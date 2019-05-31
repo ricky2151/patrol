@@ -16,10 +16,10 @@ class CreateShiftsTable extends Migration
         Schema::create('shifts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
-            $table->integer('location_id');
+            $table->integer('room_id');
             $table->integer('time_id');
             $table->date('date');
-            $table->integer('status_id');
+            $table->integer('status_node_id');
             $table->string('message');
             $table->string('token_shift');
             $table->timestamps();
