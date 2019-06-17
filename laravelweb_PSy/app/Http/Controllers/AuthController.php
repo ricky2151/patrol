@@ -9,9 +9,8 @@ use Auth;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(AuthLoginRequest $request)
     {
-   
     	if(Auth::attempt(['username' => $request->username, 'password' => $request->password]))
 		{
 			return Auth::user();
@@ -22,7 +21,7 @@ class AuthController extends Controller
 		}
     }
 
-    public function register(Request $request)
+    public function register(AuthRegisterRequest $request)
     {
     	User::create($request->all());
     	dd("user created");
