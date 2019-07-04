@@ -1,0 +1,104 @@
+.padding30{
+	padding:30px;
+}
+.fixfullscreen{
+    height: 100%;
+}
+.text-link{
+    color:blue;
+    text-decoration: underline;
+    cursor:pointer;
+}
+.button-action{
+    width: 30px;
+    height: 30px;
+}
+.button-action i{
+    font-size: 14px !important;
+}
+
+.bgwhite
+{
+	background-color: white !important;
+}
+
+.marginleft30
+{
+	margin-left: 30px !important;
+}
+
+.marginhorizontal10
+{
+	margin-right: 10px !important;
+	margin-left: 10px !important;
+
+}
+.margintop10
+{
+	margin-top: 10px !important;
+}
+
+
+
+
+
+.datatable
+{
+	margin-left: 10px !important;
+	width: 98% !important;
+	margin-top: 20px !important;
+}
+
+.datatable td, .datatable th
+{
+	border: 1px solid #ddd !important;
+}
+
+.datatable th
+{
+	color: white !important;
+	background-color: #444444 !important;
+}
+
+.datatable thead tr:nth-child(1), .datatable tbody tr td
+{
+	height: 40px !important;
+}
+
+.searchdatatable
+{
+	padding-top: 7px !important;
+	width: 50% !important;
+	margin-right: 10px !important;
+	margin-left: 10px !important;
+}
+.icontitledatatable
+{
+	position: static !important;
+	margin-top: 3px !important;
+	display: inline-block !important;
+}
+
+.titledatatable
+{
+	position: static !important;
+	margin-left: 5px !important;
+	display: inline-block !important;
+}
+
+.datatable th i
+{
+	color: white !important;
+}
+
+.btnadddata
+{
+	width: 120px !important;
+	margin-left: 20px !important;
+	height: 35px !important;
+	margin-top:0px !important;
+}
+.btnaction
+{
+	height: 30px !important;
+}
