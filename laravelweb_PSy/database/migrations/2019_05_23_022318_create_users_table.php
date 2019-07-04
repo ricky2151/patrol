@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('phone');
             $table->string('master_key');
             $table->string('email');
+            $table->string('remember_token')->nullable();
             
 
             $table->timestamps();
