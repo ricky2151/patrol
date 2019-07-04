@@ -57,11 +57,11 @@ class AuthController extends Controller
 
     public function logout()
     {
-        
-            return response()->json([
-                'error' => false,
-                'message' => 'Logout Success',
-            ]);
+        auth()->logout();
+        return response()->json([
+            'error' => false,
+            'message' => 'Logout Success',
+        ]);
 
     	
     }
