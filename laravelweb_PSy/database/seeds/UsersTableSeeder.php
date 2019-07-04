@@ -14,10 +14,32 @@ class UsersTableSeeder extends Seeder
     {
         //tester
         DB::table('users')->insert([
-                'name' => 'Samuel Ricky Saputro',
+                'name' => 'Guard',
                 'age' => 20,
                 'role_id' => 1,
-                'username' => 'ricky2151',
+                'username' => 'test_guard',
+                'password' => bcrypt('secret'),
+                'phone' => '085727322755',
+                'email' => 'samuel.ricky@ti.ukdw.ac.id', 
+                'master_key' => ' '
+            ]);
+
+        DB::table('users')->insert([
+                'name' => 'Admin',
+                'age' => 20,
+                'role_id' => 2,
+                'username' => 'test_admin',
+                'password' => bcrypt('secret'),
+                'phone' => '085727322755',
+                'email' => 'samuel.ricky@ti.ukdw.ac.id', 
+                'master_key' => ' '
+            ]);
+
+        DB::table('users')->insert([
+                'name' => 'Super Admin',
+                'age' => 20,
+                'role_id' => 3,
+                'username' => 'test_superadmin',
                 'password' => bcrypt('secret'),
                 'phone' => '085727322755',
                 'email' => 'samuel.ricky@ti.ukdw.ac.id', 

@@ -27,6 +27,25 @@ Route::group(['prefix'=>'auth'], function()
 
 });
 
+Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
+{
+	Route::get('coba', function()
+	{
+		dd("haha");
+	});
+
+	Route::resource('shifts', 'ShiftsController');
+});
+
+Route::group(['prefix' => 'guard', 'middleware' => 'RoleGuard'], function()
+{
+	Route::get('coba', function()
+	{
+		dd("haha");
+	});
+});
+
+
 
 
 
