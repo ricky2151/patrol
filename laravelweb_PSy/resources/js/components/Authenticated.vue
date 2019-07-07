@@ -270,6 +270,22 @@ export default {
                     
                     ]
                 },
+                {
+                    icon: "supervised_user_circle",
+                    title: "Guard",
+                    subroutes:[
+                    {
+                        subicon:"person",
+                        subtitle:"Guard",
+                        subaction: "/user"
+                    },
+                    
+                    
+
+                   
+                    
+                    ]
+                },
 
                 
                
@@ -327,7 +343,7 @@ export default {
         },
     },
     mounted() {
-        this.user = JSON.parse(localStorage.getItem('user'))
+        
     }
 }
 </script>

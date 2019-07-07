@@ -17,15 +17,21 @@ class RoleAdmin
      */
     public function handle($request, Closure $next)
     {
-        $user = User::find(auth()->user()->id);
+
+    	if(Auth::check())
+    	{
+    		$user = User::find(auth()->user()->id);
+    		if($user->canPlayARole('Admin'))
+    		{
+    			return $next($request);	
+    		}
+    	}
+
+        return response()->json([
+            'error' => true,
+            'message' => 'Your are not admin',
+        ]);
+        	
         
-        
-        if($user->canPlayARole('Admin'))
-            return $next($request);
-        else
-            return response()->json([
-                'error' => true,
-                'message' => 'Your are not admin',
-            ]);
     }
 }

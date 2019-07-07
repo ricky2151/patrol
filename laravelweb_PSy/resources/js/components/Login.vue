@@ -12,9 +12,10 @@
                                 </v-toolbar>
                                 <v-card-text>
                                     <v-form>
-                                        <v-text-field v-model="in_email" prepend-icon="person" name="login" label="Email" type="text"></v-text-field>
+                                        
+                                        <v-text-field v-model="in_username" prepend-icon="person" name="login" label="Username" type="text"></v-text-field>
                                         <v-text-field v-model="in_password" prepend-icon="lock" name="password" label="Password" id="password" type="password"></v-text-field>
-
+                                        <label style='color:red' v-if='message_error.length > 0'>{{message_error}}</label>
                                     </v-form>
                                 </v-card-text>
                                 <v-card-actions>
@@ -35,23 +36,39 @@
     	data()
     	{
     		return {
+                message_error:'',
 	            in_password:'',
-	            in_email:'',
+	            in_username:'',
         	}
     	},
     	methods:
     	{
     		req_login(){
-    			axios.post('/api/auth/login',{
-    				email:this.in_email,
-    				password:this.in_password
-    			}).then(r => this.saveToken(r));
-    		},
 
-    		saveToken(r){
-    			localStorage.setItem('token', r.data.access_token)
-                localStorage.setItem('user', JSON.stringify(r.data.user))
-                this.$router.replace('/');
+    			axios.post('/api/auth/login',{
+    				username:this.in_username,
+    				password:this.in_password,
+                    isAdmin:true,
+    			}).then(r => {
+                    //console.log(response);
+                    console.log(r.data.message);
+                    if(r.data.message == "Your are not admin")
+                    {
+                        this.in_password = '';
+                        this.in_username = '';
+                        this.message_error = 'Wrong username/password !';
+
+                    }
+                    else
+                    {
+
+                        this.in_password = '';
+                        this.in_username = '';
+                        this.message_error = '';
+                        this.$router.replace('/');
+                        
+                    }
+                });
     		}
     	}
     }

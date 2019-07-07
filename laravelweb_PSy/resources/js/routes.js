@@ -5,6 +5,8 @@ import Unauthenticated from '@/js/components/Unauthenticated'
 import Authenticated from '@/js/components/Authenticated'
 import Login from '@/js/components/Login'
 import Floor from '@/js/components/Floor'
+import Room from '@/js/components/Room'
+import User from '@/js/components/User'
 
 
 import Home from '@/js/components/Home';
@@ -25,6 +27,8 @@ const routes = [
         children: [
             { path: '/', component: Home },
             { path: '/floor', component: Floor },
+            { path: '/room', component: Room },
+            { path: '/user', component: User },
            
         ],
         meta: { requiresAuth: false }
@@ -39,28 +43,10 @@ const router = new VueRouter({
     mode: 'history',
 })
 
-// router.beforeEach(async (to, from, next) => {
-//     // check if the route requires authentication and user is not logged in
-//     if (to.matched.some(route => route.meta.requiresAuth)) {
-//         try {
-//             if(!localStorage.getItem('token')) {
-//                 next({ path: '/', replace: true}) //harusnya /login
-//                 return
-//             }
-//         } catch (err) {
-//             return
-//         }
-//     }
+router.beforeEach(async (to, from, next) => {
+   
 
-//     // if logged in redirect to dashboard
-//     if(to.path === '/login') {
-//         if(localStorage.getItem('token')) {
-//             next({ path: '/', replace: true})
-//             return
-//         }
-//     }
-
-//     next()
-// })
+    next()
+})
 
 export default router;

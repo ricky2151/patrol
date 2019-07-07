@@ -18,10 +18,10 @@ class CreateShiftsTable extends Migration
             $table->integer('user_id');
             $table->integer('room_id');
             $table->integer('time_id');
-            $table->date('date');
-            $table->integer('status_node_id');
-            $table->string('message');
-            $table->string('token_shift');
+            $table->date('date')->nullable();
+            $table->integer('status_node_id')->nullable();
+            $table->string('message')->nullable();
+            $table->string('token_shift')->nullable();
             $table->timestamps();
         });
     }

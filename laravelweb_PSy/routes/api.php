@@ -27,14 +27,21 @@ Route::group(['prefix'=>'auth'], function()
 
 });
 
+
 Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 {
-	Route::get('coba', function()
-	{
-		dd("haha");
-	});
 
+	//additional route
+	//user
+	Route::get('/users/{id}/shifts', 'UserController@shifts');
+	//route resource
 	Route::resource('shifts', 'ShiftsController');
+	Route::resource('floors', 'FloorController');
+	Route::resource('buildings', 'BuildingController');
+	Route::resource('rooms', 'RoomController');
+	Route::resource('status_nodes', 'StatusNodeController');
+	Route::resource('times', 'TimeController');
+	Route::resource('users', 'UserController');
 });
 
 Route::group(['prefix' => 'guard', 'middleware' => 'RoleGuard'], function()

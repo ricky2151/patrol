@@ -28,12 +28,12 @@ class Shift extends Model
 
     public function time()
     {
-    	return $this->belongsTo('App\Models\Time');
+    	return $this->belongsTo('App\Models\Time', 'time_id', 'id');
     }
 
     public function status_node()
     {
-    	return $this->belongsTo('App\Models\StatusNode');
+    	return $this->belongsTo('App\Models\StatusNode', 'status_node_id', 'id');
     }
 
     

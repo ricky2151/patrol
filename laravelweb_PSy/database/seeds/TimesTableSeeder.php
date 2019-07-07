@@ -12,24 +12,24 @@ class TimesTableSeeder extends Seeder
     public function run()
     {
     	DB::table('times')->insert([
-			'start' => '00:00:00',
-			'end' => '06:00:00'
+			'start' => '00:00',
+			'end' => '06:00'
 		]);
         DB::table('times')->insert([
-			'start' => '06:00:00',
-			'end' => '10:00:00'
+			'start' => '06:00',
+			'end' => '10:00'
 		]);
 		DB::table('times')->insert([
-			'start' => '10:00:00',
-			'end' => '14:00:00'
+			'start' => '10:00',
+			'end' => '14:00'
 		]);
 		DB::table('times')->insert([
-			'start' => '14:00:00',
-			'end' => '18:00:00'
+			'start' => '14:00',
+			'end' => '18:00'
 		]);
 		DB::table('times')->insert([
-			'start' => '18:00:00',
-			'end' => '22:00:00'
+			'start' => '18:00',
+			'end' => '22:00'
 		]);
 
     }

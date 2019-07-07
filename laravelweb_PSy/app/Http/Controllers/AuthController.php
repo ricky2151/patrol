@@ -13,25 +13,36 @@ class AuthController extends Controller
     
     public function login(ValidateLogin $request)
     {
-        
-    	if(Auth::attempt(['username' => $request->username, 'password' => $request->password]))
+        if(Auth::attempt(['username' => $request->username, 'password' => $request->password]))
 		{
-
-            return response()->json([
-                'error' => false,
-                'user' => Auth::user(),
-                'message' => 'Login Success',
-            ]);
+            if($request->isAdmin)
+            {
+                if(Auth::user()->canPlayARole('Admin'))
+                {
+                    return response()->json([
+                        'error' => false,
+                        'user' => Auth::user(),
+                        'message' => 'Login Success',
+                    ]);        
+                }
+            }
+            else
+            {
+                return response()->json([
+                    'error' => false,
+                    'user' => Auth::user(),
+                    'message' => 'Login Success',
+                ]);
+            }
+            
 			
 		}
-		else
-		{
-			return response()->json([
-                'error' => false,
+		
+        return response()->json([
+                'error' => true,
                 'user' => Auth::user(),
                 'message' => 'Login Failed'
             ]);
-		}
     }
 
     public function isLogin()
@@ -48,7 +59,7 @@ class AuthController extends Controller
         else
         {
             return response()->json([
-                'error' => false,
+                'error' => true,
                 'isLogin' => false,
                 'user' => $user
             ]);
