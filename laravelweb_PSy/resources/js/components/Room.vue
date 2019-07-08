@@ -32,7 +32,7 @@
         <v-layout row class='bgwhite margintop10'>
             <v-flex xs6>
                 <div class='marginleft30 margintop10'>
-                    <v-icon class='icontitledatatable'>dns</v-icon>
+                    <v-icon class='icontitledatatable'>meeting_room</v-icon>
                     <h2 class='titledatatable'>Rooms Data</h2>
                     <v-btn v-on:click='opendialog_createedit(-1)' color="menu" dark class='btnadddata'>
                     Add Data
@@ -174,8 +174,8 @@ export default {
             //console.log(r);
             var temp_r = r;
             this.input.name = temp_r.name;
-            this.input.building_id = temp_r.building_id;
-            this.input.floor_id = temp_r.floor_id;
+            this.input.building_id = parseInt(temp_r.building_id);
+            this.input.floor_id = parseInt(temp_r.floor_id);
 
             this.input_before_edit = JSON.parse(JSON.stringify(this.input));
         },

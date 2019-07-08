@@ -7,6 +7,7 @@ import Login from '@/js/components/Login'
 import Floor from '@/js/components/Floor'
 import Room from '@/js/components/Room'
 import User from '@/js/components/User'
+import Building from '@/js/components/Building'
 
 
 import Home from '@/js/components/Home';
@@ -29,6 +30,7 @@ const routes = [
             { path: '/floor', component: Floor },
             { path: '/room', component: Room },
             { path: '/user', component: User },
+            { path: '/building', component: Building },
            
         ],
         meta: { requiresAuth: false }

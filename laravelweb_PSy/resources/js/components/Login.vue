@@ -52,14 +52,14 @@
     			}).then(r => {
                     //console.log(response);
                     console.log(r.data.message);
-                    if(r.data.message == "Your are not admin")
+                    if(r.data.message == "Your are not admin" || r.data.message == 'Login Failed')
                     {
                         this.in_password = '';
                         this.in_username = '';
                         this.message_error = 'Wrong username/password !';
 
                     }
-                    else
+                    else 
                     {
 
                         this.in_password = '';

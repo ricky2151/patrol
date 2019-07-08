@@ -1,6 +1,6 @@
 <div>
     <v-container fluid>
-        <h3>Floors</h3>
+        <h3>Building</h3>
     </v-container>
 </div>
 
@@ -16,7 +16,7 @@
                     <v-btn icon dark v-on:click="closedialog_createedit()">
                         <v-icon>close</v-icon>
                     </v-btn>
-                    <v-toolbar-title v-html='id_data_edit == -1 ?"Add Floors":"Edit Floors"'></v-toolbar-title>
+                    <v-toolbar-title v-html='id_data_edit == -1 ?"Add Buildings":"Edit Buildings"'></v-toolbar-title>
 
                 </v-toolbar>
                 <v-form v-model="valid" style='padding:30px' ref='formCreateEdit'>
@@ -29,8 +29,8 @@
         <v-layout row class='bgwhite margintop10'>
             <v-flex xs6>
                 <div class='marginleft30 margintop10'>
-                    <v-icon class='icontitledatatable'>list</v-icon>
-                    <h2 class='titledatatable'>Floors Data</h2>
+                    <v-icon class='icontitledatatable'>domain</v-icon>
+                    <h2 class='titledatatable'>Buildings Data</h2>
                     <v-btn v-on:click='opendialog_createedit(-1)' color="menu" dark class='btnadddata'>
                     Add Data
                 </v-btn>
@@ -98,7 +98,7 @@ export default {
     data () {
         return {
 
-            name_table:'floors',
+            name_table:'buildings',
             header_api:{
                 'Accept': 'application/json',
                 'Content-type': 'application/json'
