@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class RoleGuard
 {
@@ -15,15 +17,18 @@ class RoleGuard
      */
     public function handle($request, Closure $next)
     {
-        $user = User::find(auth()->user()->id);
-        
-        
-        if($user->canPlayARole('Guard'))
-            return $next($request);
-        else
-            return response()->json([
-                'error' => true,
-                'message' => 'Your are not admin',
-            ]);
+        if(Auth::check())
+        {
+            $user = User::find(auth()->user()->id);
+            if($user->canPlayARole('Guard'))
+            {
+                return $next($request); 
+            }
+        }
+
+        return response()->json([
+            'error' => true,
+            'message' => 'Your are not Guard',
+        ]);
     }
 }

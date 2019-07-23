@@ -33,9 +33,10 @@ class UserController extends Controller
         });
         return response()->json(['error' => false, 'data'=>$data]);
     }
-    public function shifts($id)
+    public function shifts()
     {
-        $data = $this->user->find($id)->getShift();
+        $iduser = Auth::user()->id;
+        $data = $this->user->find($iduser)->getShiftToday();
         return response()->json(['error' => false, 'data'=>$data]);
     }
 

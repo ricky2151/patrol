@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -50,9 +51,10 @@ class User extends Authenticatable
        
         return $user;
     }
-    public function getShift()
+    public function getShiftToday()
     {
-        $shifts = $this->shifts->map(function($item)
+        
+        $shifts = $this->shifts->where('date',Carbon::today()->format('Y-m-d'))->map(function($item)
         {
             return [
                 'id' => $item['id'],
@@ -112,7 +114,8 @@ class User extends Authenticatable
     public function canPlayARole($role)
     {
         $thisrole = $this->role->name;
-        if($role == 'Guard' && ($thisrole == 'Guard' && $thisrole == 'Admin' || $thisrole == 'Superadmin'))
+
+        if($role == 'Guard' && ($thisrole == 'Guard' || $thisrole == 'Admin' || $thisrole == 'Superadmin'))
         {
             return true;
         }

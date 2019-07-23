@@ -23604,7 +23604,30 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("Home component")])
+  return _c(
+    "div",
+    [
+      _c(
+        "v-layout",
+        { attrs: { row: "" } },
+        [
+          _c("v-flex", { attrs: { xs3: "" } }, [
+            _c("div", {
+              staticStyle: {
+                "background-color": "red",
+                width: "100%",
+                height: "100%",
+                display: "block",
+                position: "absolute"
+              }
+            })
+          ])
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

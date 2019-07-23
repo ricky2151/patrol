@@ -12,8 +12,10 @@ class Kernel extends ConsoleKernel
      *
      * @var array
      */
-    protected $commands = [
-        //
+    protected $commands =
+    [
+        \App\Console\Commands\RealTimeShift::class,
+        
     ];
 
     /**
@@ -24,8 +26,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('RealTimeShift:run')
+                 ->everyMinute()
+                 ->sendOutputTo('storage/logs/realtimeshiftlog.log');
     }
 
     /**

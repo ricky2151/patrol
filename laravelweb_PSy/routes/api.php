@@ -31,9 +31,7 @@ Route::group(['prefix'=>'auth'], function()
 Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 {
 
-	//additional route
-	//user
-	Route::get('/users/{id}/shifts', 'UserController@shifts');
+	
 	//route resource
 	Route::resource('shifts', 'ShiftsController');
 	Route::resource('floors', 'FloorController');
@@ -46,10 +44,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 
 Route::group(['prefix' => 'guard', 'middleware' => 'RoleGuard'], function()
 {
-	Route::get('coba', function()
-	{
-		dd("haha");
-	});
+	//additional route
+	//user
+	Route::get('/users/shifts', 'UserController@shifts');
+
+	//Route::resource('shifts', 'AndroidShiftController');
 });
 
 

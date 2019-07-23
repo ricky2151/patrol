@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Shift;
 use Illuminate\Support\Arr;
+use Salman\Mqtt\MqttClass\Mqtt;
 
-class ShiftsController extends Controller
+class AndroidShiftController extends Controller
 {
     private $shift;
     /**
@@ -19,20 +20,30 @@ class ShiftsController extends Controller
     {
         $this->shift = $shift;
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        
-        $data = $this->shift->index();
+        $data = $this->shift->indexThisUser();
 
         
         return response()->json(['error' => false, 'data'=>$data]);
-    }
 
-    // public function list()
-    // {
-    //     $data = $this->shift->list();
-    //     return response()->json(['error' => false, 'data'=>$data]);
-    // }
+        $mqtt = new Mqtt();
+        
+        $output = $mqtt->ConnectAndPublish('shift', response()->json(['error'=> false, 'data' => $data]));
+        if ($output === true)
+        {
+            return response()->json(['error' => false, 'message'=>'Success !']);
+        }
+
+        return response()->json(['error' => true, 'data'=>'Failed !']);
+        //return ;
+    }
 
     /**
      * Show the form for creating a new resource.

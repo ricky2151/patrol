@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7db79b30d08e23640bd164e6395b1abe",
+    "content-hash": "5b20181e53496c66248a78974a82b691",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1397,6 +1397,66 @@
                 "uuid"
             ],
             "time": "2018-07-19T23:38:55+00:00"
+        },
+        {
+            "name": "salmanzafar/laravel-mqtt",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/salmanzafar949/MQTT-Laravel.git",
+                "reference": "77a8b9db1333a6080521cef0a21f1092737898b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/salmanzafar949/MQTT-Laravel/zipball/77a8b9db1333a6080521cef0a21f1092737898b5",
+                "reference": "77a8b9db1333a6080521cef0a21f1092737898b5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "laravel/framework": ">=5.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Salman\\Mqtt\\MqttServiceProvider"
+                    ],
+                    "aliases": {
+                        "Mqtt": "Salman\\Mqtt\\Facades\\Mqtt"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Salman\\Mqtt\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Salman Zafar",
+                    "email": "salmanzafar949@gmail.com"
+                }
+            ],
+            "description": "A simple Laravel 5 Library to connect/publish to MQTT broker",
+            "keywords": [
+                "laravel",
+                "laravel mqtt",
+                "laravel mqtt library",
+                "laravel-mqtt",
+                "laravel5",
+                "mqtt laravel",
+                "mqtt-laravel",
+                "mqtt-laravel-publisher",
+                "mqtt-laravel-subscriber"
+            ],
+            "time": "2019-06-11T14:40:29+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

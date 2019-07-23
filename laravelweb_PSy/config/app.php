@@ -166,6 +166,8 @@ return [
          * Package Service Providers...
          */
 
+        Salman\Mqtt\MqttServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
@@ -225,6 +227,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        'Mqtt' => \Salman\Mqtt\Facades\Mqtt::class,
 
     ],
 

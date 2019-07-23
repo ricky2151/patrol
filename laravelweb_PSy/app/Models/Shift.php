@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Arr;
+
 
 class Shift extends Model
 {
@@ -10,12 +13,37 @@ class Shift extends Model
 
 
     public static function index(){
-        $collection = Shift::latest()->get();
-
         
 
-        return $collection;
+        $data = Shift::latest()->get();
+
+        $data = $data->map(function ($data) { 
+            $data = Arr::add($data, 'room_name', $data['room']['name']);
+            $data = Arr::add($data, 'status_node_name', $data['status_node']['name']);
+            $data = Arr::add($data, 'time_start', $data['time']['start']);
+            $data = Arr::add($data, 'time_end', $data['time']['end']);
+            return Arr::except($data, ['room', 'status_node', 'time']);
+        });
+        
+
+        return $data;
     }
+
+    // public static function indexThisUser()
+    // {
+    //     $iduser = Auth::user()->id;
+    //     $data = Shift::latest()->where('user_id',$iduser)->get();
+
+    //      $data = $data->map(function ($data) { 
+    //         $data = Arr::add($data, 'room_name', $data['room']['name']);
+    //         $data = Arr::add($data, 'status_node_name', $data['status_node']['name']);
+    //         $data = Arr::add($data, 'time_start', $data['time']['start']);
+    //         $data = Arr::add($data, 'time_end', $data['time']['end']);
+    //         return Arr::except($data, ['room', 'status_node', 'time']);
+    //     });
+    //      return $data;
+    // }
+    
     public function user()
     {
     	return $this->belongsTo('App\Models\User');
