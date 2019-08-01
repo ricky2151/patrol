@@ -64,14 +64,24 @@ class UserController extends Controller
         try {
             $data = $request->validated();
             $data["password"] = bcrypt($data["password"]);
-            $shifts = $data['shifts'];
+            //make random string
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $charactersLength = strlen($characters);
+            $randomString = '';
+            for ($i = 0; $i < 16; $i++) {
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+            }
+            //======
+            $data['master_key'] = $randomString;
+            
+            
 
             //dd($data);
             
 
             $user = $this->user->create($data);
-
-            $user->shifts()->createMany($shifts);
+            if(array_key_exists('shifts', $data))
+                $user->shifts()->createMany($data['shifts']);
             
 
             DB::commit();
@@ -124,10 +134,18 @@ class UserController extends Controller
         //dd($data);
         DB::beginTransaction();
         try {
-            $shifts = $data['shifts'];
-            $data["password"] = bcrypt($data["password"]);
+            if(array_key_exists('password', $data))
+            {
+             $data["password"] = bcrypt($data["password"]);
+
+            }
+            
             $user->update($data);
-            is_null($shifts) ? "" : $user->updateShifts($shifts);
+            if(array_key_exists('shifts', $data))
+            {
+                $user->updateShifts($data['shifts']);
+            }
+            
 
             DB::commit();
             return response()->json(['error' => false, 'message'=>'update data success !']);

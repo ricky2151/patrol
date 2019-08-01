@@ -8,6 +8,8 @@ import Floor from '@/js/components/Floor'
 import Room from '@/js/components/Room'
 import User from '@/js/components/User'
 import Building from '@/js/components/Building'
+import Time from '@/js/components/Time'
+import StatusNode from '@/js/components/StatusNode'
 
 
 import Home from '@/js/components/Home';
@@ -31,6 +33,8 @@ const routes = [
             { path: '/room', component: Room },
             { path: '/user', component: User },
             { path: '/building', component: Building },
+            { path: '/time', component: Time },
+            { path: '/statusnode', component: StatusNode },
            
         ],
         meta: { requiresAuth: false }

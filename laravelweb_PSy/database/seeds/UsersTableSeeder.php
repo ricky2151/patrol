@@ -10,8 +10,17 @@ class UsersTableSeeder extends Seeder
      *
      * @return void
      */
+
     public function run()
     {
+        //make random string
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < 16; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        //======
         //tester
         DB::table('users')->insert([
                 'name' => 'Guard',
@@ -21,9 +30,13 @@ class UsersTableSeeder extends Seeder
                 'password' => bcrypt('secret'),
                 'phone' => '085727322755',
                 'email' => 'samuel.ricky@ti.ukdw.ac.id', 
-                'master_key' => ' '
+                'master_key' => $randomString,
             ]);
 
+        $randomString = '';
+        for ($i = 0; $i < 16; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
         DB::table('users')->insert([
                 'name' => 'Admin',
                 'age' => 20,
@@ -32,9 +45,13 @@ class UsersTableSeeder extends Seeder
                 'password' => bcrypt('secret'),
                 'phone' => '085727322755',
                 'email' => 'samuel.ricky@ti.ukdw.ac.id', 
-                'master_key' => ' '
+                'master_key' => $randomString,
             ]);
 
+        $randomString = '';
+        for ($i = 0; $i < 16; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
         DB::table('users')->insert([
                 'name' => 'Super Admin',
                 'age' => 20,
@@ -43,13 +60,18 @@ class UsersTableSeeder extends Seeder
                 'password' => bcrypt('secret'),
                 'phone' => '085727322755',
                 'email' => 'samuel.ricky@ti.ukdw.ac.id', 
-                'master_key' => ' '
+                'master_key' => $randomString,
             ]);
 
         //random generate
         $faker = Faker::create('id_ID');
-    
-    	for($i = 1; $i <= 25; $i++){    		
+        
+    	for($i = 1; $i <= 25; $i++){    	
+            $randomString = '';
+            for ($j = 0; $j < 16; $j++) {
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+            }
+
     		DB::table('users')->insert([
     			'name' => $faker->name,
     			'age' => mt_rand(30,60),
@@ -58,7 +80,7 @@ class UsersTableSeeder extends Seeder
     			'password' => bcrypt('secret'),
     			'phone' => $faker->PhoneNumber,
     			'email' => $faker->email, 
-    			'master_key' => ' '
+    			'master_key' => $randomString
     		]);
  
     	}

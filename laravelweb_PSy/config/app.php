@@ -177,6 +177,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        //helper
+        App\Providers\HelperServiceProvider::class,
+
     ],
 
     /*
@@ -229,6 +232,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Mqtt' => \Salman\Mqtt\Facades\Mqtt::class,
+        'Helper' => App\Helpers\Helper::class
 
     ],
 

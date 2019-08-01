@@ -24,7 +24,7 @@
                     <v-select class='pa-2' :rules="this.$list_validation.selectdata_req"  v-model='input.building_id' :items="ref_input.building" item-text='name' item-value='id' label="Select Building"></v-select>
                     <v-select class='pa-2' :rules="this.$list_validation.selectdata_req"  v-model='input.floor_id' :items="ref_input.floor" item-text='name' item-value='id' label="Select Floor"></v-select>
                     <v-btn v-on:click='save_data()' >submit</v-btn>
-                    {{input}}
+                    
                 </v-form>
             </v-card>
         </v-dialog>
@@ -173,6 +173,7 @@ export default {
         {
             //console.log(r);
             var temp_r = r;
+            
             this.input.name = temp_r.name;
             this.input.building_id = parseInt(temp_r.building_id);
             this.input.floor_id = parseInt(temp_r.floor_id);

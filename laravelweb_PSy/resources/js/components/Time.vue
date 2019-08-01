@@ -20,7 +20,8 @@
 
                 </v-toolbar>
                 <v-form v-model="valid" style='padding:30px' ref='formCreateEdit'>
-                    <v-text-field :rules="this.$list_validation.max_req" v-model='input.name' label="Name" required></v-text-field>
+                    <v-text-field :rules="this.$list_validation.time_shift" v-model='input.start' label="Start" required></v-text-field>
+                    <v-text-field :rules="this.$list_validation.time_shift" v-model='input.end' label="End" required></v-text-field>
                     <v-btn v-on:click='save_data()' >submit</v-btn>
                 </v-form>
             </v-card>
@@ -57,7 +58,8 @@
         >
         <template v-slot:items="props">
             <td>{{ props.item.no }}</td>
-            <td>{{ props.item.name }}</td>
+            <td>{{ props.item.start }}</td>
+            <td>{{ props.item.end }}</td>
 
             <td>
                 <div class="text-xs-left">
@@ -116,14 +118,16 @@ export default {
             id_data_edit:-1,
 
             input:{
-                name:'',    
+                start:'',    
+                end : '',
             },
             input_before_edit:null, //variabel ini digunakan untuk menampung input sebelum di klik submit saat edit
             
 
             headers: [
                 { text: 'No', value: 'no'},
-                { text: 'Name', value: 'name'},
+                { text: 'Start', value: 'start'},
+                { text: 'End', value: 'end'},
                 { text: 'Action', align:'left',sortable:false, width:'15%'},
 
             ],
@@ -152,7 +156,8 @@ export default {
 
         convert_data_input(tempobject)
         {
-            this.input.name = tempobject.name;
+            this.input.start = tempobject.start;
+            this.input.end = tempobject.end;
             this.input_before_edit = JSON.parse(JSON.stringify(this.input));
         },
 
@@ -161,12 +166,15 @@ export default {
             const formData = new FormData();
             if(this.id_data_edit == -1) //jika add data
             {
-                formData.append('name', this.input.name);
+                formData.append('start', this.input.start);
+                formData.append('end', this.input.end);
             }
             else //jika edit data
             {
-                if(this.input.name != this.input_before_edit.name) 
-                    formData.append('name', this.input.name);
+                if(this.input.start != this.input_before_edit.start) 
+                    formData.append('start', this.input.start);
+                 if(this.input.end != this.input_before_edit.end) 
+                    formData.append('end', this.input.end);
                 formData.append('_method','patch');
             }
             formData.append('token', localStorage.getItem('token'));

@@ -19,6 +19,7 @@ import PatrolApp from '@/js/views/PatrolApp'
 import VueSwal from 'vue-swal'
 import PluginValidation from '@/js/plugin/PluginValidation'
 import BasicCss from '@/js/css/custom/basic.css'
+import 'vuetify/dist/vuetify.min.css'
 //import 'vuetify/dist/vuetify.min.css'
 
 Vue.use(Vuetify);

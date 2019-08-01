@@ -22,10 +22,16 @@ export default {
             if(id_data_edit != -1)
             {
                 this.id_data_edit = id_data_edit;
-                if(r.length > 0)
+                if(r)
+                {
+                    console.log('masuk pilihan 1');
                     this.convert_data_input(r);
+                }
                 else
+                {
+                    console.log('masuk pilihan2');
                     this.convert_data_input(this.findDataById(id_data_edit));
+                }
                 
             }
             else

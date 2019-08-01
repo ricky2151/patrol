@@ -47,11 +47,21 @@ export default {
 
   		numeric : [
   			v => !isNaN(v) || 'Input must number !',
-  		]
+  		],
+
+      time_shift : [
+        v => !!v || 'Please fill the blank !',
+        v => (v.length == 5 && !isNaN(v[0]) && !isNaN(v[1]) && !isNaN(v[3]) && !isNaN(v[4]) && v[2] == ":")  || 'Input format must hh:mm !',
+
+      ],
 
 
   	};
 
 
+  },
+  methods :
+  {
+   
   }
 }

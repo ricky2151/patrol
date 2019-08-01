@@ -26,9 +26,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('RealTimeShift:run')
-                 ->everyMinute()
-                 ->sendOutputTo('storage/logs/realtimeshiftlog.log');
+        // $schedule->command('RealTimeShift:run')
+        //          ->everyMinute()
+        //          ->sendOutputTo('storage/logs/realtimeshiftlog.log');
     }
 
     /**

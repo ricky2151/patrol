@@ -63,6 +63,7 @@
                         <v-toolbar-title v-html='id_data_edit == -1 ?"Add Guard":"Edit Guard"'></v-toolbar-title>
 
                     </v-toolbar>
+                    {{id_data_edit}}
                     <v-stepper v-model="e6" vertical non-linear >
 
                         <!-- ==== STEPPER 1 ==== -->
@@ -73,55 +74,56 @@
 
                         <v-stepper-content step="1" editable='id_data_edit != -1'>
                             
-                            <v-layout row>
-                                <v-flex xs12>
+                            
                                     <v-text-field class="pa-2" :rules="this.$list_validation.max_req" v-model='input.name'  label="Name" counter=191></v-text-field>
-                                </v-flex>
-                            </v-layout>
+                                
 
-                            <v-layout row>
-                                <v-flex xs12>
+                            
                                     <v-text-field class="pa-2" :rules="this.$list_validation.numeric_req" v-model='input.age'  label="Age" counter=191></v-text-field>
-                                </v-flex>
-                            </v-layout>
+                                
 
 
-                            <v-layout row>
-                                <v-flex xs12>
+                            
                                     <v-select class='pa-2' :rules="this.$list_validation.selecttf_req" v-model='input.role_id' :items="ref_input.role" item-text='name' item-value='id' label="Select Role"></v-select>
-                                </v-flex>
-                            </v-layout>
+                                
 
-                            <v-layout row>
-                                <v-flex xs12>
+                            
                                     <v-text-field class="pa-2" :rules="this.$list_validation.max_req" v-model='input.username'  label="Username" counter=191></v-text-field>
-                                </v-flex>
-                            </v-layout>
+                                
 
-                            <v-layout row>
-                                <v-flex xs12>
-                                    <v-text-field v-if='id_data_edit == -1' class="pa-2" :rules="this.$list_validation.max_req" v-model='input.password'  label="Password" counter=191></v-text-field>
-                                    <v-text-field v-if='id_data_edit != -1' class="pa-2" :rules="this.$list_validation.max_req" v-model='input.password'  label="New Password" counter=191></v-text-field>
-                                </v-flex>
-                            </v-layout>
+                            
+                                    <v-text-field 
+                                    v-if='id_data_edit == -1' 
+                                    class="pa-2" 
+                                    :rules="this.$list_validation.max_req" 
+                                    v-model='input.password'  
+                                    label="Password" 
+                                    type="password"
+                                    counter=191>
+                                    </v-text-field>
 
-                            <v-layout row>
-                                <v-flex xs12>
+                                    <v-text-field 
+                                    v-if='id_data_edit != -1' 
+                                    class="pa-2" 
+                                    :rules="this.$list_validation.max_req" 
+                                    v-model='input.password'  
+                                    label="New Password" 
+                                    type="password"
+                                    counter=191>
+                                    </v-text-field>
+                                
+
+                            
                                     <v-text-field class="pa-2" :rules="this.$list_validation.max_req" v-model='input.phone'  label="Phone" counter=191></v-text-field>
-                                </v-flex>
-                            </v-layout>
+                                
 
-                            <v-layout row>
-                                <v-flex xs12>
+                            
                                     <v-text-field class="pa-2" :rules="this.$list_validation.email_req" v-model='input.email'  label="Email" counter=191></v-text-field>
-                                </v-flex>
-                            </v-layout>
+                               
 
-                            <v-layout row>
-                                <v-flex xs12>
-                                    <v-text-field class="pa-2" v-model='input.master_key'  label="Master Key" counter=191></v-text-field>
-                                </v-flex>
-                            </v-layout>
+                            
+                                    
+                                
                             
                             
                             
@@ -171,6 +173,9 @@
                               <v-date-picker v-model="temp_input.shifts.date" no-title @input="menu_date = false"></v-date-picker>
                             </v-menu>
                             
+                            <v-text-field v-if='temp_input.id_edit_shifts==-1' style='margin-top:15px' :rules="this.$list_validation.numeric_req" v-model='repeat_time' label="How many days is it repeated?" required></v-text-field>
+
+
                             <v-toolbar flat color="white" >
                                 
                                 <v-spacer></v-spacer>
@@ -329,6 +334,7 @@ export default {
 
             action_items: ['Edit', 'Shifts', 'Delete'],
             
+            repeat_time : 1,
             
 
 
@@ -440,6 +446,18 @@ export default {
         }
     },
     methods: {
+        add_zero_time(num)
+        {
+            var str = num.toString();
+            if(str.length == 1)
+            {
+                return "0" + str;
+            }
+            else
+            {
+                return str;
+            }
+        },
         action_change(id_datatable,idx_action)
         {
             
@@ -471,6 +489,7 @@ export default {
                     self.temp_input.id_edit_shifts = idx;
                 },
                 clearTempInput(){
+                    self.repeat_time = 1;
                     for (var key in self.temp_input.shifts)
                     {
                         if(self.temp_input.shifts[key])
@@ -478,12 +497,28 @@ export default {
                     }
                 },
                 save(){ //bisa edit / add
+
                     var id_edit = JSON.parse(JSON.stringify(self.temp_input.id_edit_shifts));
+                    console.log(id_edit);
+                    if(!self.input.shifts)
+                    {
+                        self.input.shifts = [];
+                    }
                     if(id_edit == -1)
                     {
-                        var temp = JSON.parse(JSON.stringify(self.temp_input.shifts));
-                    
-                        self.input.shifts.push(temp);
+                        for(var i = 0;i<self.repeat_time;i++)
+                        {
+                            var temp = JSON.parse(JSON.stringify(self.temp_input.shifts));
+                            self.input.shifts.push(temp);
+                            var temp_date = new Date(self.temp_input.shifts.date);
+                            // add a day
+                            temp_date.setDate(temp_date.getDate() + 1);
+                            var str_temp_date = temp_date.getFullYear() + "-" + self.add_zero_time(temp_date.getMonth() + 1) + "-" + self.add_zero_time(temp_date.getDate());
+                            
+                            self.temp_input.shifts.date = str_temp_date;
+
+                           // console.log(str_temp_date);
+                        }
                         
                     }
                     else
@@ -548,18 +583,19 @@ export default {
         },
         convert_data_input(r)
         {
-            var temp_r = r.data;
+            var temp_r = r.data.user;
             console.log(temp_r);
-            this.input.name = temp_r.user.name;
-            this.input.age = temp_r.user.age;
-            this.input.role_id = temp_r.user.role.id;
-            this.input.username = temp_r.user.username;
-            this.input.password = temp_r.user.password;
-            this.input.phone = temp_r.user.phone;
-            this.input.email = temp_r.user.email;
-            this.input.master_key = temp_r.user.master_key;
-            this.input.shifts = temp_r.shifts;
-
+            this.input.name = temp_r.name;
+            this.input.age = temp_r.age;
+            this.input.role_id = temp_r.role.id;
+            this.input.username = temp_r.username;
+            this.input.password = temp_r.password;
+            this.input.phone = temp_r.phone;
+            this.input.email = temp_r.email;
+            this.input.master_key = temp_r.master_key;
+            //console.log('sampe conver data input');
+            this.input.shifts = r.data.shifts;
+            //console.log(this.input.shifts);
             
 
             
@@ -586,6 +622,8 @@ export default {
 
                 //step-step :
                 //1. kirim data goods yang berubah
+                
+
                 if(this.input.name != this.input_before_edit.name) formData.append('name', this.input.name);
 
                 if(this.input.age != this.input_before_edit.age) formData.append('age', this.input.age);
@@ -604,7 +642,7 @@ export default {
 
                 
 
-                //3. kirim data material yang berubah, ditambah, dan dihapus
+                //3. kirim data shift yang berubah, ditambah, dan dihapus
                 
                 //cek di input cocokin dengan input_before_edit
                 //1. cek apakah ada id nya atau tidak, jika tidak memiliki id, pasti itu tambah baru
@@ -613,69 +651,83 @@ export default {
                 //temp adalah data dari input
                 //temp2 adalah data dari input_before_edit
                 var counteridx = 0;
-                for(var i = 0;i<this.input.shifts.length;i++)
+                if(this.input.shifts)
                 {
-                    var temp = this.input.shifts[i];
-                    if(temp.id == null)
-                    {
-                        formData.append('shifts[' + counteridx + '][room_id]', temp.room.id);
-                        formData.append('shifts[' + counteridx + '][time_id]', temp.time.id);
-                        formData.append('shifts[' + counteridx + '][date]', temp.date);
-                        formData.append('shifts[' + counteridx + '][type]', '1');
-                        counteridx++;
-                    }
-                    else
-                    {
-                        //cocokan dengan input_before_edit
-                        var edittrue = false;
-                        for(var j = 0;j<this.input_before_edit.shifts.length;j++)
-                        {
-                            var temp2 = this.input_before_edit.shifts[i];
-                            if(temp.id == temp2.id)
-                            {
-                                if(temp.room.id != temp2.room.id || temp.time.id != temp2.time.id || temp.date != temp2.date) //jika ada salah satu saja yang berbeda, maka ini pasti diedit
-                                {
-                                    edittrue = true;
-                                }
-                                break;
-                            }
-                        }
 
-                        if(edittrue)
+                    for(var i = 0;i<this.input.shifts.length;i++)
+                    {
+
+                        var temp = this.input.shifts[i];
+                        if(temp.id == null)
                         {
-                            formData.append('shifts[' + counteridx + '][id]', temp.id);
+                            
                             formData.append('shifts[' + counteridx + '][room_id]', temp.room.id);
                             formData.append('shifts[' + counteridx + '][time_id]', temp.time.id);
                             formData.append('shifts[' + counteridx + '][date]', temp.date);
-                            formData.append('shifts[' + counteridx + '][type]', '0');
+                            formData.append('shifts[' + counteridx + '][type]', '1');
                             counteridx++;
                         }
+                        else
+                        {
 
+                            //cocokan dengan input_before_edit
+                            var edittrue = false;
+                            for(var j = 0;j<this.input_before_edit.shifts.length;j++)
+                            {
+                                var temp2 = this.input_before_edit.shifts[i];
+                                if(temp.id == temp2.id)
+                                {
+                                    if(temp.room.id != temp2.room.id || temp.time.id != temp2.time.id || temp.date != temp2.date) //jika ada salah satu saja yang berbeda, maka ini pasti diedit
+                                    {
+                                        edittrue = true;
+                                    }
+                                    break;
+                                }
+                            }
+
+                            if(edittrue)
+                            {
+                                formData.append('shifts[' + counteridx + '][id]', temp.id);
+                                formData.append('shifts[' + counteridx + '][room_id]', temp.room.id);
+                                formData.append('shifts[' + counteridx + '][time_id]', temp.time.id);
+                                formData.append('shifts[' + counteridx + '][date]', temp.date);
+                                formData.append('shifts[' + counteridx + '][type]', '0');
+                                counteridx++;
+                            }
+
+                        }
                     }
                 }
 
                 //cek di input_before_edit cocokin dengan input
                 //1. jika ada data dengan id yang tidak ada di data input, berarti data tersebut pasti dihapus
-                for(var i = 0;i<this.input_before_edit.shifts.length;i++)
+                if(this.input_before_edit.shifts)
                 {
-                    var deletetrue = true;
-                    for(var j=0;j<this.input.shifts.length;j++)
+                    for(var i = 0;i<this.input_before_edit.shifts.length;i++)
                     {
-                        if(this.input.shifts[j].id == this.input_before_edit.shifts[i].id)
+                        var deletetrue = true;
+                        for(var j=0;j<this.input.shifts.length;j++)
                         {
-                            deletetrue = false;
-                            break;
+                            if(this.input.shifts[j].id == this.input_before_edit.shifts[i].id)
+                            {
+                                deletetrue = false;
+                                break;
+                            }
+                        }
+
+                        if(deletetrue)
+                        {
+                            formData.append('shifts[' + counteridx + '][id]', this.input_before_edit.shifts[i].id);
+                            formData.append('shifts[' + counteridx + '][type]', '-1');
+                            counteridx++;
                         }
                     }
 
-                    if(deletetrue)
-                    {
-                        formData.append('shifts[' + counteridx + '][id]', this.input_before_edit.shifts[i].id);
-                        formData.append('shifts[' + counteridx + '][type]', '-1');
-                        counteridx++;
-                    }
                 }
 
+                
+
+                
                 
                
                 formData.append('_method', 'patch');
@@ -715,7 +767,10 @@ export default {
             }
 
             
-            
+            //cek dulu
+            // for (var pair of formData.entries()) {
+            //     console.log(pair[0]+ ', ' + pair[1]); 
+            // }
 
             //4. masukan token
             
@@ -746,6 +801,8 @@ export default {
         
         this.get_data();
         this.get_master_data();
+       // console.log(this.add_zero_time('1'))
+       // console.log(this.add_zero_time('10'))
         
         //this.testing_input();
 
