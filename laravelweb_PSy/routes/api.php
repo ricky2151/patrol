@@ -31,7 +31,9 @@ Route::group(['prefix'=>'auth'], function()
 Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 {
 
-	
+	//dashboard
+	Route::get('/shifts/graph', 'ShiftsController@graph');
+
 	//route resource
 	Route::resource('shifts', 'ShiftsController');
 	Route::resource('floors', 'FloorController');

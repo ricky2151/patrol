@@ -22,6 +22,10 @@ import BasicCss from '@/js/css/custom/basic.css'
 import 'vuetify/dist/vuetify.min.css'
 //import 'vuetify/dist/vuetify.min.css'
 
+
+import VueGoogleCharts from 'vue-google-charts'
+
+Vue.use(VueGoogleCharts)
 Vue.use(Vuetify);
 Vue.use(Vuefs);
 Vue.use(VueSwal);

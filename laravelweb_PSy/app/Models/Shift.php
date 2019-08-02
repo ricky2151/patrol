@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
+use Carbon\Carbon;
+use DB;
 
 
 class Shift extends Model
@@ -27,6 +29,18 @@ class Shift extends Model
         
 
         return $data;
+    }
+    public static function showGraph()
+    {
+        $data = DB::table('shifts')->select(DB::raw('strftime("%m",date) as month, status_nodes.name as status_nodes, count(*) as count'))
+        ->groupBy('month', 'status_nodes')
+        ->join('status_nodes', 'status_node_id','status_nodes.id')
+        ->get();
+        // $data = Shift::latest()->get()->groupBy(function($d) {
+        //     return Carbon::parse($d->date)->format('m');
+        // });
+        return $data;
+        
     }
 
     // public static function indexThisUser()
