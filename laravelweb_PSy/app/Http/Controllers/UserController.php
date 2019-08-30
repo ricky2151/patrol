@@ -75,6 +75,7 @@ class UserController extends Controller
             $data['master_key'] = $randomString;
             
             
+            
 
             //dd($data);
             

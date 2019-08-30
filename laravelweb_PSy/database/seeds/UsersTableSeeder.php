@@ -80,7 +80,7 @@ class UsersTableSeeder extends Seeder
     			'password' => bcrypt('secret'),
     			'phone' => $faker->PhoneNumber,
     			'email' => $faker->email, 
-    			'master_key' => $randomString
+    			'master_key' => $randomString,
     		]);
  
     	}
