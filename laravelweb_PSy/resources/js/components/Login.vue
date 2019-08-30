@@ -58,10 +58,12 @@
                         this.in_username = '';
                         this.message_error = 'Wrong username/password !';
 
+
                     }
                     else 
                     {
-
+                        localStorage.setItem('token', r.data.access_token)
+                        localStorage.setItem('user', JSON.stringify(r.data.user))
                         this.in_password = '';
                         this.in_username = '';
                         this.message_error = '';

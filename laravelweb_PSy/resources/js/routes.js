@@ -14,6 +14,7 @@ import StatusNode from '@/js/components/StatusNode'
 
 import Home from '@/js/components/Home';
 import About from '@/js/components/About';
+import Logout from '@/js/components/Logout';
 
 Vue.use(VueRouter);
 
@@ -35,6 +36,7 @@ const routes = [
             { path: '/building', component: Building },
             { path: '/time', component: Time },
             { path: '/statusnode', component: StatusNode },
+            { path: '/logout', component: Logout,},
            
         ],
         meta: { requiresAuth: false }
@@ -51,6 +53,25 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
    
+    // check if the route requires authentication and user is not logged in
+    if (to.matched.some(route => route.meta.requiresAuth)) {
+        try {
+            if(!localStorage.getItem('token')) {
+                next({ path: '/login', replace: true})
+                return
+            }
+        } catch (err) {
+            return
+        }
+    }
+
+    // if logged in redirect to dashboard
+    if(to.path === '/login') {
+        if(localStorage.getItem('token')) {
+            next({ path: '/', replace: true})
+            return
+        }
+    }
 
     next()
 })

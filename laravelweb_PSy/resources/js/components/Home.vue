@@ -95,7 +95,7 @@
 
 	            axios.get('/api/admin/shifts/graph', {
 	                params:{
-	                    
+	                    token: localStorage.getItem('token')
 	                }
 	            },this.header_api).then((r) => {
 	                r = r.data;

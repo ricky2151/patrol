@@ -608,6 +608,8 @@ export default {
             
             
             const formData = new FormData();
+            formData.append('token', localStorage.getItem('token'));
+
 
 
 
@@ -783,10 +785,9 @@ export default {
 
         get_popup_detailshifts(id_edit_popup_detailshifts){
             axios.get('api/admin/users/' + id_edit_popup_detailshifts + '/shifts',{
-                params : {
-                    
-                }
-
+                    params:{
+                        token: localStorage.getItem('token')
+                    }
             }).then((r) => {
                 this.popup_detailshifts = r.data.data;
             })

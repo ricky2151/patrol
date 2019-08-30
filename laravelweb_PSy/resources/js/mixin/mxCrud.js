@@ -46,9 +46,9 @@ export default {
         {
             
             axios.get('/api/admin/' + this.name_table +'/' + id_edit + '/edit', {
-                params:{
-                    
-                }
+                    params:{
+                        token: localStorage.getItem('token')
+                    }
             },{
                 headers: {
                     'Accept': 'application/json',
@@ -158,9 +158,9 @@ export default {
         get_data() {
 
             axios.get('/api/admin/' + this.name_table, {
-                params:{
-                    
-                }
+                    params:{
+                        token: localStorage.getItem('token')
+                    }
             },this.header_api).then((r) => {
                 r = r.data;
                 if(r.message == "Your are not admin")
@@ -260,10 +260,9 @@ export default {
         {
         	
         	axios.get('api/admin/' + this.name_table + '/' + this.findDataById(id_edit).id + '/' + path,{
-                params : {
-                    
-                }
-
+                    params:{
+                        token: localStorage.getItem('token')
+                    }
             }).then((r) => {
                 r = r.data;
                 if(r.message == "Your are not admin")
