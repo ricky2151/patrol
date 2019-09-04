@@ -49,6 +49,8 @@ Route::group(['prefix' => 'guard', 'middleware' => 'RoleGuard'], function()
 	//additional route
 	//user
 	Route::get('/users/shifts', 'UserController@shifts');
+	Route::get('/users/getMasterData', 'UserController@getMasterData');
+	Route::patch('/users/submitShift', 'UserController@submitShift');
 
 	//Route::resource('shifts', 'AndroidShiftController');
 });

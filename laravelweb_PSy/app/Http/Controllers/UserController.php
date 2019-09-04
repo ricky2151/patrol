@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreUser;
 use App\Http\Requests\UpdateUser;
+use App\Http\Requests\SubmitShift;
 use App\Models\User;
+use App\Models\Shift;
+use App\Models\StatusNode;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -49,6 +52,25 @@ class UserController extends Controller
     {
 
         return response()->json(['error' => false, 'data'=>Auth::user()->allDataCreate()]);
+    }
+
+    public function getMasterData()
+    {
+        $data = ['status_node' => StatusNode::all(['id','name'])];
+        return response()->json(['error' => false, 'data'=>$data]);
+        
+    }
+
+    public function submitShift(SubmitShift $request)
+    {
+        $data = $request->validated();
+        $id = $data['id'];
+        unset($data['id']);
+        $temp_shift = Shift::find($id);
+        $temp_shift->status_node_id = $data['status_node_id'];
+        $data['message'] ? $temp_shift->message = $data['message'] : '';
+        $temp_shift->save();
+        return response()->json(['error' => false, 'message'=>'submit data success !']);
     }
 
     /**
