@@ -192,9 +192,9 @@ export default {
                 .then((willDelete) => {
                     if (willDelete) {
                         axios.delete('api/admin/' + this.name_table + '/' + this.findDataById(id_data_delete).id,{
-                            data:{
-                                
-                            }
+                            params:{
+                        token: localStorage.getItem('token')
+                    }
                             
                         }).then((r)=>{
                             r = r.data;

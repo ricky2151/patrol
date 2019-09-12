@@ -36,11 +36,11 @@ class UserController extends Controller
         });
         return response()->json(['error' => false, 'data'=>$data]);
     }
-    public function getAllShifts()
+    public function getAllShifts($id)
     {
         
-        $iduser = Auth::user()->id;
-        $data = $data = $this->user->find($iduser)->getAllShifts();
+        
+        $data = $data = $this->user->find($id)->getAllShifts();
         return response()->json(['error' => false, 'data'=>$data]);
     }
     public function shifts()

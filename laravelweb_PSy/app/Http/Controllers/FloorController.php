@@ -106,6 +106,7 @@ class FloorController extends Controller
     {
         DB::beginTransaction();
         try {
+            
             $this->floor->find($id)->rooms->map(function($item){
                 $item->shifts()->delete();
             });

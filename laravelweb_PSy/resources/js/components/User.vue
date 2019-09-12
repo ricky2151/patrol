@@ -41,7 +41,7 @@
                         <td>{{ props.item.date }}</td>
                         <td>{{ props.item.status_node }}</td>
                         <td>{{ props.item.message }}</td>
-                        <td>{{ props.item.token_shift }}</td>
+                        <td>{{ props.item.scan_time }}</td>
                     </template>
                     </v-data-table>
                 </div>
@@ -63,7 +63,7 @@
                         <v-toolbar-title v-html='id_data_edit == -1 ?"Add Guard":"Edit Guard"'></v-toolbar-title>
 
                     </v-toolbar>
-                    {{id_data_edit}}
+                    
                     <v-stepper v-model="e6" vertical non-linear >
 
                         <!-- ==== STEPPER 1 ==== -->
@@ -418,7 +418,7 @@ export default {
                 { text: 'Date', value:'date'},
                 { text: 'Status Node', value:'status_node'},
                 { text: 'Message', value:'message'},
-                { text: 'Token Shift', value:'token_shift'},
+                { text: 'Scan Time', value:'scan_time'},
 
             ],
 
@@ -436,7 +436,7 @@ export default {
                     date:null,
                     status_node:null,
                     message:null,
-                    token_shift:null,
+                    scan_time:null,
                 },
                
             ],
@@ -584,7 +584,7 @@ export default {
         convert_data_input(r)
         {
             var temp_r = r.data.user;
-            console.log(temp_r);
+            console.log(r.data.shifts);
             this.input.name = temp_r.name;
             this.input.age = temp_r.age;
             this.input.role_id = temp_r.role.id;
@@ -784,7 +784,7 @@ export default {
 
 
         get_popup_detailshifts(id_edit_popup_detailshifts){
-            axios.get('api/admin/users/' + id_edit_popup_detailshifts + '/shifts',{
+            axios.get('api/admin/users/' + id_edit_popup_detailshifts + '/getAllShifts',{
                     params:{
                         token: localStorage.getItem('token')
                     }

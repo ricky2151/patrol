@@ -33,7 +33,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 
 	//dashboard
 	Route::get('/shifts/graph', 'ShiftsController@graph');
-	Route::get('/users/getAllShifts', 'UserController@getAllShifts');
+	Route::get('/users/{id}/getAllShifts', 'UserController@getAllShifts');
 
 	//route resource
 	Route::resource('shifts', 'ShiftsController');

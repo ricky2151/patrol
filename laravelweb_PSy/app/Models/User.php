@@ -90,26 +90,41 @@ class User extends Authenticatable implements JWTSubject
 
     public function getShiftWithId()
     {
-        $shifts = $this->shifts->map(function($item)
+        $resultShifts = [];
+        $shifts =  $this->shifts->where('scan_time', null);
+        
+        $shifts = $shifts->map(function($item)
         {
-            return [
-                'id' => $item['id'],
-                'room' => [
-                    'id' => $item['room']['id'],
-                    'name' => $item['room']['name'],
-                ],
-                'time' => $item->time()->select(DB::raw("id, (start || '-' || end) AS name"))->get()[0]
-                ,
-                'status_node' => [
-                    'id' => $item['status_node']['id'],
-                    'name' => $item['status_node']['name'],
-                ],
-                'date' => $item['date'],
-                'message' => $item['message'],
-                'scan_time' => $item['scan_time'],
-            ];
+            
+                return [
+                    'id' => $item['id'],
+                    'room' => [
+                        'id' => $item['room']['id'],
+                        'name' => $item['room']['name'],
+                    ],
+                    'time' => $item->time()->select(DB::raw("id, (start || '-' || end) AS name"))->get()[0]
+                    ,
+                    'status_node' => [
+                        'id' => $item['status_node']['id'],
+                        'name' => $item['status_node']['name'],
+                    ],
+                    'date' => $item['date'],
+                    'message' => $item['message'],
+                    'scan_time' => $item['scan_time'],
+                ];
+
+            
+            
         });
-        return $shifts;
+
+        foreach ($shifts as $key => $value) {
+            $resultShifts[] = $value;
+        }
+        
+        //dd($resultShifts);
+    
+       
+        return $resultShifts;
     }
 
 

@@ -10,7 +10,7 @@
         
 
         <!-- POPUP CREATE EDIT -->
-        <v-dialog v-model="dialog_createedit" width=750>
+        <v-dialog v-model="dialog_createedit" width=750 >
             <v-card>
                 <v-toolbar dark color="menu">
                     <v-btn icon dark v-on:click="closedialog_createedit()">
@@ -19,7 +19,7 @@
                     <v-toolbar-title v-html='id_data_edit == -1 ?"Add Floors":"Edit Floors"'></v-toolbar-title>
 
                 </v-toolbar>
-                <v-form v-model="valid" style='padding:30px' ref='formCreateEdit'>
+                <v-form v-model="valid" style='padding:30px' ref='formCreateEdit' onSubmit="return false;">
                     <v-text-field :rules="this.$list_validation.max_req" v-model='input.name' label="Name" required></v-text-field>
                     <v-btn v-on:click='save_data()' >submit</v-btn>
                 </v-form>
