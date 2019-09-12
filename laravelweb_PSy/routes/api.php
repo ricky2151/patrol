@@ -33,6 +33,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 
 	//dashboard
 	Route::get('/shifts/graph', 'ShiftsController@graph');
+	Route::get('/users/getAllShifts', 'UserController@getAllShifts');
 
 	//route resource
 	Route::resource('shifts', 'ShiftsController');
@@ -42,6 +43,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 	Route::resource('status_nodes', 'StatusNodeController');
 	Route::resource('times', 'TimeController');
 	Route::resource('users', 'UserController');
+
 });
 
 Route::group(['prefix' => 'guard', 'middleware' => 'RoleGuard'], function()

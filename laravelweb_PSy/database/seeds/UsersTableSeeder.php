@@ -66,7 +66,7 @@ class UsersTableSeeder extends Seeder
         //random generate
         $faker = Faker::create('id_ID');
         
-    	for($i = 1; $i <= 25; $i++){    	
+    	for($i = 1; $i <= 15; $i++){    	
             $randomString = '';
             for ($j = 0; $j < 16; $j++) {
                 $randomString .= $characters[rand(0, $charactersLength - 1)];
@@ -75,7 +75,7 @@ class UsersTableSeeder extends Seeder
     		DB::table('users')->insert([
     			'name' => $faker->name,
     			'age' => mt_rand(30,60),
-    			'role_id' => mt_rand(1,3),
+    			'role_id' => 1,
     			'username' => $faker->userName,
     			'password' => bcrypt('secret'),
     			'phone' => $faker->PhoneNumber,

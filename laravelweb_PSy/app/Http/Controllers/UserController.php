@@ -36,6 +36,13 @@ class UserController extends Controller
         });
         return response()->json(['error' => false, 'data'=>$data]);
     }
+    public function getAllShifts()
+    {
+        
+        $iduser = Auth::user()->id;
+        $data = $data = $this->user->find($iduser)->getAllShifts();
+        return response()->json(['error' => false, 'data'=>$data]);
+    }
     public function shifts()
     {
         $iduser = Auth::user()->id;
@@ -68,6 +75,7 @@ class UserController extends Controller
         unset($data['id']);
         $temp_shift = Shift::find($id);
         $temp_shift->status_node_id = $data['status_node_id'];
+        $temp_shift->scan_time = $data['scan_time'];
         $data['message'] ? $temp_shift->message = $data['message'] : '';
         $temp_shift->save();
         return response()->json(['error' => false, 'message'=>'submit data success !']);

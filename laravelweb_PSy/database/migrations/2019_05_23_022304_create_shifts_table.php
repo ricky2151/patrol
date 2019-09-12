@@ -21,7 +21,7 @@ class CreateShiftsTable extends Migration
             $table->date('date')->nullable();
             $table->integer('status_node_id')->nullable();
             $table->string('message')->nullable();
-            $table->string('token_shift')->nullable();
+            $table->time('scan_time')->nullable();
             $table->timestamps();
         });
     }

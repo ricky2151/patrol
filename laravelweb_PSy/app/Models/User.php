@@ -52,6 +52,23 @@ class User extends Authenticatable implements JWTSubject
        
         return $user;
     }
+    public function getAllShifts()
+    {
+        $shifts = $this->shifts->map(function($item)
+        {
+            return [
+                'id' => $item['id'],
+                'room' => $item['room']['name'],
+                'time_start' => $item['time']['start'],
+                'time_end' => $item['time']['end'],
+                'date' => $item['date'],
+                'status_node' => $item['status_node']['name'],
+                'message' => $item['message'],
+                'scan_time' => $item['scan_time'],
+            ];
+        });
+        return $shifts;
+    }
     public function getShiftToday()
     {
         
@@ -65,7 +82,7 @@ class User extends Authenticatable implements JWTSubject
                 'date' => $item['date'],
                 'status_node' => $item['status_node']['name'],
                 'message' => $item['message'],
-                'token_shift' => $item['token_shift'],
+                'scan_time' => $item['scan_time'],
             ];
         });
         return $shifts;
@@ -89,7 +106,7 @@ class User extends Authenticatable implements JWTSubject
                 ],
                 'date' => $item['date'],
                 'message' => $item['message'],
-                'token_shift' => $item['token_shift'],
+                'scan_time' => $item['scan_time'],
             ];
         });
         return $shifts;

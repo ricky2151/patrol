@@ -11,7 +11,7 @@ use DB;
 
 class Shift extends Model
 {
-    protected $fillable = ['user_id', 'room_id', 'time_id', 'date', 'status_node_id', 'message', 'token_shift'];
+    protected $fillable = ['user_id', 'room_id', 'time_id', 'date', 'status_node_id', 'message', 'scan_time'];
 
 
     public static function index(){

@@ -38,7 +38,7 @@ class UpdateUser extends FormRequest
             'shifts.*.date' => 'nullable|string',
             'shifts.*.status_node_id' => 'nullable|string',
             'shifts.*.message' => 'nullable|string',
-            'shifts.*.token_shift' => 'nullable|string',
+            'shifts.*.scan_time' => 'nullable|string',
             'shifts.*.type' => 'nullable|string',
 
         ];

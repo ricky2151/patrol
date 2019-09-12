@@ -27,6 +27,7 @@ class SubmitShift extends FormRequest
             'id' => 'required|integer',
             'status_node_id' => 'required|integer',
             'message' => 'required|string',
+            'scan_time' => 'required|string',
         ];
     }
 }
