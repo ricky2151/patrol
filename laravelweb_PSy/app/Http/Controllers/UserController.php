@@ -12,6 +12,7 @@ use App\Models\StatusNode;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -75,7 +76,7 @@ class UserController extends Controller
         unset($data['id']);
         $temp_shift = Shift::find($id);
         $temp_shift->status_node_id = $data['status_node_id'];
-        $temp_shift->scan_time = $data['scan_time'];
+        $temp_shift->scan_time = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
         $data['message'] ? $temp_shift->message = $data['message'] : '';
         $temp_shift->save();
         return response()->json(['error' => false, 'message'=>'submit data success !']);
