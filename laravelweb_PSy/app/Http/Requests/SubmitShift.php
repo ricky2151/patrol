@@ -26,7 +26,7 @@ class SubmitShift extends FormRequest
         return [
             'id' => 'required|integer',
             'status_node_id' => 'required|integer',
-            'message' => 'required|string',
+            'message' => 'nullable|string',
         ];
     }
 }

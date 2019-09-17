@@ -77,7 +77,7 @@ class UserController extends Controller
         $temp_shift = Shift::find($id);
         $temp_shift->status_node_id = $data['status_node_id'];
         $temp_shift->scan_time = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
-        $data['message'] ? $temp_shift->message = $data['message'] : '';
+        isset($data['message']) ? $temp_shift->message = $data['message'] : $temp_shift->message = '';
         $temp_shift->save();
         return response()->json(['error' => false, 'message'=>'submit data success !']);
     }
