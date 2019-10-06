@@ -1,3 +1,69 @@
+.one_step .info_stepper
+{
+	display: none !important;
+}
+.one_step .v-stepper__content
+{
+	border-left: 1px solid white !important;
+	margin-left: 0px !important;
+	margin-top: 10px !important;
+}
+
+#dashboard-top
+{
+	background-color: #0D47A1;
+	color:white;
+	padding:50px 50px 50px 50px;
+}
+#dashboard-top #list-current-events p
+{
+	margin-bottom: 5px;
+}
+#report-section-box .box-report
+{
+	width: 220px;
+	height: 120px;
+	background-color: white;
+	padding:10px 15px 10px 20px;
+	border-radius: 25px;
+	margin-right: 15px;
+	margin-top: 5px;
+
+}
+.percent-report
+{
+	font-size: 46px;
+	color:#0000a6;
+	font-weight: bold;
+	margin-bottom: 0px;
+	line-height: 1.0;
+
+}
+#one_step .info_stepper
+{
+	display: none !important;
+}
+#one_step .v-stepper__content
+{
+	border-left: 1px solid white !important;
+	margin-left: 0px !important;
+	margin-top: 10px !important;
+}
+
+#toolbar_mr .v-toolbar__content
+{
+	padding:0px !important;
+}
+.bg-login
+{
+	background-image: url('/assets/images/backgroundlogin.jpg');
+	background-size: cover;
+	height: 100%;
+	padding-top: 150px;
+}
+.swal-footer {
+	text-align: center;
+}
 .padding30{
 	padding:30px;
 }
@@ -39,8 +105,61 @@
 }
 
 
+.colorblack .accent--text
+{
+	color: #0060ff !important;
+}
+
+.colorblack label
+{
+	color: black !important;
+}
+
+.colorblack .v-input__slot
+{
+	margin-top:10px !important;
+	margin-bottom: 0px !important;
+}
+
+.clean_datatable
+{
+	margin-left: 10px !important;
+	width: 98% !important;
+	margin-top: 20px !important;
+}
+
+.clean_datatable td, .clean_datatable th
+{
+	border: 1px solid #ddd !important;
+}
 
 
+.clean_datatable th
+{
+	color: white !important;
+	background-color: #0d47a1 !important;
+}
+
+.clean_datatable thead tr:nth-child(1), .clean_datatable tbody tr td
+{
+	height: 40px !important;
+}
+
+
+.rowRed
+{
+	background-color: #ff9494 !important; 
+}
+
+.rowOrange
+{
+	background-color: #ffc278 !important; 
+}
+
+.rowGreen
+{
+	background-color: #7aff78 !important; 
+}
 
 .datatable
 {
@@ -54,10 +173,15 @@
 	border: 1px solid #ddd !important;
 }
 
+.datatable tr:nth-child(even)
+{
+	background-color: #ededff;
+}
+
 .datatable th
 {
 	color: white !important;
-	background-color: #444444 !important;
+	background-color: #0d47a1 !important;
 }
 
 .datatable thead tr:nth-child(1), .datatable tbody tr td
@@ -72,7 +196,7 @@
 	margin-right: 10px !important;
 	margin-left: 10px !important;
 }
-.icontitledatatable
+.icontitledatatable 
 {
 	position: static !important;
 	margin-top: 3px !important;
@@ -91,6 +215,29 @@
 	color: white !important;
 }
 
+.addmr_row
+{
+	height:-moz-fit-content;
+  	height:-webkit-fit-content;
+  	height:fit-content;
+	padding:20px !important;
+
+}
+.addmr_row div
+{
+	height:-moz-fit-content;
+  	height:-webkit-fit-content;
+  	height:fit-content;
+}
+.addmr_row .addmr_column
+{
+
+}
+.btnplusminus
+{
+	min-width: 10px !important;
+
+}
 .btnadddata
 {
 	width: 120px !important;
@@ -101,4 +248,73 @@
 .btnaction
 {
 	height: 30px !important;
+}
+.addmr_goods b
+{
+	color:#484848 !important;
+}
+.addmr_summary .button-action
+{
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+}
+.addmr_summary
+{
+	background-color: #f2eeff !important;
+	padding: 30px !important;
+}
+.mr_div_container
+{
+	background-color: white;
+}
+.datatable_checklist .v-input__control
+{
+	margin: auto !important;
+	vertical-align: middle !important; 
+	height: 20px !important;
+	margin-top: 9px !important;
+}
+.floatright
+{
+	float:right !important;
+}
+
+.marginright25
+{
+	margin-right: 25px !important;
+}
+
+.breadcrumbs
+{
+	padding-left: 30px !important;
+	padding-bottom: 0px !important;
+	margin-top: 10px !important;	
+}
+.breadcrumbs a
+{
+	font-size: 15px !important;
+}
+
+
+
+
+
+
+.breadcrumbs_hidden, .breadcrumbs_hidden + .v-breadcrumbs__divider
+{
+	display: none !important;
+}
+
+.cardStockOpname
+{
+	display: table-cell;
+	padding: 20px;
+
+}
+#containerCardStockOpname
+{
+	width: 680px !important;
+	margin-left: 15px !important;
+	overflow-x: scroll;
 }

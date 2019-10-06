@@ -29,8 +29,13 @@ class ShiftsController extends Controller
     }
     public function graph()
     {
-        $data = $this->shift->showGraph();
-        return response()->json(['error' => false, 'data'=>$data]);
+        $smallReportData = $this->shift->showSmallReport();
+
+        $graphData = $this->shift->showGraph();
+        $result = [];
+        $result['smallReportData'] = $smallReportData;
+        $result['graphData'] = $graphData;
+        return response()->json(['error' => false, 'data'=>$result]);
     }
 
     // public function list()

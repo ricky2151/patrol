@@ -1,9 +1,19 @@
-import mxStringProcessing from '@/js/mixin/mxStringProcessing'
+import mxStringProcessing from './mxStringProcessing'
 
 export default {
-
+    
 	methods:{
-
+        showLoading(state)
+        {
+            if(state)
+            {
+                document.getElementById('myLoading').style.display = 'block';
+            }
+            else
+            {
+                document.getElementById('myLoading').style.display = 'none';
+            }
+        },
 		findDataById(id)
 		{
 			
@@ -104,7 +114,7 @@ export default {
 
             if(this.id_data_edit != -1) //jika sedang diedit
             {
-                
+                this.showLoading(true);
                 axios.post(
                 	'api/admin/' + this.name_table + '/' + this.findDataById(this.id_data_edit).id,
                 	this.prepare_data_form(),
@@ -117,7 +127,7 @@ export default {
                     
                 }).catch(function (error)
                 {
-                    
+                    this.showLoading(false);
                     if(error.response.status == 422)
                     {
                         swal('Request Failed', 'Check your internet connection !', 'error');
@@ -127,6 +137,7 @@ export default {
                         swal('Unkown Error', error.response.data , 'error');
                     }
                 }).then((r) => {
+                    this.showLoading(false);
                     r = r.data;
                     if(r.message == "Your are not admin")
                     {
@@ -137,6 +148,7 @@ export default {
             }
             else //jika sedang tambah data
             {
+                this.showLoading(true);
                 axios.post(
                 	'api/admin/' + this.name_table,
                 	this.prepare_data_form(),
@@ -146,6 +158,7 @@ export default {
                     this.closedialog_createedit();
                     swal("Good job!", "Data saved !", "success");
                 }).then((r) => {
+                    this.showLoading(false);
                     r = r.data;
                     if(r.message == "Your are not admin")
                     {
@@ -190,13 +203,16 @@ export default {
                     dangerMode: true,
                 })
                 .then((willDelete) => {
+                    this.showLoading(true);
                     if (willDelete) {
+
                         axios.delete('api/admin/' + this.name_table + '/' + this.findDataById(id_data_delete).id,{
                             params:{
                         token: localStorage.getItem('token')
                     }
                             
                         }).then((r)=>{
+                            this.showLoading(false);
                             r = r.data;
                             if(r.message == "Your are not admin")
                             {
@@ -209,6 +225,7 @@ export default {
                                 
 
                             }
+
                             
                         });
                     }
@@ -284,5 +301,9 @@ export default {
 	},
 	mixins:[
 		mxStringProcessing,
-	]
+	],
+    mounted() {
+
+        
+    },
 }

@@ -4,33 +4,43 @@
  * application frontend using useful Laravel and JavaScript libraries.
  */
 
-import './bootstrap';
-import Vue from 'vue';
+ window.Vue = require('vue');
+window.axios = require('axios');
+
+
+
 import Vuetify from 'vuetify';
+import Routes from './routes.js';
+
 import Vuefs from 'vue-fullscreen';
 
-//Route information for Vue Router
-import Routes from '@/js/routes.js';
-
-//component file
-//import App from '@/js/views/App';
-
-import PatrolApp from '@/js/views/PatrolApp'
 import VueSwal from 'vue-swal'
-import PluginValidation from '@/js/plugin/PluginValidation'
-import BasicCss from '@/js/css/custom/basic.css'
 import 'vuetify/dist/vuetify.min.css'
+import colors from 'vuetify/es5/util/colors'
+import PluginValidation from './plugin/PluginValidation'
+import PatrolApp from './views/PatrolApp'
+
 //import 'vuetify/dist/vuetify.min.css'
 
 
 import VueGoogleCharts from 'vue-google-charts'
 
+require('./css/custom/basic.css');
+
+Vue.use(PluginValidation);
 Vue.use(VueGoogleCharts)
-Vue.use(Vuetify);
 Vue.use(Vuefs);
 Vue.use(VueSwal);
-Vue.use(PluginValidation);
-Vue.use(BasicCss);
+
+
+
+Vue.use(Vuetify, {
+    iconfont: 'md',
+    // override colors
+    theme: {
+    	menu:colors.blue.darken4,
+    }
+});
 
 const app = new Vue({
 	el: '#app',
@@ -40,4 +50,4 @@ const app = new Vue({
     },
 });
 
-export default app;
+

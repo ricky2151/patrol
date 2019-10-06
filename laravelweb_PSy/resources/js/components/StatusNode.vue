@@ -92,7 +92,7 @@
 
 <script>
 import axios from 'axios'
-import mxCrudBasic from '@/js/mixin/mxCrudBasic';
+import mxCrudBasic from './../mixin/mxCrudBasic';
 
 export default {
     data () {

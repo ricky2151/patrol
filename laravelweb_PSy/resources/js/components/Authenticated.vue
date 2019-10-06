@@ -92,7 +92,7 @@
                             </v-avatar>
                         </v-flex>
                         <v-flex xs9 class='ml15'>
-                            <div class='title black--text'>SatpamXXX</div>
+                            <div class='title black--text'>Patrolee</div>
                             <div class='subheading black--text'>Absence System</div>
                         </v-flex>
                     </v-layout>
@@ -286,6 +286,12 @@ export default {
                     
                     ]
                 },
+                {
+                    icon: "report",
+                    title: "Reports",
+                    action:"/report",
+
+                },
 
                 
                
@@ -343,7 +349,7 @@ export default {
         },
     },
     mounted() {
-        
+        this.user = JSON.parse(localStorage.getItem('user'))
     }
 }
 </script>

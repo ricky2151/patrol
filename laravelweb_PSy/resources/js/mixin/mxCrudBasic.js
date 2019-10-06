@@ -1,4 +1,4 @@
-import mxCrud from '@/js/mixin/mxCrud'
+import mxCrud from './mxCrud'
 export default {
 	methods:{
         

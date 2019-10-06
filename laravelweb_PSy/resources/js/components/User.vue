@@ -64,15 +64,15 @@
 
                     </v-toolbar>
                     
-                    <v-stepper v-model="e6" vertical non-linear >
+                    <v-stepper class='one_step' v-model="e6" vertical non-linear >
 
                         <!-- ==== STEPPER 1 ==== -->
 
-                        <v-stepper-step :complete="e6 > 1" step="1" editable>
+                        <v-stepper-step v-show='editing == 0' :complete="e6 > 1" step="1" editable>
                             <h3>User Data</h3>
                         </v-stepper-step>
 
-                        <v-stepper-content step="1" editable='id_data_edit != -1'>
+                        <v-stepper-content v-show='editing == 0' step="1" editable='id_data_edit != -1'>
                             
                             
                                     <v-text-field class="pa-2" :rules="this.$list_validation.max_req" v-model='input.name'  label="Name" counter=191></v-text-field>
@@ -128,7 +128,7 @@
                             
                             
 
-                            <v-btn color='menu' v-on:click='e6=2'>Continue</v-btn>
+                            
                               
                                 
                             
@@ -138,9 +138,9 @@
 
                         <!-- ==== STEPPER 2 ==== -->
 
-                        <v-stepper-step :complete="e6 > 2" step="2" editable><h3>Shifts Schedule</h3></v-stepper-step>
+                        <v-stepper-step  v-show='editing == 1' :complete="e6 > 2" step="2" editable><h3>Shifts Schedule</h3></v-stepper-step>
 
-                        <v-stepper-content step="2">
+                        <v-stepper-content v-show='editing == 1' step="2">
 
 
                             <v-select v-model='temp_input.shifts.room' :items="ref_input.room" item-text='name' return-object label="Select Room"></v-select>
@@ -332,10 +332,11 @@ export default {
                 'Content-type': 'multipart/form-data'
             },
 
-            action_items: ['Edit', 'Shifts', 'Delete'],
+            action_items: ['Edit Profile','Edit Shift', 'Show Shifts', 'Delete'],
             
             repeat_time : 1,
             
+            editing:0,
 
 
             valid:false,
@@ -466,16 +467,23 @@ export default {
             // console.log(this.action_selected == 'Rack');
             if(idx_action == 0)
             {
+                this.e6 = 1;
+                this.editing = 0;
                 this.get_data_before_edit(id_datatable);
             }
             else if(idx_action == 1)
             {
-                
-                this.opendialog_detailshifts(id_datatable);
+                this.e6 = 2;
+                this.editing = 1;
+                this.get_data_before_edit(id_datatable);
             }
             else if(idx_action == 2)
             {
-
+                this.opendialog_detailshifts(id_datatable);
+                
+            }
+            else if(idx_action == 3)
+            {
                 this.delete_data(id_datatable);
             }
             //this.action_selected[id_datatable] = null;

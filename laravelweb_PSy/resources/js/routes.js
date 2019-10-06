@@ -1,20 +1,21 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Unauthenticated from '@/js/components/Unauthenticated'
-import Authenticated from '@/js/components/Authenticated'
-import Login from '@/js/components/Login'
-import Floor from '@/js/components/Floor'
-import Room from '@/js/components/Room'
-import User from '@/js/components/User'
-import Building from '@/js/components/Building'
-import Time from '@/js/components/Time'
-import StatusNode from '@/js/components/StatusNode'
+import Unauthenticated from './components/Unauthenticated'
+import Authenticated from './components/Authenticated'
+import Login from './components/Login'
+import Floor from './components/Floor'
+import Room from './components/Room'
+import User from './components/User'
+import Building from './components/Building'
+import Time from './components/Time'
+import StatusNode from './components/StatusNode'
+import Report from './components/Report'
 
 
-import Home from '@/js/components/Home';
-import About from '@/js/components/About';
-import Logout from '@/js/components/Logout';
+import Home from './components/Home';
+import About from './components/About';
+import Logout from './components/Logout';
 
 Vue.use(VueRouter);
 
@@ -36,6 +37,7 @@ const routes = [
             { path: '/building', component: Building },
             { path: '/time', component: Time },
             { path: '/statusnode', component: StatusNode },
+            { path: '/report', component: Report },
             { path: '/logout', component: Logout,},
            
         ],
@@ -56,7 +58,7 @@ router.beforeEach(async (to, from, next) => {
     // check if the route requires authentication and user is not logged in
     if (to.matched.some(route => route.meta.requiresAuth)) {
         try {
-            if(!localStorage.getItem('token')) {
+            if(!localStorage.getItem('token') || localStorage.getItem('token') === 'undefined') {
                 next({ path: '/login', replace: true})
                 return
             }
@@ -67,7 +69,7 @@ router.beforeEach(async (to, from, next) => {
 
     // if logged in redirect to dashboard
     if(to.path === '/login') {
-        if(localStorage.getItem('token')) {
+        if(localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined') {
             next({ path: '/', replace: true})
             return
         }

@@ -8,13 +8,14 @@
 
         <!-- Vuetify CSS -->
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css">
+        
         <link href="{{asset('css/app.css')}}"/>
 
        
     </head>
     <body>
        <div id="app">
+        <div id='myLoading'style='display:none;width:100%;height:100%;background-color: rgba(0,0,0,0.5);position: fixed;z-index: 9999999'></div>
            <patrol-app></patrol-app>
        </div>
        <script src="{{asset('js/app.js')}}"></script>
