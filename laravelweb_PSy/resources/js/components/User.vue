@@ -31,6 +31,7 @@
                     :headers="headers_popup_detailshifts"
                     :items="popup_detailshifts"
                     :search="popup_search_detailshifts"
+                    :rows-per-page-items='[{"text" : "10", "value" : 10}]'
                     class=""
                     >
                     <template v-slot:items="props">

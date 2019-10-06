@@ -245,15 +245,6 @@ export default {
                         subtitle:"Building",
                         subaction: "/building"
                     },
-
-                    
-                    
-                    ]
-                },
-                {
-                    icon: "local_convenience_store",
-                    title: "Shifts",
-                    subroutes:[
                     {
                         subicon:"access_time",
                         subtitle:"times",
@@ -264,6 +255,16 @@ export default {
                         subtitle:"Status Nodes",
                         subaction: "/statusnode"
                     },
+
+                    
+                    
+                    ]
+                },
+                {
+                    icon: "local_convenience_store",
+                    title: "Shifts",
+                    subroutes:[
+                    
                     
 
                    
