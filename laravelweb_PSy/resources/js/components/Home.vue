@@ -3,7 +3,7 @@
 		<div id='dashboard-top'>
 			<v-layout row align-center>
 				<v-flex>
-					<img width=120 height=250 src='/assets/images/icon satpam.png'></img>
+					<img width=120 height=250 src='/assets/images/iconsatpam.png'></img>
 				</v-flex>
 				<v-flex>
 					<h1> Welcome To Patrolee !</h1>
