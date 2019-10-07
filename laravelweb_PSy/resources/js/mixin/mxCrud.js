@@ -168,9 +168,18 @@ export default {
             }
         },
 
-        get_data() {
+        get_data(str) {
+            var url = '';
+            if(str)
+            {
+                url = str;
 
-            axios.get('/api/admin/' + this.name_table, {
+            }
+            else
+            {
+                url = '/api/admin/' + this.name_table;
+            }
+            axios.get(url, {
                     params:{
                         token: localStorage.getItem('token')
                     }

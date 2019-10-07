@@ -1,3 +1,7 @@
+.hide_number_stepper .v-stepper__step__step.primary
+{
+	display: none;
+}
 .one_step .info_stepper
 {
 	display: none !important;
@@ -15,13 +19,17 @@
 	color:white;
 	padding:50px 50px 50px 50px;
 }
+#list-current-events
+{
+	padding-right: 30px;
+}
 #dashboard-top #list-current-events p
 {
 	margin-bottom: 5px;
 }
 #report-section-box .box-report
 {
-	width: 220px;
+	width: 200px;
 	height: 120px;
 	background-color: white;
 	padding:10px 15px 10px 20px;

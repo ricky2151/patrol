@@ -3,7 +3,7 @@
 		<div id='dashboard-top'>
 			<v-layout row align-center>
 				<v-flex>
-					<img width=120 height=250 src='/assets/images/iconsatpam.png'></img>
+					<img width=80 height=160 src='/assets/images/iconsatpam.png'></img>
 				</v-flex>
 				<v-flex>
 					<h1> Welcome To Patrolee !</h1>
@@ -29,7 +29,7 @@
 										<p class='percent-report'>{{secure[0]}}%</p>
 									</v-flex>
 									<v-flex xs6>
-										<center>
+										<center style='padding-top:10px'>
 											<img width=60 height=60 src='/assets/images/secureicon.png'></img>
 										</center>
 									</v-flex>
@@ -52,7 +52,7 @@
 										<p class='percent-report'>{{presence[0]}}%</p>
 									</v-flex>
 									<v-flex xs6>
-										<center>
+										<center style='padding-top:10px'>
 											<img width=60 height=60 src='/assets/images/presenceicon.png'></img>
 										</center>
 									</v-flex>
@@ -77,13 +77,15 @@
 		
 		<center><p style='margin-top:40px;font-size: 40px;font-weight: bold'>Overview</p></center>
 		<br>
+		<div style='overflow-x: auto;overflow-y: hidden;'>
 		<GChart
 		v-if='chartData[1]'
 	    type="BarChart"
 	    :data="chartData"
 	    :options="chartOptions"
-	    style='height:1000px'
+	    style='height:1000px;'
 	  />
+	</div>
 
 	</div>
 </template>
@@ -106,23 +108,26 @@
 				secure : ['50', '40', 0, 'February'],
 				presence : ['98', '5', 1, 'February'],
 				chartData: [
-		        	['Month', 'Mencurigakan', 'Tidak Aman', 'Aman'],
+		        	['Month', 'Aman', 'Mencurigakan', 'Tidak Aman'],
 		       
 		      	],
 		      	chartOptions: {
-		      		width:'2000',
-		      		chartArea:{left:100,top:50,width:"800",height:'100%'},
+		      		width:'1200',
+		      		chartArea:{left:100,top:50,width:"800"},
 		        	chart: {
-		          		title: 'Company Performance',
-		          		subtitle: 'Sales, Expenses, and Profit: 2014-2017',
-		          		height:1000,
-		          		width:1000,
-		        	}
+		          		height:1500,
+		          		width:600,
+		          		
+		        	},
+		        	colors: ['#40ff4d', '#ffa040', '#ff3333'],
+		        	hAxis: {format: '0'}
+    
 		      	}
 			}
 		},
 		methods : 
 		{
+			pad(n){return n<10 ? '0'+n : n},
 			convert_month(str)
 			{
 				if(str == '01')
@@ -233,21 +238,52 @@
 
 	                	//isi graph
 	                	var r_graph = r.data.graphData;
+	                	//isi semua bulan, karena ada kemungkinan dari backend ada bulan yang tidak dikembalikan jika tidak ada datanya
+	                	//r_graph : [{month : 1}, {month : 1}, {month : 2}, {month : 3}, {month : 3}, {month : 5}, {month : 7}, {month : 8}, {month : 8}]
+	                	//i : 1 - 12
+
+	                	var idxcek = 0;
+	                	for(var i = 1;i<13;i++)
+	                	{
+	                		var count = 0;
+	                		for(var j = 0;j<r_graph.length;j++)
+	                		{
+	                			if(parseInt(r_graph[j].month) == i)
+	                			{
+	                				count += 1;
+	                			}
+	                		}
+	                		if(count == 0)
+	                		{
+	                			for(var j = 0;j<r_graph.length;j++)
+	                			{
+	                				if(parseInt(r_graph[j].month) > i)
+	                				{
+	                					r_graph.splice(j,0,{month:i});		
+	                					break;
+	                				}
+	                			}
+	                			
+	                		}
+	                	}
+	                	
+	                	console.log('cek r_graph');
+	                	console.log(r_graph);
 	                	var temp_push = [];
 		                temp_push.push(this.convert_month(r_graph[0].month));
 		                for(var i = 0;i<r_graph.length;i++)
 		                {
 		                	if(r_graph[i].status_nodes == 'Mencurigakan')
 		                	{
-		                		temp_push[1] = parseInt(r_graph[i].count);
+		                		temp_push[2] = parseInt(r_graph[i].count);
 		                	}
 		                	else if(r_graph[i].status_nodes == 'Tidak Aman')
 		                	{
-		                		temp_push[2] = parseInt(r_graph[i].count);
+		                		temp_push[3] = parseInt(r_graph[i].count);
 		                	}
 		                	else if(r_graph[i].status_nodes == 'Aman')
 		                	{
-		                		temp_push[3] = parseInt(r_graph[i].count);
+		                		temp_push[1] = parseInt(r_graph[i].count);
 		                	}
 		                	for(var j = 1;j<=3;j++)
 		                	{
@@ -259,6 +295,10 @@
 		                		this.chartData.push(temp_push);
 		                		temp_push = [];
 		                		temp_push.push(this.convert_month(r_graph[i + 1].month));
+		                	}
+		                	else if(i == r_graph.length - 1)
+		                	{
+		                		this.chartData.push(temp_push);
 		                	}
 		                }
 		                console.log(this.chartData);

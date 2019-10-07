@@ -7,28 +7,7 @@
                 ></v-toolbar-side-icon>
                 <v-spacer></v-spacer>
 
-                <!-- notification button -->
-                <v-menu open-on-click  offset-y offset-x>
-
-                        <v-icon class="text-none ma-0" slot="activator" depressed flat>notifications</v-icon>
-
-
-                    <v-list>
-                        <v-list-tile
-
-                            v-for="(item, index) in notifications"
-                            :key="index"
-                            :to="item.action"
-                            >
-                            <v-list-tile-action>
-                                <v-icon>{{ item.icon }}</v-icon>
-                            </v-list-tile-action>
-                            <v-list-tile-content>
-                                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                            </v-list-tile-content>
-                        </v-list-tile>
-                    </v-list>
-                </v-menu>
+                
 
                 <!-- fullscreen button -->
                 <v-tooltip bottom>
@@ -247,7 +226,7 @@ export default {
                     },
                     {
                         subicon:"access_time",
-                        subtitle:"times",
+                        subtitle:"Times",
                         subaction: "/time"
                     },
                     {
@@ -262,14 +241,9 @@ export default {
                 },
                 {
                     icon: "local_convenience_store",
-                    title: "Shifts",
-                    subroutes:[
-                    
-                    
+                    title: "Shifts Today",
+                    action:"/shifttoday",
 
-                   
-                    
-                    ]
                 },
                 {
                     icon: "supervised_user_circle",
@@ -319,26 +293,7 @@ export default {
                     action: "/logout"
                 }
             ],
-            notifications: [
-                {
-                    icon: "feedback",
-                    title: "Barang sudah habis !",
-                    action: "/goods",
-                    bgcolor : "red",
-                },
-                {
-                    icon: "feedback",
-                    title: "Barang sudah habis !",
-                    action: "/goods",
-                    bgcolor : "red",
-                },
-                {
-                    icon: "feedback",
-                    title: "Barang sudah habis !",
-                    action: "/goods",
-                    bgcolor : "red",
-                }
-            ]
+            
         }
     },
     methods: {

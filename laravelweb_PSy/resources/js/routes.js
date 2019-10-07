@@ -11,6 +11,7 @@ import Building from './components/Building'
 import Time from './components/Time'
 import StatusNode from './components/StatusNode'
 import Report from './components/Report'
+import ShiftToday from './components/ShiftToday'
 
 
 import Home from './components/Home';
@@ -38,6 +39,7 @@ const routes = [
             { path: '/time', component: Time },
             { path: '/statusnode', component: StatusNode },
             { path: '/report', component: Report },
+            { path: '/ShiftToday', component: ShiftToday },
             { path: '/logout', component: Logout,},
            
         ],

@@ -27,6 +27,14 @@ class ShiftsController extends Controller
         
         return response()->json(['error' => false, 'data'=>$data]);
     }
+    public function getShiftToday()
+    {
+        $data = $this->shift->indexToday();
+
+        
+        return response()->json(['error' => false, 'data'=>$data]);   
+    }
+
     public function graph()
     {
         $smallReportData = $this->shift->showSmallReport();

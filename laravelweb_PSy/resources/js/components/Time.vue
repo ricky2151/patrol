@@ -55,7 +55,7 @@
             :items="data_table"
             :search="search_data"
             class="datatable"
-            :rows-per-page-items='[{"text" : "10", "value" : 10}]'
+            :rowsPerPageItems="[10, 20, 30, 40, 50]"
         >
         <template v-slot:items="props">
             <td>{{ props.item.no }}</td>

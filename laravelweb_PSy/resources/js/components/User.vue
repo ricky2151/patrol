@@ -31,7 +31,7 @@
                     :headers="headers_popup_detailshifts"
                     :items="popup_detailshifts"
                     :search="popup_search_detailshifts"
-                    :rows-per-page-items='[{"text" : "10", "value" : 10}]'
+                    :rowsPerPageItems="[10, 20, 30, 40, 50]"
                     class=""
                     >
                     <template v-slot:items="props">
@@ -139,7 +139,7 @@
 
                         <!-- ==== STEPPER 2 ==== -->
 
-                        <v-stepper-step  v-show='editing == 1' :complete="e6 > 2" step="2" editable><h3>Shifts Schedule</h3></v-stepper-step>
+                        <v-stepper-step  v-bind:class="{'hide_number_stepper' : editing}" v-show='editing == 1' :complete="e6 > 2" step="2" editable><h3>Shifts Schedule</h3></v-stepper-step>
 
                         <v-stepper-content v-show='editing == 1' step="2">
 
@@ -274,6 +274,8 @@
             :items="data_table"
             :search="search_data"
             class="datatable"
+            :rowsPerPageItems="[10, 20, 30, 40, 50]"
+                    
         >
         <template v-slot:items="props">
             <td>{{ props.item.no }}</td>
@@ -283,7 +285,6 @@
             <td class="text-xs-right">{{ props.item.username }}</td>
             <td class="text-xs-right">{{ props.item.phone }}</td>
             <td class="text-xs-right">{{ props.item.email }}</td>
-            <td class="text-xs-right">{{ props.item.master_key }}</td>
             <td>
                 <div class="text-xs-left">
                     <v-menu offset-y>
@@ -362,7 +363,7 @@ export default {
                 username:'',
                 password:'',
                 phone:'',
-                master_key:'',
+                
                 email:'',
                 
                 shifts:[],
@@ -408,7 +409,6 @@ export default {
                 { text: 'Username', value: 'username', align:'right' },
                 { text: 'Phone', value: 'phone', align:'right' },
                 { text: 'Email', value: 'email', align:'right' },
-                { text: 'Master Key', value: 'master_key', align:'right' },
                 { text: 'Action', align:'left',sortable:false, width:'15%'},
             ],
 
@@ -601,7 +601,7 @@ export default {
             this.input.password = temp_r.password;
             this.input.phone = temp_r.phone;
             this.input.email = temp_r.email;
-            this.input.master_key = temp_r.master_key;
+            
             //console.log('sampe conver data input');
             this.input.shifts = r.data.shifts;
             //console.log(this.input.shifts);
@@ -759,7 +759,7 @@ export default {
                 formData.append('username', this.input.username);
                 formData.append('password', this.input.password);
                 formData.append('phone', this.input.phone);
-                formData.append('master_key', this.input.master_key);
+                
                 formData.append('email', this.input.email);
                
 

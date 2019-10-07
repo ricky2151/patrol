@@ -1,6 +1,6 @@
 <div>
     <v-container fluid>
-        <h3>Reports</h3>
+        <h3>Shift Today</h3>
     </v-container>
 </div>
 
@@ -15,7 +15,7 @@
             <v-flex xs6>
                 <div class='marginleft30 margintop10'>
                     <v-icon class='icontitledatatable'>list</v-icon>
-                    <h2 class='titledatatable'>Reports Data</h2>
+                    <h2 class='titledatatable'>Shift Today</h2>
                    
                 </div>
                 
@@ -35,7 +35,9 @@
             disable-initial-sort
             :rowsPerPageItems="[10, 20, 30, 40, 50]"
             
-            
+            :sort-by="['room_name', 'user_name']"
+            :sort-asc="[true, true]"
+            multi-sort
             :headers="headers"
             :items="data_table"
             :search="search_data"
@@ -54,12 +56,6 @@
             rowRed: props.item.status_node_id == 3,
             rowOrange : props.item.status_node_id == 2,
             rowGreen : props.item.status_node_id == 1,
-            }'>{{ props.item.user_name }}</td>
-                <td v-bind:class='
-            {
-            rowRed: props.item.status_node_id == 3,
-            rowOrange : props.item.status_node_id == 2,
-            rowGreen : props.item.status_node_id == 1,
             }'>{{ props.item.room_name }}</td>
                 <td v-bind:class='
             {
@@ -72,7 +68,8 @@
             rowRed: props.item.status_node_id == 3,
             rowOrange : props.item.status_node_id == 2,
             rowGreen : props.item.status_node_id == 1,
-            }'>{{ props.item.date }}</td>
+            }'>{{ props.item.user_name }}</td>
+                
                 <td v-bind:class='
             {
             rowRed: props.item.status_node_id == 3,
@@ -115,13 +112,12 @@ export default {
 
             headers: [
                 { text: 'No', value: 'no'},
-                { text: 'User', value: 'user_name'},
-                { text: 'Room', value: 'room_name'},
-                { text: 'Time', value: 'time_start_end'},
-                { text: 'Date', value: 'date'},
-                { text: 'Status', value: 'status_node_name'},
-                { text: 'Message', value: 'message', width:'30%'},
-                { text: 'Scan Time', value: 'scan_time'},
+                { text: 'Room', value: 'room_name', sort:0},
+                { text: 'Time', value: 'time_start_end',sort:2},
+                { text: 'User', value: 'user_name',sort:3},
+                { text: 'Status', value: 'status_node_name',sort:4},
+                { text: 'Message', value: 'message', width:'30%',sort:5},
+                { text: 'Scan Time', value: 'scan_time',sort:6},
                
 
             ],
@@ -150,7 +146,7 @@ export default {
 
     },
     mounted(){
-        this.get_data();
+        this.get_data('api/admin/shifts/shifttoday');
 
     },
     mixins:[

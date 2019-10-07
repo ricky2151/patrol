@@ -20,12 +20,50 @@ class Shift extends Model
         $data = Shift::latest()->get();
 
         $data = $data->map(function ($data) { 
+            $data['date'] = Carbon::parse($data['date'])->format('d-m-Y');
             $data = Arr::add($data, 'room_name', $data['room']['name']);
             $data = Arr::add($data, 'status_node_name', $data['status_node']['name']);
             $data = Arr::add($data, 'user_name', $data['user']['name']);
             $data = Arr::add($data, 'time_start_end', $data['time']['start'] . ' - ' . $data['time']['end']);
             return Arr::except($data, ['room', 'status_node', 'time']);
         });
+        
+
+        return $data;
+    }
+    public static function indexToday(){
+        
+        $thisDay = date('Y-m-d');
+        //ruangan, start time, end time, nama satpam, status, message
+        $data = DB::table('shifts')->where('date', $thisDay)
+        ->join('rooms', 'rooms.id','room_id')
+        ->join('users', 'users.id','user_id')
+        ->join('times', 'times.id','time_id')
+        ->join('status_nodes', 'status_nodes.id','status_node_id')
+        ->select(
+            [
+                'rooms.name as room_name',
+                'users.name as user_name',
+                DB::raw('times.start || " - " || times.end as time_start_end'),
+                'status_nodes.name as status_node_name',
+                'status_nodes.id as status_node_id',
+                'message',
+                'scan_time',
+            ]
+        )->orderBy('rooms.name','ASC')
+        ->orderBy('time_start_end', 'ASC')
+        ->orderBy('user_name', 'ASC')
+        ->orderBy('status_node_name', 'ASC')
+        ->orderBy('message', 'ASC')
+        ->get();
+
+        // $data = $data->map(function ($data) { 
+        //     $data = Arr::add($data, 'room_name', $data['room']['name']);
+        //     $data = Arr::add($data, 'status_node_name', $data['status_node']['name']);
+        //     $data = Arr::add($data, 'user_name', $data['user']['name']);
+        //     $data = Arr::add($data, 'time_start_end', $data['time']['start'] . ' - ' . $data['time']['end']);
+        //     return Arr::except($data, ['room', 'status_node', 'time']);
+        // });
         
 
         return $data;
@@ -48,6 +86,7 @@ class Shift extends Model
         $thisYear = date('Y');
         $thisDay = date('Y-m-d');
         $beforeThisMonth = date("m", strtotime("-1 months"));
+
 
         //get secure
         $totalSecureThisMonth = Shift::whereMonth('date', $thisMonth)->whereYear('date', $thisYear)->where('status_node_id','1')->count();
