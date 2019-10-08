@@ -31,7 +31,7 @@
             <v-flex xs6>
                 <div class='marginleft30 margintop10'>
                     <v-icon class='icontitledatatable'>access_time</v-icon>
-                    <h2 class='titledatatable'>Time Data</h2>
+                    <h2 class='titledatatable'>Time</h2>
                     <v-btn v-on:click='opendialog_createedit(-1)' color="menu" dark class='btnadddata'>
                     Add Data
                 </v-btn>

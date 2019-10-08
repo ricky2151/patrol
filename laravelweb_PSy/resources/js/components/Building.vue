@@ -30,7 +30,7 @@
             <v-flex xs6>
                 <div class='marginleft30 margintop10'>
                     <v-icon class='icontitledatatable'>domain</v-icon>
-                    <h2 class='titledatatable'>Buildings Data</h2>
+                    <h2 class='titledatatable'>Buildings</h2>
                     <v-btn v-on:click='opendialog_createedit(-1)' color="menu" dark class='btnadddata'>
                     Add Data
                 </v-btn>
