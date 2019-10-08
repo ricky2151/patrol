@@ -15,7 +15,7 @@
             <v-flex xs6>
                 <div class='marginleft30 margintop10'>
                     <v-icon class='icontitledatatable'>list</v-icon>
-                    <h2 class='titledatatable'>Reports Data</h2>
+                    <h2 class='titledatatable'>Reports</h2>
                    
                 </div>
                 
@@ -49,30 +49,38 @@
             rowOrange : props.item.status_node_id == 2,
             rowGreen : props.item.status_node_id == 1,
             }'>{{ props.item.no }}</td>
-                <td v-bind:class='
+                
+                
+            <td v-bind:class='
             {
             rowRed: props.item.status_node_id == 3,
             rowOrange : props.item.status_node_id == 2,
             rowGreen : props.item.status_node_id == 1,
-            }'>{{ props.item.user_name }}</td>
-                <td v-bind:class='
-            {
-            rowRed: props.item.status_node_id == 3,
-            rowOrange : props.item.status_node_id == 2,
-            rowGreen : props.item.status_node_id == 1,
-            }'>{{ props.item.room_name }}</td>
+            }'>{{ props.item.date }}</td>
+
                 <td v-bind:class='
             {
             rowRed: props.item.status_node_id == 3,
             rowOrange : props.item.status_node_id == 2,
             rowGreen : props.item.status_node_id == 1,
             }'>{{ props.item.time_start_end }}</td>
-                <td v-bind:class='
+                
+
+            <td v-bind:class='
             {
             rowRed: props.item.status_node_id == 3,
             rowOrange : props.item.status_node_id == 2,
             rowGreen : props.item.status_node_id == 1,
-            }'>{{ props.item.date }}</td>
+            }'>{{ props.item.room_name }}</td>
+
+            <td v-bind:class='
+            {
+            rowRed: props.item.status_node_id == 3,
+            rowOrange : props.item.status_node_id == 2,
+            rowGreen : props.item.status_node_id == 1,
+            }'>{{ props.item.user_name }}</td>
+
+
                 <td v-bind:class='
             {
             rowRed: props.item.status_node_id == 3,
@@ -115,10 +123,10 @@ export default {
 
             headers: [
                 { text: 'No', value: 'no'},
-                { text: 'User', value: 'user_name'},
-                { text: 'Room', value: 'room_name'},
-                { text: 'Time', value: 'time_start_end'},
                 { text: 'Date', value: 'date'},
+                { text: 'Time', value: 'time_start_end'},
+                { text: 'Room', value: 'room_name'},
+                { text: 'User', value: 'user_name'},
                 { text: 'Status', value: 'status_node_name'},
                 { text: 'Message', value: 'message', width:'30%'},
                 { text: 'Scan Time', value: 'scan_time'},
