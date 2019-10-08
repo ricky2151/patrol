@@ -1,3 +1,4 @@
+
 <template>
     <fullscreen ref="fullscreen" @change="fullscreenChange">
         <v-app>
@@ -209,34 +210,36 @@ export default {
                     icon: "store",
                     title: "Master Data",
                     subroutes:[
-                    {
-                        subicon:"list",
-                        subtitle:"Floor",
-                        subaction: "/floor"
-                    },
-                    {
-                        subicon:"meeting_room",
-                        subtitle:"Rooms",
-                        subaction: "/room"
-                    },
-                    {
-                        subicon:"domain",
-                        subtitle:"Building",
-                        subaction: "/building"
-                    },
-                    {
-                        subicon:"access_time",
-                        subtitle:"Times",
-                        subaction: "/time"
-                    },
-                    {
-                        subicon:"radio_button_checked",
-                        subtitle:"Status Nodes",
-                        subaction: "/statusnode"
-                    },
-
-                    
-                    
+                        {
+                            subicon:"domain",
+                            subtitle:"Building",
+                            subaction: "/building"
+                        },
+                        {
+                            subicon:"list",
+                            subtitle:"Floor",
+                            subaction: "/floor"
+                        },
+                        {
+                            subicon:"meeting_room",
+                            subtitle:"Rooms",
+                            subaction: "/room"
+                        },
+                        {
+                            subicon:"access_time",
+                            subtitle:"Times",
+                            subaction: "/time"
+                        },
+                        {
+                            subicon:"radio_button_checked",
+                            subtitle:"Status Nodes",
+                            subaction: "/statusnode"
+                        },
+                        {
+                            subicon:"person",
+                            subtitle:"Guard",
+                            subaction: "/user"
+                        },
                     ]
                 },
                 {
@@ -246,47 +249,13 @@ export default {
 
                 },
                 {
-                    icon: "supervised_user_circle",
-                    title: "Guard",
-                    subroutes:[
-                    {
-                        subicon:"person",
-                        subtitle:"Guard",
-                        subaction: "/user"
-                    },
-                    
-                    
-
-                   
-                    
-                    ]
-                },
-                {
                     icon: "report",
                     title: "Reports",
                     action:"/report",
 
                 },
-
-                
-               
             ],
             toolbarMenu: [
-                {
-                    icon: "account_circle",
-                    title: "Account",
-                    action: "/account"
-                },
-                {
-                    icon: "contact_support",
-                    title: "Support",
-                    action: "/support"
-                },
-                {
-                    icon: "feedback",
-                    title: "Feedback",
-                    action: "/feedback"
-                },
                 {
                     icon: "exit_to_app",
                     title: "Logout",
@@ -306,6 +275,7 @@ export default {
     },
     mounted() {
         this.user = JSON.parse(localStorage.getItem('user'))
+       
     }
 }
 </script>
