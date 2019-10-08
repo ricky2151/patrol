@@ -1,3 +1,11 @@
+.v-stepper__step.v-stepper__step--active.v-stepper__step--editable.hide_number_stepper
+{
+	padding-bottom: 0px !important;
+}
+.v-stepper__step.v-stepper__step--active.v-stepper__step--editable.hide_number_stepper .v-stepper__content
+{
+	padding-top: 0px !important;
+}
 .hide_number_stepper .v-stepper__step__step.primary
 {
 	display: none;

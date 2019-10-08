@@ -8,7 +8,7 @@
     <div>
         
         <!-- POPUP DETAIL SHIFT -->
-        <v-dialog v-model="dialog_detailshifts" width=750>
+        <v-dialog v-model="dialog_detailshifts">
             <v-card>
                 <v-toolbar dark color="menu">
                     <v-btn icon dark v-on:click="closedialog_detailshifts()">
@@ -31,16 +31,15 @@
                     :headers="headers_popup_detailshifts"
                     :items="popup_detailshifts"
                     :search="popup_search_detailshifts"
-                    :rowsPerPageItems="[10, 20, 30, 40, 50]"
+                    :rowsPerPageItems="[50]"
                     class=""
                     >
                     <template v-slot:items="props">
                         <td>{{ props.index + 1 }}</td>
-                        <td>{{ props.item.room }}</td>
-                        <td>{{ props.item.time_start }}</td>
-                        <td>{{ props.item.time_end }}</td>
                         <td>{{ props.item.date }}</td>
-                        <td>{{ props.item.status_node }}</td>
+                        <td>{{ props.item.time_start_end }}</td>
+                        <td>{{ props.item.room_name }}</td>
+                        <td>{{ props.item.status_node_name }}</td>
                         <td>{{ props.item.message }}</td>
                         <td>{{ props.item.scan_time }}</td>
                     </template>
@@ -69,11 +68,11 @@
 
                         <!-- ==== STEPPER 1 ==== -->
 
-                        <v-stepper-step v-show='editing == 0' :complete="e6 > 1" step="1" editable>
+                        <v-stepper-step v-bind:class="{'hide_number_stepper' : !editing_shift && adding_shift}" v-show='adding_shift == 1' :complete="e6 > 1" step="1" editable>
                             <h3>User Data</h3>
                         </v-stepper-step>
 
-                        <v-stepper-content v-show='editing == 0' step="1" editable='id_data_edit != -1'>
+                        <v-stepper-content v-show='adding_shift == 1' step="1" editable='id_data_edit != -1'>
                             
                             
                                     <v-text-field class="pa-2" :rules="this.$list_validation.max_req" v-model='input.name'  label="Name" counter=191></v-text-field>
@@ -84,8 +83,8 @@
                                 
 
 
-                            
-                                    <v-select class='pa-2' :rules="this.$list_validation.selecttf_req" v-model='input.role_id' :items="ref_input.role" item-text='name' item-value='id' label="Select Role"></v-select>
+                                
+                                    <v-select class='pa-2' :rules="this.$list_validation.selectdata_req" v-model='input.role_id' :items="ref_input.role" item-text='name' item-value='id' label="Select Role"></v-select>
                                 
 
                             
@@ -106,7 +105,6 @@
                                     <v-text-field 
                                     v-if='id_data_edit != -1' 
                                     class="pa-2" 
-                                    :rules="this.$list_validation.max_req" 
                                     v-model='input.password'  
                                     label="New Password" 
                                     type="password"
@@ -139,9 +137,9 @@
 
                         <!-- ==== STEPPER 2 ==== -->
 
-                        <v-stepper-step  v-bind:class="{'hide_number_stepper' : editing}" v-show='editing == 1' :complete="e6 > 2" step="2" editable><h3>Shifts Schedule</h3></v-stepper-step>
+                        <v-stepper-step  v-bind:class="{'hide_number_stepper' : editing_shift && !adding_shift}" v-show='editing_shift == 1' :complete="e6 > 2" step="2" editable><h3>Shifts Schedule</h3></v-stepper-step>
 
-                        <v-stepper-content v-show='editing == 1' step="2">
+                        <v-stepper-content v-show='editing_shift == 1' step="2">
 
 
                             <v-select v-model='temp_input.shifts.room' :items="ref_input.room" item-text='name' return-object label="Select Room"></v-select>
@@ -191,7 +189,7 @@
 
 
                             <v-toolbar flat color="white" >
-                                <v-toolbar-title>Shifts Data</v-toolbar-title>
+                                <v-toolbar-title>Shifts</v-toolbar-title>
                                 
                             </v-toolbar>
                             
@@ -207,6 +205,7 @@
                                 ]"
                                 :items="input.shifts"
                                 class=""
+                                :rowsPerPageItems="[50]"
                             >
 
                                 <template v-slot:items="props">
@@ -249,8 +248,8 @@
             <v-flex xs6>
                 <div class='marginleft30 margintop10'>
                     <v-icon class='icontitledatatable'>widgets</v-icon>
-                    <h2 class='titledatatable'>Users Data</h2>
-                    <v-btn v-on:click='opendialog_createedit(-1)' color="menu" dark class='btnadddata'>
+                    <h2 class='titledatatable'>Users</h2>
+                    <v-btn v-on:click='before_open_dialog(-1)' color="menu" dark class='btnadddata'>
                     Add Data
                 </v-btn>
                 </div>
@@ -270,7 +269,7 @@
         
         <v-data-table
             disable-initial-sort
-            :headers="headers"
+            :headers="user.role_id == 3 ? headers : headers_without_role "
             :items="data_table"
             :search="search_data"
             class="datatable"
@@ -281,7 +280,7 @@
             <td>{{ props.item.no }}</td>
             <td>{{ props.item.name }}</td>
             <td class="text-xs-right">{{ props.item.age }}</td>
-            <td class="text-xs-right">{{ props.item.role_name }}</td>
+            <td v-if='user.role_id == 3' class="text-xs-right">{{ props.item.role_name }}</td>
             <td class="text-xs-right">{{ props.item.username }}</td>
             <td class="text-xs-right">{{ props.item.phone }}</td>
             <td class="text-xs-right">{{ props.item.email }}</td>
@@ -338,7 +337,8 @@ export default {
             
             repeat_time : 1,
             
-            editing:0,
+            editing_shift:0,
+            adding_shift:0,
 
 
             valid:false,
@@ -411,14 +411,22 @@ export default {
                 { text: 'Email', value: 'email', align:'right' },
                 { text: 'Action', align:'left',sortable:false, width:'15%'},
             ],
+            headers_without_role: [
+                { text: 'No', value: 'no'},
+                { text: 'Name', value: 'name'},
+                { text: 'Age', value: 'age', align:'right' },
+                { text: 'Username', value: 'username', align:'right' },
+                { text: 'Phone', value: 'phone', align:'right' },
+                { text: 'Email', value: 'email', align:'right' },
+                { text: 'Action', align:'left',sortable:false, width:'15%'},
+            ],
 
             headers_popup_detailshifts : [
                 { text: 'No', value:'no'},
-                { text: 'user', value:'user'},
-                { text: 'Room', value:'room'},
-                { text: 'Time', value:'time'},
-                { text: 'Date', value:'date'},
-                { text: 'Status Node', value:'status_node'},
+                { text: 'Time', value:'date'},
+                { text: 'Date', value:'time_start_end'},
+                { text: 'Room', value:'room_name'},
+                { text: 'Status Node', value:'status_node_name'},
                 { text: 'Message', value:'message'},
                 { text: 'Scan Time', value:'scan_time'},
 
@@ -448,6 +456,13 @@ export default {
         }
     },
     methods: {
+        before_open_dialog(id)
+        {
+            this.e6 = 1;
+            this.editing_shift = 1;
+            this.adding_shift = 1;
+            this.opendialog_createedit(-1);
+        },
         add_zero_time(num)
         {
             var str = num.toString();
@@ -469,13 +484,15 @@ export default {
             if(idx_action == 0)
             {
                 this.e6 = 1;
-                this.editing = 0;
+                this.editing_shift = 0;
+                this.adding_shift = 1;
                 this.get_data_before_edit(id_datatable);
             }
             else if(idx_action == 1)
             {
                 this.e6 = 2;
-                this.editing = 1;
+                this.editing_shift = 1;
+                this.adding_shift = 0;
                 this.get_data_before_edit(id_datatable);
             }
             else if(idx_action == 2)
@@ -806,6 +823,11 @@ export default {
        
 
 
+    },
+    created()
+    {
+        this.user = JSON.parse(localStorage.getItem('user'));
+        console.log(this.user);
     },
     mounted(){
         
