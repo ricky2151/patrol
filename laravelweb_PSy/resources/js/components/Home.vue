@@ -78,14 +78,16 @@
 		<center><p style='margin-top:40px;font-size: 40px;font-weight: bold'>Overview</p></center>
 		<br>
 		<div style='overflow-x: auto;overflow-y: hidden;'>
-		<GChart
-		v-if='chartData[1]'
-	    type="BarChart"
-	    :data="chartData"
-	    :options="chartOptions"
-	    style='height:1000px;'
-	  />
-	</div>
+			<center><h3>Total events this year : {{total_event}}</h3></center>
+			<GChart
+			v-if='chartData[1]'
+		    type="BarChart"
+		    :data="chartData"
+		    :options="chartOptions"
+		    style='height:1000px;'
+		  	/>
+
+		</div>
 
 	</div>
 </template>
@@ -98,6 +100,7 @@
 		  },
 		data () {
 			return {
+				
 				current_event : {
 					'Gedung Agape' : 'Ada acara IAA',
 					'Gedung Didaktos' : 'Tidak ada apa-apa',
@@ -113,16 +116,32 @@
 		      	],
 		      	chartOptions: {
 		      		width:'1200',
-		      		chartArea:{left:100,top:50,width:"800"},
+		      		chartArea:{left:100,top:50,bottom:80,width:"800"},
 		        	chart: {
 		          		height:1500,
 		          		width:600,
 		          		
 		        	},
 		        	colors: ['#40ff4d', '#ffa040', '#ff3333'],
-		        	hAxis: {format: '0'}
+		        	hAxis: {
+		        		format: '0',
+		        		title: 'The Number of events'
+		        	}
     
 		      	}
+			}
+		},
+		computed : 
+		{
+			total_event : function()
+			{
+				console.log(this.chartData);
+				var total = 0;
+				for(var i = 1;i<this.chartData.length;i++)
+				{
+					total += (parseInt(this.chartData[i][1]) + parseInt(this.chartData[i][2]) + parseInt(this.chartData[i][3]));
+				}
+				return total;
 			}
 		},
 		methods : 
