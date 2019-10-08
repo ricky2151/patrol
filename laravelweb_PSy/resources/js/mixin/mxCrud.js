@@ -68,7 +68,7 @@ export default {
 
                 this.opendialog_createedit(id_edit,r.data);
             })
-            .catch(function (error)
+            .catch((error) =>
             {
                 console.log("error : ")
                 console.log(error)
@@ -110,61 +110,83 @@ export default {
 
         save_data() 
         {
-            
+            if(this.valid)
+            {
 
-            if(this.id_data_edit != -1) //jika sedang diedit
-            {
-                this.showLoading(true);
-                axios.post(
-                	'api/admin/' + this.name_table + '/' + this.findDataById(this.id_data_edit).id,
-                	this.prepare_data_form(),
-                	this.header_api).then((r) => {
-                	this.clear_input();
-                    this.get_data();
-                    this.closedialog_createedit();
-                    swal("Good job!", "Data saved !", "success");
-                    this.id_data_edit = -1;
-                    
-                }).catch(function (error)
+
+                if(this.id_data_edit != -1) //jika sedang diedit
                 {
-                    this.showLoading(false);
-                    if(error.response.status == 422)
+                    this.showLoading(true);
+                    axios.post(
+                    	'api/admin/' + this.name_table + '/' + this.findDataById(this.id_data_edit).id,
+                    	this.prepare_data_form(),
+                    	this.header_api).then((r) => {
+                    	this.clear_input();
+                        this.get_data();
+                        this.closedialog_createedit();
+                        swal("Good job!", "Data saved !", "success");
+                        this.id_data_edit = -1;
+                        
+                    }).catch((error) =>
                     {
-                        swal('Request Failed', 'Check your internet connection !', 'error');
-                    }
-                    else
+                        console.log('terjadi error guys 1');
+                        this.showLoading(false);
+                        if(error.response.status == 422)
+                        {
+                            swal('Request Failed', 'Check your internet connection !', 'error');
+                        }
+                        else
+                        {
+                            swal('Unkown Error', error.response.data , 'error');
+                        }
+                    }).then((r) => {
+                        this.showLoading(false);
+                        r = r.data;
+                        if(r.message == "Your are not admin")
+                        {
+                            this.$router.replace('/login');
+                        }
+                    });
+                    
+                }
+                else //jika sedang tambah data
+                {
+                    this.showLoading(true);
+                    
+                    axios.post(
+                    	'api/admin/' + this.name_table,
+                    	this.prepare_data_form(),
+                    	this.header_api).then((r)=> {
+                        this.clear_input();
+                        this.get_data();
+                        this.closedialog_createedit();
+                        swal("Good job!", "Data saved !", "success");
+                    }).catch((error) =>
                     {
-                        swal('Unkown Error', error.response.data , 'error');
-                    }
-                }).then((r) => {
-                    this.showLoading(false);
-                    r = r.data;
-                    if(r.message == "Your are not admin")
-                    {
-                        this.$router.replace('/login');
-                    }
-                });
-                
+                        console.log('terjadi error guys 2');
+                        this.showLoading(false);
+                        console.log('adoh');
+                        if(error.response.status == 422)
+                        {
+                            swal('Request Failed', 'Check your internet connection !', 'error');
+                        }
+                        else
+                        {
+                            swal('Unkown Error', error.response.data , 'error');
+                        }
+                    }).then((r) => {
+                        this.showLoading(false);
+                        r = r.data;
+                        if(r.message == "Your are not admin")
+                        {
+                            this.$router.replace('/login');
+                        }
+                    });
+                }
             }
-            else //jika sedang tambah data
+            else
             {
-                this.showLoading(true);
-                axios.post(
-                	'api/admin/' + this.name_table,
-                	this.prepare_data_form(),
-                	this.header_api).then((r)=> {
-                    this.clear_input();
-                    this.get_data();
-                    this.closedialog_createedit();
-                    swal("Good job!", "Data saved !", "success");
-                }).then((r) => {
-                    this.showLoading(false);
-                    r = r.data;
-                    if(r.message == "Your are not admin")
-                    {
-                        this.$router.replace('/login');
-                    }
-                });
+                swal('Cannot Submit !', 'Please fill input correctly !', 'error');
             }
         },
 
@@ -179,11 +201,13 @@ export default {
             {
                 url = '/api/admin/' + this.name_table;
             }
+            this.showLoading(true);
             axios.get(url, {
                     params:{
                         token: localStorage.getItem('token')
                     }
             },this.header_api).then((r) => {
+                this.showLoading(false);
                 r = r.data;
                 if(r.message == "Your are not admin")
                 {
@@ -267,7 +291,7 @@ export default {
 
                 }
                 
-            }).catch(function (error)
+            }).catch((error) =>
             {
                 console.log("error : ")
                 console.log(error)

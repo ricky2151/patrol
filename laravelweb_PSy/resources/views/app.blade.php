@@ -15,7 +15,9 @@
     </head>
     <body>
        <div id="app">
-        <div id='myLoading'style='display:none;width:100%;height:100%;background-color: rgba(0,0,0,0.5);position: fixed;z-index: 9999999'></div>
+        <div id='myLoading'style='display:none;width:100%;height:100%;background-color: rgba(0,0,0,0.5);position: fixed;z-index: 9999999'>
+          <img src='/assets/images/loading.gif' style='position: absolute;top:50%;left: 50%;transform: translate(-50%,-50%);'>
+        </div>
            <patrol-app></patrol-app>
        </div>
        <script src="{{asset('js/app.js')}}"></script>
