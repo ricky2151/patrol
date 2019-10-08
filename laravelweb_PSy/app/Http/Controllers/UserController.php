@@ -29,7 +29,15 @@ class UserController extends Controller
     }
     public function index()
     {
-        $data = $this->user->where('role_id','1')->orderBy('id', 'desc')->get();
+        if(Auth::user()->canPlayARole('Superadmin'))
+        {
+            $data = $this->user->where('role_id','<','3')->orderBy('id', 'desc')->get();
+        }
+        else
+        {
+            $data = $this->user->where('role_id','1')->orderBy('id', 'desc')->get();
+        }
+        
 
         $data = $data->map(function ($data) { 
             $data = Arr::add($data, 'role_name', $data['role']['name']);
@@ -41,7 +49,7 @@ class UserController extends Controller
     {
         
         
-        $data = $data = $this->user->find($id)->getAllShifts();
+        $data = $this->user->getAllShifts($id);
         return response()->json(['error' => false, 'data'=>$data]);
     }
     public function shifts()
@@ -112,8 +120,12 @@ class UserController extends Controller
             
 
             $user = $this->user->create($data);
+            
             if(array_key_exists('shifts', $data))
-                $user->shifts()->createMany($data['shifts']);
+            {
+                $datashifts = collect(Arr::pull($data,'shifts'))->toArray();
+                $user->shifts()->createMany($datashifts);
+            }
             
 
             DB::commit();

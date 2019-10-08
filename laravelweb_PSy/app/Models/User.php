@@ -52,22 +52,42 @@ class User extends Authenticatable implements JWTSubject
        
         return $user;
     }
-    public function getAllShifts()
+    public function getAllShifts($id)
     {
-        $shifts = $this->shifts->map(function($item)
-        {
-            return [
-                'id' => $item['id'],
-                'room' => $item['room']['name'],
-                'time_start' => $item['time']['start'],
-                'time_end' => $item['time']['end'],
-                'date' => $item['date'],
-                'status_node' => $item['status_node']['name'],
-                'message' => $item['message'],
-                'scan_time' => $item['scan_time'],
-            ];
-        });
-        return $shifts;
+        $data = DB::table('shifts')
+        ->where('shifts.user_id', '35')
+        ->join('rooms', 'rooms.id','shifts.room_id')
+        ->join('times', 'times.id','shifts.time_id')
+        ->leftJoin('status_nodes', 'status_nodes.id','shifts.status_node_id')
+        ->select(
+            [
+                'shifts.user_id',
+                'shifts.date',
+                'rooms.name as room_name',
+                DB::raw('times.start || " - " || times.end as time_start_end'),
+                'status_nodes.name as status_node_name',
+                'status_nodes.id as status_node_id',
+                'message',
+                'scan_time',
+            ]
+        )
+        ->orderBy('date', 'DESC')
+        ->orderBy('time_start_end', 'DESC')
+        ->orderBy('rooms.name','ASC')
+        ->orderBy('status_node_name', 'ASC')
+        ->orderBy('message', 'ASC')
+        ->get();
+
+        // $data = $data->map(function ($data) { 
+        //     $data = Arr::add($data, 'room_name', $data['room']['name']);
+        //     $data = Arr::add($data, 'status_node_name', $data['status_node']['name']);
+        //     $data = Arr::add($data, 'user_name', $data['user']['name']);
+        //     $data = Arr::add($data, 'time_start_end', $data['time']['start'] . ' - ' . $data['time']['end']);
+        //     return Arr::except($data, ['room', 'status_node', 'time']);
+        // });
+        
+
+        return $data;
     }
     public function getShiftToday()
     {

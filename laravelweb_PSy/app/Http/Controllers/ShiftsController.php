@@ -40,6 +40,9 @@ class ShiftsController extends Controller
         $smallReportData = $this->shift->showSmallReport();
 
         $graphData = $this->shift->showGraph();
+
+        
+
         $result = [];
         $result['smallReportData'] = $smallReportData;
         $result['graphData'] = $graphData;

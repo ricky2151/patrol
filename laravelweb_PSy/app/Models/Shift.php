@@ -17,19 +17,56 @@ class Shift extends Model
     public static function index(){
         
 
-        $data = Shift::latest()->get();
+        // $data = Shift::latest()->get();
 
-        $data = $data->map(function ($data) { 
-            $data['date'] = Carbon::parse($data['date'])->format('d-m-Y');
-            $data = Arr::add($data, 'room_name', $data['room']['name']);
-            $data = Arr::add($data, 'status_node_name', $data['status_node']['name']);
-            $data = Arr::add($data, 'user_name', $data['user']['name']);
-            $data = Arr::add($data, 'time_start_end', $data['time']['start'] . ' - ' . $data['time']['end']);
-            return Arr::except($data, ['room', 'status_node', 'time']);
-        });
+        // $data = $data->map(function ($data) { 
+        //     $data['date'] = Carbon::parse($data['date'])->format('d-m-Y');
+        //     $data = Arr::add($data, 'room_name', $data['room']['name']);
+        //     $data = Arr::add($data, 'status_node_name', $data['status_node']['name']);
+        //     $data = Arr::add($data, 'user_name', $data['user']['name']);
+        //     $data = Arr::add($data, 'time_start_end', $data['time']['start'] . ' - ' . $data['time']['end']);
+        //     return Arr::except($data, ['room', 'status_node', 'time']);
+        // });
+
+
+        $data = DB::table('shifts')
+        ->join('rooms', 'rooms.id','room_id')
+        ->join('users', 'users.id','user_id')
+        ->join('times', 'times.id','time_id')
+        ->leftJoin('status_nodes', 'status_nodes.id','status_node_id')
+        ->select(
+            [
+                'shifts.date as date',
+                'rooms.name as room_name',
+                'users.name as user_name',
+                DB::raw('times.start || " - " || times.end as time_start_end'),
+                'status_nodes.name as status_node_name',
+                'status_nodes.id as status_node_id',
+                'message',
+                'scan_time',
+            ]
+        )
+        ->orderBy('date', 'DESC')
+        ->orderBy('time_start_end', 'DESC')
+        ->orderBy('rooms.name','ASC')
+        ->orderBy('user_name', 'ASC')
+        ->orderBy('status_node_name', 'ASC')
+        ->orderBy('message', 'ASC')
+        ->get();
+
+        // $data = $data->map(function ($data) { 
+        //     $data = Arr::add($data, 'room_name', $data['room']['name']);
+        //     $data = Arr::add($data, 'status_node_name', $data['status_node']['name']);
+        //     $data = Arr::add($data, 'user_name', $data['user']['name']);
+        //     $data = Arr::add($data, 'time_start_end', $data['time']['start'] . ' - ' . $data['time']['end']);
+        //     return Arr::except($data, ['room', 'status_node', 'time']);
+        // });
         
 
         return $data;
+        
+
+        
     }
     public static function indexToday(){
         
@@ -39,7 +76,7 @@ class Shift extends Model
         ->join('rooms', 'rooms.id','room_id')
         ->join('users', 'users.id','user_id')
         ->join('times', 'times.id','time_id')
-        ->join('status_nodes', 'status_nodes.id','status_node_id')
+        ->leftJoin('status_nodes', 'status_nodes.id','status_node_id')
         ->select(
             [
                 'rooms.name as room_name',
@@ -51,7 +88,7 @@ class Shift extends Model
                 'scan_time',
             ]
         )->orderBy('rooms.name','ASC')
-        ->orderBy('time_start_end', 'ASC')
+        ->orderBy('time_start_end', 'DESC')
         ->orderBy('user_name', 'ASC')
         ->orderBy('status_node_name', 'ASC')
         ->orderBy('message', 'ASC')
@@ -68,6 +105,7 @@ class Shift extends Model
 
         return $data;
     }
+   
     public static function showGraph()
     {
         $data = DB::table('shifts')->select(DB::raw('strftime("%m",date) as month, status_nodes.name as status_nodes, count(*) as count'))
