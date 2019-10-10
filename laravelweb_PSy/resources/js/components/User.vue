@@ -333,7 +333,7 @@ export default {
                 'Content-type': 'multipart/form-data'
             },
 
-            action_items: ['Edit Profile','Edit Shift', 'Show Shifts', 'Delete'],
+            action_items: ['Add Shift', 'Show Shifts', 'Edit Profile', 'Delete'],
             
             repeat_time : 1,
             
@@ -483,21 +483,24 @@ export default {
             // console.log(this.action_selected == 'Rack');
             if(idx_action == 0)
             {
-                this.e6 = 1;
-                this.editing_shift = 0;
-                this.adding_shift = 1;
-                this.get_data_before_edit(id_datatable);
-            }
-            else if(idx_action == 1)
-            {
                 this.e6 = 2;
                 this.editing_shift = 1;
                 this.adding_shift = 0;
                 this.get_data_before_edit(id_datatable);
+
+               
+            }
+            else if(idx_action == 1)
+            {
+                this.opendialog_detailshifts(id_datatable);
             }
             else if(idx_action == 2)
             {
-                this.opendialog_detailshifts(id_datatable);
+                 this.e6 = 1;
+                this.editing_shift = 0;
+                this.adding_shift = 1;
+                this.get_data_before_edit(id_datatable);
+                
                 
             }
             else if(idx_action == 3)
