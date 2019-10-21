@@ -734,24 +734,27 @@ export default {
                 //1. jika ada data dengan id yang tidak ada di data input, berarti data tersebut pasti dihapus
                 if(this.input_before_edit.shifts)
                 {
-                    for(var i = 0;i<this.input_before_edit.shifts.length;i++)
-                    {
-                        var deletetrue = true;
-                        for(var j=0;j<this.input.shifts.length;j++)
+                    if(this.id_edit != -1){
+                        for(var i = 0;i<this.input_before_edit.shifts.length;i++)
                         {
-                            if(this.input.shifts[j].id == this.input_before_edit.shifts[i].id)
+                            var deletetrue = true;
+                            for(var j=0;j<this.input.shifts.length;j++)
                             {
-                                deletetrue = false;
-                                break;
+                                if(this.input.shifts[j].id == this.input_before_edit.shifts[i].id)
+                                {
+                                    deletetrue = false;
+                                    break;
+                                }
+                            }
+
+                            if(deletetrue)
+                            {
+                                formData.append('shifts[' + counteridx + '][id]', this.input_before_edit.shifts[i].id);
+                                formData.append('shifts[' + counteridx + '][type]', '-1');
+                                counteridx++;
                             }
                         }
-
-                        if(deletetrue)
-                        {
-                            formData.append('shifts[' + counteridx + '][id]', this.input_before_edit.shifts[i].id);
-                            formData.append('shifts[' + counteridx + '][type]', '-1');
-                            counteridx++;
-                        }
+                        
                     }
 
                 }
