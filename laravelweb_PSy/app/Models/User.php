@@ -55,7 +55,7 @@ class User extends Authenticatable implements JWTSubject
     public function getAllShifts($id)
     {
         $data = DB::table('shifts')
-        ->where('shifts.user_id', '35')
+        ->where('shifts.user_id', $id)
         ->join('rooms', 'rooms.id','shifts.room_id')
         ->join('times', 'times.id','shifts.time_id')
         ->leftJoin('status_nodes', 'status_nodes.id','shifts.status_node_id')
