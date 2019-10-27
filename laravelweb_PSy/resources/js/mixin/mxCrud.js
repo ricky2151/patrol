@@ -84,6 +84,7 @@ export default {
         },
         
 		closedialog_createedit(){ 
+            this.clear_input();
             this.id_data_edit = -1;
             this.dialog_createedit = false;
         },
@@ -102,10 +103,22 @@ export default {
                     }
                     else
                     {
-                        this.input[key] = "";
+                        this.input[key] = null;
                     }   
                 }
             }
+
+            //khusus user
+            if(this.shift_not_assign)
+            {
+                this.shift_not_assign.date_start = '';
+                this.shift_not_assign.date_end = '';
+                this.shift_not_assign.menu_date_end_sna = null;
+                this.shift_not_assign.menu_date_start_sna = null;
+                this.shift_not_assign.data = [];
+            }
+
+
         },
 
         save_data() 

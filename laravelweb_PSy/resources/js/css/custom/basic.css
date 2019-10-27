@@ -1,3 +1,11 @@
+.red_row
+{
+	background-color: #ff5757;
+}
+.green_row
+{
+	background-color: #57ff62;
+}
 .v-stepper__step.v-stepper__step--active.v-stepper__step--editable.hide_number_stepper
 {
 	padding-bottom: 0px !important;

@@ -60,7 +60,7 @@
                         <v-btn icon dark v-on:click="closedialog_createedit()">
                             <v-icon>close</v-icon>
                         </v-btn>
-                        <v-toolbar-title v-html='id_data_edit == -1 ?"Add Guard":"Edit Guard"'></v-toolbar-title>
+                        <v-toolbar-title v-html='editing_shift ? "Add/Edit Shift" : id_data_edit == -1 ?"Add Guard":"Edit Guard"'></v-toolbar-title>
 
                     </v-toolbar>
                     
@@ -68,13 +68,14 @@
 
                         <!-- ==== STEPPER 1 ==== -->
 
-                        <v-stepper-step v-bind:class="{'hide_number_stepper' : !editing_shift && adding_shift}" v-show='adding_shift == 1' :complete="e6 > 1" step="1" editable>
+                        <v-stepper-step v-bind:class="{'hide_number_stepper' : (!(editing_shift && id_data_edit))}" v-show='(!(editing_shift && id_data_edit != -1))' :complete="e6 > 1" step="1" editable>
                             <h3>User Data</h3>
                         </v-stepper-step>
 
-                        <v-stepper-content v-show='adding_shift == 1' step="1" editable='id_data_edit != -1'>
+                        <v-stepper-content v-show='(!(editing_shift && id_data_edit != -1))' step="1" editable='id_data_edit != -1'>
                             
-                            
+                                    
+
                                     <v-text-field class="pa-2" :rules="this.$list_validation.max_req" v-model='input.name'  label="Name" counter=191></v-text-field>
                                 
 
@@ -137,10 +138,96 @@
 
                         <!-- ==== STEPPER 2 ==== -->
 
-                        <v-stepper-step  v-bind:class="{'hide_number_stepper' : editing_shift && !adding_shift}" v-show='editing_shift == 1' :complete="e6 > 2" step="2" editable><h3>Shifts Schedule</h3></v-stepper-step>
+                        <v-stepper-step  v-bind:class="{'hide_number_stepper' : (!(editing_shift && id_data_edit == -1))}" v-show='(!(!editing_shift && id_data_edit != -1))' :complete="e6 > 2" step="2" editable><h3>Shifts Schedule</h3></v-stepper-step>
 
-                        <v-stepper-content v-show='editing_shift == 1' step="2">
+                        <v-stepper-content v-show='(!(!editing_shift && id_data_edit != -1))' step="2">
 
+
+                            <h3 style='margin-left: 30px;margin-bottom: 10px'>Check Shifts That Have Not Been Set</h3>
+                            <v-layout row>
+                                <v-flex xs5>
+                                    <v-menu
+                                          ref="shift_not_assign.menu_date_start_sna"
+                                          v-model="shift_not_assign.menu_date_start_sna"
+                                          :close-on-content-click="false"
+                                          :nudge-right="40"
+                                          lazy
+                                          transition="scale-transition"
+                                          offset-y
+                                          full-width
+                                          max-width="290px"
+                                          min-width="290px"
+                                        >
+                                          <template v-slot:activator="{ on }">
+                                            <v-text-field
+                                              v-model="shift_not_assign.date_start"
+                                              label="Date Start"
+                                              hint="YYYY-MM-DD format"
+                                              persistent-hint
+                                              prepend-icon="event"
+                                              @blur="date = shift_not_assign.date_start"
+                                              v-on="on"
+                                            ></v-text-field>
+                                          </template>
+                                          <v-date-picker v-model="shift_not_assign.date_start" no-title @input="shift_not_assign.menu_date_start_sna = false"></v-date-picker>
+                                        </v-menu>
+                                </v-flex>
+                                <v-flex xs5>
+                                    <v-menu
+                                      ref="shift_not_assign.menu_date_end_sna"
+                                      v-model="shift_not_assign.menu_date_end_sna"
+                                      :close-on-content-click="false"
+                                      :nudge-right="40"
+                                      lazy
+                                      transition="scale-transition"
+                                      offset-y
+                                      full-width
+                                      max-width="290px"
+                                      min-width="290px"
+                                    >
+                                      <template v-slot:activator="{ on }">
+                                        <v-text-field
+                                          v-model="shift_not_assign.date_end"
+                                          label="Date End"
+                                          hint="YYYY-MM-DD format"
+                                          persistent-hint
+                                          prepend-icon="event"
+                                          @blur="date = shift_not_assign.date_end"
+                                          v-on="on"
+                                        ></v-text-field>
+                                      </template>
+                                      <v-date-picker v-model="shift_not_assign.date_end" no-title @input="shift_not_assign.menu_date_end_sna = false"></v-date-picker>
+                                    </v-menu>
+                                </v-flex>
+                                <v-btn @click='check_shift_not_assign'>Check</v-btn>
+                            </v-layout>
+
+                            
+                            <v-data-table
+                                disable-initial-sort
+                                :headers="[
+                                {text:'No', value:'no'},
+                                {text:'Room',value:'room_name'},
+                                {text:'Time',value:'time_start_end'},
+                                {text:'Date',value:'date'},
+                                ]"
+                                :items="shift_not_assign.data"
+                                class="datatable"
+                                
+                            >
+
+                                <template v-slot:items="props">
+                                    <td v-bind:class="{'red_row' : !props.item.is_assign, 'green_row' : props.item.is_assign}">{{ props.item.no }}</td>
+                                    <td v-bind:class="{'red_row' : !props.item.is_assign, 'green_row' : props.item.is_assign}">{{ props.item.room_name }}</td>
+                                    <td v-bind:class="{'red_row' : !props.item.is_assign, 'green_row' : props.item.is_assign}">{{ props.item.time_start_end }}</td>
+                                    <td v-bind:class="{'red_row' : !props.item.is_assign, 'green_row' : props.item.is_assign}">{{ props.item.date }}</td>
+                                </template>
+                            </v-data-table>
+
+
+
+
+                            <h2 style='margin-bottom: 10px'>Assign Shift</h2>
 
                             <v-select v-model='temp_input.shifts.room' :items="ref_input.room" item-text='name' return-object label="Select Room"></v-select>
 
@@ -162,7 +249,7 @@
                                 <v-text-field
                                   v-model="temp_input.shifts.date"
                                   label="Date"
-                                  hint="MM/DD/YYYY format"
+                                  hint="YYYY-MM-DD format"
                                   persistent-hint
                                   prepend-icon="event"
                                   @blur="date = temp_input.shifts.date"
@@ -188,12 +275,9 @@
                             
 
 
-                            <v-toolbar flat color="white" >
-                                <v-toolbar-title>Shifts</v-toolbar-title>
-                                
-                            </v-toolbar>
+                            <h2 style='margin-bottom: 10px'>Shifts</h2>
                             
-
+                            
                             <v-data-table
                                 disable-initial-sort
                                 :headers="[
@@ -204,7 +288,7 @@
                                 {text:'Action',align:'left',width:'15%',sortable:false}
                                 ]"
                                 :items="input.shifts"
-                                class=""
+                                class="datatable"
                                 :rowsPerPageItems="[50]"
                             >
 
@@ -333,7 +417,7 @@ export default {
                 'Content-type': 'multipart/form-data'
             },
 
-            action_items: ['Add Shift', 'Show Shifts', 'Edit Profile', 'Delete'],
+            action_items: ['Update Shift', 'Show Shifts', 'Edit Profile', 'Delete'],
             
             repeat_time : 1,
             
@@ -356,6 +440,9 @@ export default {
             input_before_edit:{ //variabel ini digunakan untuk menampung input sebelum di klik submit saat edit
                 
             },
+
+
+
             input:{
                 name:'',
                 age:'',
@@ -398,6 +485,15 @@ export default {
 
             },
             
+
+            shift_not_assign : 
+            {
+                date_start : '',
+                date_end : '',
+                menu_date_end_sna : null,
+                menu_date_start_sna : null,
+                data : [],
+            },
 
             
 
@@ -460,7 +556,6 @@ export default {
         {
             this.e6 = 1;
             this.editing_shift = 1;
-            this.adding_shift = 1;
             this.opendialog_createedit(-1);
         },
         add_zero_time(num)
@@ -485,7 +580,6 @@ export default {
             {
                 this.e6 = 2;
                 this.editing_shift = 1;
-                this.adding_shift = 0;
                 this.get_data_before_edit(id_datatable);
 
                
@@ -498,7 +592,6 @@ export default {
             {
                  this.e6 = 1;
                 this.editing_shift = 0;
-                this.adding_shift = 1;
                 this.get_data_before_edit(id_datatable);
                 
                 
@@ -608,6 +701,11 @@ export default {
             this.ref_input.room = r.data.rooms;
             this.ref_input.time = r.data.times;
             this.ref_input.status_node = r.data.status_nodes;
+            this.ref_input.shift_future = r.data.shift_future;
+            for(var i = 0;i<this.ref_input.shift_future;i++){
+                this.ref_input.shift_future[i].no = i + 1;
+            }
+
             
         },
         convert_data_input(r)
@@ -734,7 +832,7 @@ export default {
                 //1. jika ada data dengan id yang tidak ada di data input, berarti data tersebut pasti dihapus
                 if(this.input_before_edit.shifts)
                 {
-                    if(this.id_edit != -1){
+                    if(this.id_data_edit != -1){
                         for(var i = 0;i<this.input_before_edit.shifts.length;i++)
                         {
                             var deletetrue = true;
@@ -825,11 +923,135 @@ export default {
             })
         },
 
+        
+
+        check_shift_not_assign()
+        {
+            
+            var result = [];
+
+            var temp_data = {};
+            if(this.ref_input.shift_future && this.shift_not_assign.date_start && this.shift_not_assign.date_end)
+            {
+                console.log('masuk if');
+                var split_date_start = this.shift_not_assign.date_start.split('-');
+                var split_date_end = this.shift_not_assign.date_end.split('-');
+                var date_start = new Date(split_date_start[0], split_date_start[1] - 1, split_date_start[2]); 
+                var date_end = new Date(split_date_end[0], split_date_end[1] - 1, split_date_end[2]); 
+                
+
+                
+
+                //for pertama
+                //set nilai
+                console.log('mau masuk for pertama');
+                for(var i = date_start;i<=date_end;i.setDate(i.getDate() + 1))
+                {
+                    var month = '' + (i.getMonth() + 1);
+                    var day = '' + i.getDate();
+                    var year = i.getFullYear();
+                    if (month.length < 2) 
+                        month = '0' + month;
+                    if (day.length < 2) 
+                        day = '0' + day;
+                    var stringdate = [year, month, day].join('-');
+                    for(var j = 0;j<this.ref_input.time.length;j++)
+                    {
+                        for(var k = 0;k<this.ref_input.room.length;k++)
+                        {
+                            if(temp_data[stringdate] == null)
+                            {
+                                temp_data[stringdate] = {};    
+                            }
+                            if(temp_data[stringdate][this.ref_input.time[j].id] == null)
+                            {
+                                temp_data[stringdate][this.ref_input.time[j].id] = {};
+                            }
+                            if(temp_data[stringdate][this.ref_input.time[j].id][this.ref_input.room[k].id] == null)
+                            {
+                                temp_data[stringdate][this.ref_input.time[j].id][this.ref_input.room[k].id] = false;
+                            }
+                        }
+                    }
+                }
+                console.log('mau masuk ke for2');
+
+                //for kedua
+                //asign nilai dari ref_input ke temp_data
+                for(var i = 0;i<this.ref_input.shift_future.length;i++)
+                {
+                    var date = this.ref_input.shift_future[i].date;
+                    var time_id = this.ref_input.shift_future[i].time_id;
+                    var room_id = this.ref_input.shift_future[i].room_id;
+                    if(temp_data[date])
+                        temp_data[date][time_id][room_id] = true;
+                }
+
+                console.log('mau masuk ke for3');
+                //for ketiga
+                //asign nilai dari input.shift ke temp_data
+                if(this.input.shifts)
+                {
+                    for(var i = 0;i<this.input.shifts.length;i++)
+                    {
+                        var date = this.input.shifts[i].date;
+                        var time_id = this.input.shifts[i].time.id;
+                        var room_id = this.input.shifts[i].room.id;
+                        if(temp_data[date])
+                        {
+                            console.log('ada yang true');
+                            temp_data[date][time_id][room_id] = true;
+                        }
+                    }
+
+                }
+
+
+                console.log('mau masuk ke for4');
+                //for ketiga
+                //ubah temp_data ke shift_not_assign.data agar bisa diakses oleh datatable
+                var split_date_start = this.shift_not_assign.date_start.split('-');
+                var split_date_end = this.shift_not_assign.date_end.split('-');
+                var date_start = new Date(split_date_start[0], split_date_start[1] - 1, split_date_start[2]); 
+                var date_end = new Date(split_date_end[0], split_date_end[1] - 1, split_date_end[2]);
+                var i = date_start;
+                for(var i = date_start;i<=date_end;i.setDate(i.getDate() + 1))
+                {
+                    var month = '' + (i.getMonth() + 1);
+                    var day = '' + i.getDate();
+                    var year = i.getFullYear();
+                    if (month.length < 2) 
+                        month = '0' + month;
+                    if (day.length < 2) 
+                        day = '0' + day;
+                    var stringdate = [year, month, day].join('-');
+                    for(var j = 0;j<this.ref_input.time.length;j++)
+                    {
+                        for(var k = 0;k<this.ref_input.room.length;k++)
+                        {
+                            var temp_push = {};
+                            temp_push['no'] = result.length + 1;
+                            temp_push['date'] = stringdate;
+                            temp_push['time_start_end'] = this.ref_input.time[j].name;
+                            temp_push['room_name'] = this.ref_input.room[k].name;
+                            temp_push['is_assign'] = temp_data[stringdate][this.ref_input.time[j].id][this.ref_input.room[k].id];
+                            result.push(temp_push);
+                        }
+                    }
+                }
+                this.shift_not_assign.data = result;
+                console.log('hasil akhir');
+                console.log(result);
+            }
+            
+            
+        },
 
        
 
 
     },
+    
     created()
     {
         this.user = JSON.parse(localStorage.getItem('user'));
@@ -843,8 +1065,22 @@ export default {
        // console.log(this.add_zero_time('10'))
         
         //this.testing_input();
+        var temp_date = new Date();
+        var dd = String(temp_date.getDate()).padStart(2, '0');
+        var mm = String(temp_date.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = temp_date.getFullYear();
+
+        this.shift_not_assign.date_start = yyyy + '-' + mm + '-' + dd;
+        temp_date.setDate(temp_date.getDate() + 30);
+        var dd = String(temp_date.getDate()).padStart(2, '0');
+        var mm = String(temp_date.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = temp_date.getFullYear();
+
+        
+        this.shift_not_assign.date_end = yyyy + '-' + mm + '-' + dd;
 
     },
+
     mixins:[
         mxCrudChildForm,
     ],
