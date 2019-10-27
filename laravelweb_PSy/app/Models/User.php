@@ -20,15 +20,38 @@ class User extends Authenticatable implements JWTSubject
 
     //alldatacreate
     public function allDataCreate(){
+        $shiftNotAssign = DB::table('shifts')
+        ->whereDate('date', '>', Carbon::now())
+        ->join('rooms', 'rooms.id','shifts.room_id')
+        ->join('times', 'times.id','shifts.time_id')
+        ->leftJoin('status_nodes', 'status_nodes.id','shifts.status_node_id')
+        ->select(
+            [
+                'shifts.date',
+                'rooms.name as room_name',
+                'rooms.id as room_id',
+                'times.id as time_id',
+                DB::raw('times.start || "-" || times.end as time_start_end'),
+            ]
+        )
+        ->orderBy('date', 'DESC')
+        ->orderBy('time_start_end', 'DESC')
+        ->orderBy('rooms.name','ASC')
+        ->orderBy('status_node_name', 'ASC')
+        ->orderBy('message', 'ASC')
+        ->get();
+       
+        
+
 
         if($this->role->name == 'Superadmin')
         {
-            return ['roles' => Role::all(['id','name']), 'rooms' =>  Room::all(['id','name']), 'status_nodes' => StatusNode::all(['id','name']), 'times' => Time::all(['start','end'])];
+            return ['roles' => Role::all(['id','name']), 'rooms' =>  Room::with('building:id,name', 'floor:id,name')->get(), 'status_nodes' => StatusNode::all(['id','name']), 'times' => Time::select(DB::raw("id, (start || '-' || end) AS name"))->get(), 'shift_future' => $shiftNotAssign];
 
         }
         else if($this->role->name == 'Admin')
         {
-            return ['roles' => Role::all(['id','name'])->where('id','1'), 'rooms' => Room::with('building:id,name', 'floor:id,name')->get(), 'status_nodes' => StatusNode::all(['id','name']), 'times' => Time::select(DB::raw("id, (start || '-' || end) AS name"))->get()];
+            return ['roles' => Role::all(['id','name'])->where('id','1'), 'rooms' => Room::with('building:id,name', 'floor:id,name')->get(), 'status_nodes' => StatusNode::all(['id','name']), 'times' => Time::select(DB::raw("id, (start || '-' || end) AS name"))->get(), 'shift_future' => $shiftNotAssign];
         }
     }
 
