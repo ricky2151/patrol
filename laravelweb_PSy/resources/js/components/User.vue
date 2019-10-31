@@ -210,6 +210,7 @@
                                 {text:'Room',value:'room_name'},
                                 {text:'Time',value:'time_start_end'},
                                 {text:'Date',value:'date'},
+                                {text:'Action', value:'action'},
                                 ]"
                                 :items="shift_not_assign.data"
                                 class="datatable"
@@ -221,13 +222,14 @@
                                     <td v-bind:class="{'red_row' : !props.item.is_assign, 'green_row' : props.item.is_assign}">{{ props.item.room_name }}</td>
                                     <td v-bind:class="{'red_row' : !props.item.is_assign, 'green_row' : props.item.is_assign}">{{ props.item.time_start_end }}</td>
                                     <td v-bind:class="{'red_row' : !props.item.is_assign, 'green_row' : props.item.is_assign}">{{ props.item.date }}</td>
+                                    <td v-bind:class="{'red_row' : !props.item.is_assign, 'green_row' : props.item.is_assign}"><v-btn v-if='!props.item.is_assign' @click='add_shift_from_checker(props.item)'>Add to Table</v-btn><label style='font-style: italic;' v-if='props.item.is_assign'>Shift Added !</label></td>
                                 </template>
                             </v-data-table>
 
 
 
 
-                            <h2 style='margin-bottom: 10px'>Assign Shift</h2>
+                            <h2 style='margin-bottom: 10px'>Assign Shift Manual</h2>
 
                             <v-select v-model='temp_input.shifts.room' :items="ref_input.room" item-text='name' return-object label="Select Room"></v-select>
 
@@ -552,10 +554,36 @@ export default {
         }
     },
     methods: {
+        add_shift_from_checker(data)
+        {
+
+          if(!this.input.shifts)
+          {
+              this.input.shifts = [];
+          }
+          //
+          var temp = JSON.parse(JSON.stringify(data));
+          var temp_push = {};
+          temp_push['date'] = temp.date;
+          temp_push['room'] = {};
+          temp_push['room']['id'] = temp.room_id;
+          temp_push['room']['name'] = temp.room_name;
+          temp_push['time'] = {};
+          temp_push['time']['id'] = temp.time_id;
+          temp_push['time']['name'] = temp.time_start_end;
+          this.input.shifts.push(temp_push);
+          console.log('lohlohloh');
+          console.log(temp_push);
+          this.check_shift_not_assign();
+              
+          console.log('cek hasil akhir dari input.shift');
+          console.log(this.input.shifts);
+        },
         before_open_dialog(id)
         {
             this.e6 = 1;
             this.editing_shift = 1;
+            this.id_data_edit = -1;
             this.opendialog_createedit(-1);
         },
         add_zero_time(num)
@@ -619,7 +647,8 @@ export default {
                     }
                 },
                 save(){ //bisa edit / add
-
+                    console.log('cek isi tempinput shift');
+                    console.log(JSON.parse(JSON.stringify(self.temp_input.shifts)));
                     var id_edit = JSON.parse(JSON.stringify(self.temp_input.id_edit_shifts));
                     console.log(id_edit);
                     if(!self.input.shifts)
@@ -1000,7 +1029,11 @@ export default {
                         if(temp_data[date])
                         {
                             console.log('ada yang true');
+                            console.log(date);
+                            console.log(time_id);
+                            console.log(room_id);
                             temp_data[date][time_id][room_id] = true;
+                            console.log('sudah di set true');
                         }
                     }
 
@@ -1034,6 +1067,8 @@ export default {
                             temp_push['date'] = stringdate;
                             temp_push['time_start_end'] = this.ref_input.time[j].name;
                             temp_push['room_name'] = this.ref_input.room[k].name;
+                            temp_push['time_id'] = this.ref_input.time[j].id;
+                            temp_push['room_id'] = this.ref_input.room[k].id;
                             temp_push['is_assign'] = temp_data[stringdate][this.ref_input.time[j].id][this.ref_input.room[k].id];
                             result.push(temp_push);
                         }
