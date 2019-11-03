@@ -114,8 +114,8 @@ class User extends Authenticatable implements JWTSubject
     }
     public function getShiftToday()
     {
-        
-        $shifts = $this->shifts->where('date',Carbon::today()->format('Y-m-d'))->map(function($item)
+        //return ($this->shifts()->get()->toArray());
+        $shifts = $this->shifts()->where('date',Carbon::today()->format('Y-m-d'))->get()->map(function($item)
         {
             return [
                 'id' => $item['id'],
@@ -126,6 +126,7 @@ class User extends Authenticatable implements JWTSubject
                 'status_node' => $item['status_node']['name'],
                 'message' => $item['message'],
                 'scan_time' => $item['scan_time'],
+                'user_id' => $item['user_id'],
             ];
         });
         return $shifts;
