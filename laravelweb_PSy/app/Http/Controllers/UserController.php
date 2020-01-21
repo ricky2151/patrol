@@ -12,6 +12,8 @@ use App\Models\StatusNode;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 use Carbon\Carbon;
 
 class UserController extends Controller
@@ -86,7 +88,36 @@ class UserController extends Controller
         $temp_shift->status_node_id = $data['status_node_id'];
         $temp_shift->scan_time = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
         isset($data['message']) ? $temp_shift->message = $data['message'] : $temp_shift->message = '';
+        //set image
+        $photosSaved = [];
+        if($request->file('photos'))
+        {
+            foreach($request->file('photos') as $image)
+            {
+                $path = '';
+                $folder = 'photos';
+                $name =  $id.Str::random(10);
+
+                if(!is_null($image)){
+                    $name = strtolower(preg_replace('/[^a-zA-Z0-9-_\.]/','',$name));
+
+                    $path = $image->storeAs($folder, $name . ".jpg");
+                }
+                else{
+                    $path = $folder."/default.png";
+                }
+
+                $photosSaved[] = ['url' => $path];
+
+            }
+
+        }
+        
+        //saving
         $temp_shift->save();
+        if(count($photosSaved) > 0)
+            $temp_shift->photos()->createMany($photosSaved);
+
         return response()->json(['error' => false, 'message'=>'submit data success !']);
     }
 

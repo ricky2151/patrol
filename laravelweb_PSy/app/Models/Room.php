@@ -57,6 +57,11 @@ class Room extends Model
     	return $this->belongsTo('App\Models\Building');
     }
 
+    public function gateway()
+    {
+        return $this->belongsTo('App\Models\Gateway');
+    }
+
     public function shifts()
     {
     	return $this->hasMany('App\Models\Shift'); 

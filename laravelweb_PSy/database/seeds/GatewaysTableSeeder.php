@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 
-class RoomsTableSeeder extends Seeder
+class GatewaysTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,13 +15,10 @@ class RoomsTableSeeder extends Seeder
         $faker = Faker::create('id_ID');
  
     	for($i = 1; $i <= 10; $i++){    		
-    		DB::table('rooms')->insert([
-    			'name' => "Ruangan " . $faker->name,
-    			'floor_id' => mt_rand(1, 5),
-    			'building_id' => mt_rand(1, 5), 
-                'gateway_id' => mt_rand(1,5),
+    		DB::table('gateways')->insert([
+    			'name' => "GT-" . $i,
+    			'location' => "Pojokan ruang" . $faker->name,
     		]);
- 
     	}
     }
 }
