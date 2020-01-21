@@ -8,6 +8,7 @@ import Floor from './components/Floor'
 import Room from './components/Room'
 import User from './components/User'
 import Building from './components/Building'
+import Gateway from './components/Gateway'
 import Time from './components/Time'
 import StatusNode from './components/StatusNode'
 import Report from './components/Report'
@@ -36,6 +37,7 @@ const routes = [
             { path: '/room', component: Room },
             { path: '/user', component: User },
             { path: '/building', component: Building },
+            { path: '/gateway', component: Gateway },
             { path: '/time', component: Time },
             { path: '/statusnode', component: StatusNode },
             { path: '/report', component: Report },
