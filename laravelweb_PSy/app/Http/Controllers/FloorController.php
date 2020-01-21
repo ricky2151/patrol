@@ -110,7 +110,6 @@ class FloorController extends Controller
             $this->floor->find($id)->rooms->map(function($item){
                 $item->shifts()->delete();
             });
-            
             $this->floor->find($id)->rooms()->delete();
             $this->floor->find($id)->delete();
             DB::commit();
