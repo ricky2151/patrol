@@ -42,7 +42,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 	Route::resource('shifts', 'ShiftsController');
 	Route::resource('floors', 'FloorController');
 	Route::resource('buildings', 'BuildingController');
+	Route::resource('gateways', 'GatewayController');
 	Route::resource('rooms', 'RoomController');
+	Route::resource('photos', 'PhotoController');
 	Route::resource('status_nodes', 'StatusNodeController');
 	Route::resource('times', 'TimeController');
 	Route::resource('users', 'UserController');
