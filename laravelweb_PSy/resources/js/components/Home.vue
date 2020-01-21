@@ -6,9 +6,9 @@
 					<img width=80 height=160 src='/assets/images/iconsatpam.png'></img>
 				</v-flex>
 				<v-flex>
-					<h1> Welcome To Patrolee !</h1>
+					<h1> Selamat Datang !</h1>
 					<br>
-					<h3>Current Events :</h3>
+					<h3>Kondisi sekarang :</h3>
 					<div id='list-current-events'>
 						<p v-for='(item,index) in current_event'>{{index}} : {{item}}</p>
 					</div>
@@ -21,11 +21,11 @@
 					</v-layout>
 					<v-layout row>
 						<div id='report-section-box'>
-							<h2>Report Last Month : </h2>
+							<h2>Laporan Bulan Lalu : </h2>
 							<div class='d-inline-block box-report'>
 								<v-layout row align-center>
 									<v-flex xs6>
-										<h2 style='color:grey'>Secure</h2>
+										<h2 style='color:grey'>Aman</h2>
 										<p class='percent-report'>{{secure[0]}}%</p>
 									</v-flex>
 									<v-flex xs6>
@@ -39,7 +39,7 @@
 										<span v-bind:style="{ color: secure[2] ? 'green' : 'red'}">{{secure[1]}}%</span>
 										<v-icon v-if='secure[2]' style='line-height: 1.5' class='icontitledatatable' color="green darken-2" small>arrow_upward</v-icon>
 										<v-icon v-if='!secure[2]' style='line-height: 1.5' class='icontitledatatable' color="red darken-2" small>arrow_downward</v-icon>
-										<span style='color:grey'>Since {{secure[3]}}</span>
+										<span style='color:grey'>Sejak {{secure[3]}}</span>
 									</v-flex>
 								</v-layout>
 
@@ -48,7 +48,7 @@
 							<div class='d-inline-block box-report'>
 								<v-layout row align-center>
 									<v-flex xs6>
-										<h2 style='color:grey'>Presence</h2>
+										<h2 style='color:grey'>Presensi</h2>
 										<p class='percent-report'>{{presence[0]}}%</p>
 									</v-flex>
 									<v-flex xs6>
@@ -62,7 +62,7 @@
 										<span v-bind:style="{ color: presence[2] ? 'green' : 'red'}">{{presence[1]}}%</span>
 										<v-icon v-if='presence[2]' style='line-height: 1.5' class='icontitledatatable' color="green darken-2" small>arrow_upward</v-icon>
 										<v-icon v-if='!presence[2]' style='line-height: 1.5' class='icontitledatatable' color="red darken-2" small>arrow_downward</v-icon>
-										<span style='color:grey'>Since {{presence[3]}}</span>
+										<span style='color:grey'>Sejak {{presence[3]}}</span>
 									</v-flex>
 								</v-layout>
 
@@ -75,10 +75,10 @@
 		</div>
 
 		
-		<center><p style='margin-top:40px;font-size: 40px;font-weight: bold'>Overview</p></center>
+		<center><p style='margin-top:40px;font-size: 40px;font-weight: bold'>Ikhtisar</p></center>
 		<br>
 		<div style='overflow-x: auto;overflow-y: hidden;'>
-			<center><h3>Total events this year : {{total_event}}</h3></center>
+			<center><h3>Laporan tahun ini : {{total_event}}</h3></center>
 			<GChart
 			v-if='chartData[1]'
 		    type="BarChart"
@@ -151,15 +151,15 @@
 			{
 				if(str == '01')
 				{
-					return 'January';
+					return 'Januari';
 				}
 				else if(str == '02')
 				{
-					return 'February';
+					return 'Februari';
 				}
 				else if(str == '03')
 				{
-					return 'March';
+					return 'Maret';
 				}
 				else if(str == '04')
 				{
@@ -171,15 +171,15 @@
 				}
 				else if(str == '06')
 				{
-					return 'Juny';
+					return 'Juni';
 				}
 				else if(str == '07')
 				{
-					return 'July';
+					return 'Juli';
 				}
 				else if(str == '08')
 				{
-					return 'August';
+					return 'Agustus';
 				}
 				else if(str == '09')
 				{
@@ -187,7 +187,7 @@
 				}
 				else if(str == '10')
 				{
-					return 'October';
+					return 'Oktober';
 				}
 				else if(str == '11')
 				{
@@ -240,7 +240,7 @@
 						{
 							this.secure[2] = 1;
 						}
-						this.secure[3] = 'Last Month';
+						this.secure[3] = 'Bulan Lalu';
 
 						this.presence[0] = r_report.presencePercentageThisMonth;
 						this.presence[1] = Math.abs(r_report.differentPresenceBetweenMonth);

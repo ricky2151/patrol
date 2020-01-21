@@ -1,6 +1,6 @@
 <div>
     <v-container fluid>
-        <h3>Room</h3>
+        <h3>Ruangan</h3>
     </v-container>
 </div>
 
@@ -16,14 +16,14 @@
                     <v-btn icon dark v-on:click="closedialog_createedit()">
                         <v-icon>close</v-icon>
                     </v-btn>
-                    <v-toolbar-title v-html='id_data_edit == -1 ?"Add Room":"Edit Room"'></v-toolbar-title>
+                    <v-toolbar-title v-html='id_data_edit == -1 ?"Tambah Ruangan":"Edit Ruangan"'></v-toolbar-title>
 
                 </v-toolbar>
                 <v-form v-model="valid" style='padding:30px' ref='formCreateEdit'>
-                    <v-text-field :rules="this.$list_validation.max_req" v-model='input.name' label="Name" required></v-text-field>
-                    <v-select class='pa-2' :rules="this.$list_validation.selectdata_req"  v-model='input.building_id' :items="ref_input.building" item-text='name' item-value='id' label="Select Building"></v-select>
-                    <v-select class='pa-2' :rules="this.$list_validation.selectdata_req"  v-model='input.floor_id' :items="ref_input.floor" item-text='name' item-value='id' label="Select Floor"></v-select>
-                    <v-btn v-on:click='save_data()' >submit</v-btn>
+                    <v-text-field :rules="this.$list_validation.max_req" v-model='input.name' label="nama" required></v-text-field>
+                    <v-select class='pa-2' :rules="this.$list_validation.selectdata_req"  v-model='input.building_id' :items="ref_input.building" item-text='name' item-value='id' label="Pilih Gedung"></v-select>
+                    <v-select class='pa-2' :rules="this.$list_validation.selectdata_req"  v-model='input.floor_id' :items="ref_input.floor" item-text='name' item-value='id' label="Pilih Lantai"></v-select>
+                    <v-btn v-on:click='save_data()' >Simpan</v-btn>
                     
                 </v-form>
             </v-card>
@@ -33,9 +33,9 @@
             <v-flex xs6>
                 <div class='marginleft30 margintop10'>
                     <v-icon class='icontitledatatable'>meeting_room</v-icon>
-                    <h2 class='titledatatable'>Rooms</h2>
+                    <h2 class='titledatatable'>Ruangan</h2>
                     <v-btn v-on:click='opendialog_createedit(-1)' color="menu" dark class='btnadddata'>
-                    Add Data
+                    Tambah
                 </v-btn>
                 </div>
                 
@@ -75,7 +75,7 @@
                           dark
                           v-on="on"
                         >
-                          Action
+                          Pilih
                         </v-btn>
                       </template>
                       <v-list>
@@ -111,7 +111,7 @@ export default {
             },
 
 
-            action_items: ['Edit', 'Delete'],
+            action_items: ['Edit', 'Hapus'],
             on:false,
 
             valid:null,
@@ -134,10 +134,10 @@ export default {
 
             headers: [
                 { text: 'No', value: 'no'},
-                { text: 'Floor', value: 'floors'},
-                { text: 'Building', value: 'buildings'},
-                { text: 'Name', value: 'name'},
-                { text: 'Action', align:'left',sortable:false, width:'15%'},
+                { text: 'Lantai', value: 'floors'},
+                { text: 'Gedung', value: 'buildings'},
+                { text: 'Nama', value: 'name'},
+                { text: 'Pilihan', align:'left',sortable:false, width:'15%'},
 
             ],
 

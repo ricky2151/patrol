@@ -31,7 +31,7 @@
                         flat
                         >
                         <span class="subheading text-xs-center overflow-text">
-                            Hello,
+                            Halo,
                             <span class="font-weight-medium">
                                 {{ user.name }}
                             </span>
@@ -73,7 +73,7 @@
                         </v-flex>
                         <v-flex xs9 class='ml15'>
                             <div class='title black--text'>Patrolee</div>
-                            <div class='subheading black--text'>Absence System</div>
+                            <div class='subheading black--text'>Sistem Keamanan</div>
                         </v-flex>
                     </v-layout>
                 </v-container>
@@ -212,45 +212,50 @@ export default {
                     subroutes:[
                         {
                             subicon:"domain",
-                            subtitle:"Building",
-                            subaction: "/building"
+                            subtitle:"Gedung",
+                            subaction: "/building" 
+                        },
+                        {
+                            subicon:"surround_sound",
+                            subtitle:"Gateway",
+                            subaction: "/gateway" 
                         },
                         {
                             subicon:"list",
-                            subtitle:"Floor",
+                            subtitle:"Lantai",
                             subaction: "/floor"
                         },
                         {
                             subicon:"meeting_room",
-                            subtitle:"Rooms",
+                            subtitle:"Ruangan",
                             subaction: "/room"
                         },
                         {
                             subicon:"access_time",
-                            subtitle:"Times",
+                            subtitle:"Waktu Jaga",
                             subaction: "/time"
                         },
                         {
                             subicon:"radio_button_checked",
-                            subtitle:"Status Nodes",
+                            subtitle:"Kondisi Lokasi",
                             subaction: "/statusnode"
                         },
                         {
                             subicon:"person",
-                            subtitle:"Guard",
+                            subtitle:"Satpam",
                             subaction: "/user"
                         },
                     ]
                 },
                 {
                     icon: "local_convenience_store",
-                    title: "Shifts Today",
+                    title: "Jadwal Hari Ini",
                     action:"/shifttoday",
 
                 },
                 {
                     icon: "report",
-                    title: "Reports",
+                    title: "Laporan",
                     action:"/report",
 
                 },
@@ -258,7 +263,7 @@ export default {
             toolbarMenu: [
                 {
                     icon: "exit_to_app",
-                    title: "Logout",
+                    title: "Keluar",
                     action: "/logout"
                 }
             ],

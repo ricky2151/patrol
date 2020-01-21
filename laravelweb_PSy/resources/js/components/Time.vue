@@ -1,6 +1,6 @@
 <div>
     <v-container fluid>
-        <h3>Time </h3>
+        <h3>Waktu Jaga </h3>
     </v-container>
 </div>
 
@@ -16,13 +16,13 @@
                     <v-btn icon dark v-on:click="closedialog_createedit()">
                         <v-icon>close</v-icon>
                     </v-btn>
-                    <v-toolbar-title v-html='id_data_edit == -1 ?"Add Time":"Edit Time"'></v-toolbar-title>
+                    <v-toolbar-title v-html='id_data_edit == -1 ?"Tambah Waktu Jaga":"Edit Waktu Jaga"'></v-toolbar-title>
 
                 </v-toolbar>
                 <v-form v-model="valid" style='padding:30px' ref='formCreateEdit'>
-                    <v-text-field :rules="this.$list_validation.time_shift" v-model='input.start' label="Start" required></v-text-field>
-                    <v-text-field :rules="this.$list_validation.time_shift" v-model='input.end' label="End" required></v-text-field>
-                    <v-btn v-on:click='save_data()' >submit</v-btn>
+                    <v-text-field :rules="this.$list_validation.time_shift" v-model='input.start' label="Mulai" required></v-text-field>
+                    <v-text-field :rules="this.$list_validation.time_shift" v-model='input.end' label="Berakhir" required></v-text-field>
+                    <v-btn v-on:click='save_data()' >Simpan</v-btn>
                 </v-form>
             </v-card>
         </v-dialog>
@@ -31,9 +31,9 @@
             <v-flex xs6>
                 <div class='marginleft30 margintop10'>
                     <v-icon class='icontitledatatable'>access_time</v-icon>
-                    <h2 class='titledatatable'>Time</h2>
+                    <h2 class='titledatatable'>Waktu Jaga</h2>
                     <v-btn v-on:click='opendialog_createedit(-1)' color="menu" dark class='btnadddata'>
-                    Add Data
+                    Tambah
                 </v-btn>
                 </div>
                 
@@ -72,7 +72,7 @@
                           dark
                           v-on="on"
                         >
-                          Action
+                          Pilih
                         </v-btn>
                       </template>
                       <v-list>
@@ -108,7 +108,7 @@ export default {
             },
 
 
-            action_items: ['Edit', 'Delete'],
+            action_items: ['Edit', 'Hapus'],
             on:false,
 
             valid:null,
@@ -127,9 +127,9 @@ export default {
 
             headers: [
                 { text: 'No', value: 'no'},
-                { text: 'Start', value: 'start'},
-                { text: 'End', value: 'end'},
-                { text: 'Action', align:'left',sortable:false, width:'15%'},
+                { text: 'Mulai', value: 'start'},
+                { text: 'Berakhir', value: 'end'},
+                { text: 'Pilihan', align:'left',sortable:false, width:'15%'},
 
             ],
 

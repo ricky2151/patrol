@@ -20,7 +20,7 @@
                                 </v-card-text>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn type="submit" color="primary" v-on:click="req_login" >Login</v-btn>
+                                    <v-btn type="submit" color="primary" v-on:click="req_login" >Masuk</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-form>

@@ -1,6 +1,6 @@
 <div>
     <v-container fluid>
-        <h3>user</h3>
+        <h3>Satpam</h3>
     </v-container>
 </div>
 
@@ -14,7 +14,7 @@
                     <v-btn icon dark v-on:click="closedialog_detailshifts()">
                         <v-icon>close</v-icon>
                     </v-btn>
-                    <v-toolbar-title>Detail Shifts</v-toolbar-title>
+                    <v-toolbar-title>Detail Satpam</v-toolbar-title>
 
                 </v-toolbar>
                 <div style='padding:30px'>
@@ -60,7 +60,7 @@
                         <v-btn icon dark v-on:click="closedialog_createedit()">
                             <v-icon>close</v-icon>
                         </v-btn>
-                        <v-toolbar-title v-html='editing_shift ? "Add/Edit Shift" : id_data_edit == -1 ?"Add Guard":"Edit Guard"'></v-toolbar-title>
+                        <v-toolbar-title v-html='editing_shift ? "Tambah/Edit Satpam" : id_data_edit == -1 ?"Tambah Satpam":"Edit Satpam"'></v-toolbar-title>
 
                     </v-toolbar>
                     
@@ -69,23 +69,23 @@
                         <!-- ==== STEPPER 1 ==== -->
 
                         <v-stepper-step v-bind:class="{'hide_number_stepper' : (!(editing_shift && id_data_edit))}" v-show='(!(editing_shift && id_data_edit != -1))' :complete="e6 > 1" step="1" editable>
-                            <h3>User Data</h3>
+                            <h3>Data Satpam</h3>
                         </v-stepper-step>
 
                         <v-stepper-content v-show='(!(editing_shift && id_data_edit != -1))' step="1" editable='id_data_edit != -1'>
                             
                                     
 
-                                    <v-text-field class="pa-2" :rules="this.$list_validation.max_req" v-model='input.name'  label="Name" counter=191></v-text-field>
+                                    <v-text-field class="pa-2" :rules="this.$list_validation.max_req" v-model='input.name'  label="Nama" counter=191></v-text-field>
                                 
 
                             
-                                    <v-text-field class="pa-2" :rules="this.$list_validation.numeric_req" v-model='input.age'  label="Age" counter=191></v-text-field>
+                                    <v-text-field class="pa-2" :rules="this.$list_validation.numeric_req" v-model='input.age'  label="Umur" counter=191></v-text-field>
                                 
 
 
                                 
-                                    <v-select class='pa-2' :rules="this.$list_validation.selectdata_req" v-model='input.role_id' :items="ref_input.role" item-text='name' item-value='id' label="Select Role"></v-select>
+                                    <v-select class='pa-2' :rules="this.$list_validation.selectdata_req" v-model='input.role_id' :items="ref_input.role" item-text='name' item-value='id' label="Pilih Peran"></v-select>
                                 
 
                             
@@ -114,7 +114,7 @@
                                 
 
                             
-                                    <v-text-field class="pa-2" :rules="this.$list_validation.max_req" v-model='input.phone'  label="Phone" counter=191></v-text-field>
+                                    <v-text-field class="pa-2" :rules="this.$list_validation.max_req" v-model='input.phone'  label="No HP" counter=191></v-text-field>
                                 
 
                             
@@ -138,12 +138,12 @@
 
                         <!-- ==== STEPPER 2 ==== -->
 
-                        <v-stepper-step  v-bind:class="{'hide_number_stepper' : (!(editing_shift && id_data_edit == -1))}" v-show='(!(!editing_shift && id_data_edit != -1))' :complete="e6 > 2" step="2" editable><h3>Shifts Schedule</h3></v-stepper-step>
+                        <v-stepper-step  v-bind:class="{'hide_number_stepper' : (!(editing_shift && id_data_edit == -1))}" v-show='(!(!editing_shift && id_data_edit != -1))' :complete="e6 > 2" step="2" editable><h3>Jadwal Satpam</h3></v-stepper-step>
 
                         <v-stepper-content v-show='(!(!editing_shift && id_data_edit != -1))' step="2">
 
 
-                            <h3 style='margin-left: 30px;margin-bottom: 10px'>Check Shifts That Have Not Been Set</h3>
+                            <h3 style='margin-left: 30px;margin-bottom: 10px'>Cek jadwal yang masih kosong</h3>
                             <v-layout row>
                                 <v-flex xs5>
                                     <v-menu
@@ -199,7 +199,7 @@
                                       <v-date-picker v-model="shift_not_assign.date_end" no-title @input="shift_not_assign.menu_date_end_sna = false"></v-date-picker>
                                     </v-menu>
                                 </v-flex>
-                                <v-btn @click='check_shift_not_assign'>Check</v-btn>
+                                <v-btn @click='check_shift_not_assign'>Cek</v-btn>
                             </v-layout>
 
                             
@@ -207,10 +207,10 @@
                                 disable-initial-sort
                                 :headers="[
                                 {text:'No', value:'no'},
-                                {text:'Room',value:'room_name'},
-                                {text:'Time',value:'time_start_end'},
-                                {text:'Date',value:'date'},
-                                {text:'Action', value:'action'},
+                                {text:'Ruangan',value:'room_name'},
+                                {text:'Waktu',value:'time_start_end'},
+                                {text:'Tanggal',value:'date'},
+                                {text:'Pilihan', value:'action'},
                                 ]"
                                 :items="shift_not_assign.data"
                                 class="datatable"
@@ -222,14 +222,14 @@
                                     <td v-bind:class="{'red_row' : !props.item.is_assign, 'green_row' : props.item.is_assign}">{{ props.item.room_name }}</td>
                                     <td v-bind:class="{'red_row' : !props.item.is_assign, 'green_row' : props.item.is_assign}">{{ props.item.time_start_end }}</td>
                                     <td v-bind:class="{'red_row' : !props.item.is_assign, 'green_row' : props.item.is_assign}">{{ props.item.date }}</td>
-                                    <td v-bind:class="{'red_row' : !props.item.is_assign, 'green_row' : props.item.is_assign}"><v-btn v-if='!props.item.is_assign' @click='add_shift_from_checker(props.item)'>Add to Table</v-btn><label style='font-style: italic;' v-if='props.item.is_assign'>Shift Added !</label></td>
+                                    <td v-bind:class="{'red_row' : !props.item.is_assign, 'green_row' : props.item.is_assign}"><v-btn v-if='!props.item.is_assign' @click='add_shift_from_checker(props.item)'>Tambahkan ke tabel</v-btn><label style='font-style: italic;' v-if='props.item.is_assign'>Jadwal Sudah Masuk !</label></td>
                                 </template>
                             </v-data-table>
 
 
 
 
-                            <h2 style='margin-bottom: 10px'>Assign Shift Manual</h2>
+                            <h2 style='margin-bottom: 10px'>Masukan Jadwal Manual</h2>
 
                             <v-select v-model='temp_input.shifts.room' :items="ref_input.room" item-text='name' return-object label="Select Room"></v-select>
 
@@ -250,7 +250,7 @@
                               <template v-slot:activator="{ on }">
                                 <v-text-field
                                   v-model="temp_input.shifts.date"
-                                  label="Date"
+                                  label="Tanggal"
                                   hint="YYYY-MM-DD format"
                                   persistent-hint
                                   prepend-icon="event"
@@ -271,23 +271,23 @@
                                     Cancel
                                 </v-btn>
                                 
-                                <v-btn color="menu" dark v-on:click='table_shift().save()' v-html='temp_input.id_edit_shifts == -1?"Add to Table":"Save Changes"'>
+                                <v-btn color="menu" dark v-on:click='table_shift().save()' v-html='temp_input.id_edit_shifts == -1?"Tambahkan ke tabel":"Simpan Perubahan"'>
                                 </v-btn>
                             </v-toolbar>
                             
 
 
-                            <h2 style='margin-bottom: 10px'>Shifts</h2>
+                            <h2 style='margin-bottom: 10px'>Jadwal</h2>
                             
                             
                             <v-data-table
                                 disable-initial-sort
                                 :headers="[
                                 {text:'No', value:'no'},
-                                {text:'Room',value:'room'},
-                                {text:'Time',value:'time'},
-                                {text:'Date',value:'date'},
-                                {text:'Action',align:'left',width:'15%',sortable:false}
+                                {text:'Ruangan',value:'room'},
+                                {text:'Waktu',value:'time'},
+                                {text:'Tanggal',value:'date'},
+                                {text:'Pilihan',align:'left',width:'15%',sortable:false}
                                 ]"
                                 :items="input.shifts"
                                 class="datatable"
@@ -320,7 +320,7 @@
 
                         
                         
-                        <v-btn v-on:click='save_data()' >submit</v-btn>
+                        <v-btn v-on:click='save_data()' >Simpan</v-btn>
 
                         
                         
@@ -334,9 +334,9 @@
             <v-flex xs6>
                 <div class='marginleft30 margintop10'>
                     <v-icon class='icontitledatatable'>widgets</v-icon>
-                    <h2 class='titledatatable'>Users</h2>
+                    <h2 class='titledatatable'>Satpam</h2>
                     <v-btn v-on:click='before_open_dialog(-1)' color="menu" dark class='btnadddata'>
-                    Add Data
+                    Tambah
                 </v-btn>
                 </div>
                 
@@ -380,7 +380,7 @@
                           v-on="on"
                           class='btnaction'
                         >
-                          Action
+                          Pilih
                         </v-btn>
                       </template>
                       <v-list>
@@ -419,7 +419,7 @@ export default {
                 'Content-type': 'multipart/form-data'
             },
 
-            action_items: ['Update Shift', 'Show Shifts', 'Edit Profile', 'Delete'],
+            action_items: ['Perbarui Jadwal', 'Lihat Jadwal', 'Edit Profil', 'Hapus'],
             
             repeat_time : 1,
             
@@ -501,32 +501,32 @@ export default {
 
             headers: [
                 { text: 'No', value: 'no'},
-                { text: 'Name', value: 'name'},
-                { text: 'Age', value: 'age', align:'right' },
-                { text: 'Role', value: 'role', align:'right' },
+                { text: 'Nama', value: 'name'},
+                { text: 'Umur', value: 'age', align:'right' },
+                { text: 'Peran', value: 'role', align:'right' },
                 { text: 'Username', value: 'username', align:'right' },
-                { text: 'Phone', value: 'phone', align:'right' },
+                { text: 'No HP', value: 'phone', align:'right' },
                 { text: 'Email', value: 'email', align:'right' },
-                { text: 'Action', align:'left',sortable:false, width:'15%'},
+                { text: 'Pilihan', align:'left',sortable:false, width:'15%'},
             ],
             headers_without_role: [
                 { text: 'No', value: 'no'},
-                { text: 'Name', value: 'name'},
-                { text: 'Age', value: 'age', align:'right' },
+                { text: 'Nama', value: 'name'},
+                { text: 'Umur', value: 'age', align:'right' },
                 { text: 'Username', value: 'username', align:'right' },
-                { text: 'Phone', value: 'phone', align:'right' },
+                { text: 'No HP', value: 'phone', align:'right' },
                 { text: 'Email', value: 'email', align:'right' },
-                { text: 'Action', align:'left',sortable:false, width:'15%'},
+                { text: 'Pilihan', align:'left',sortable:false, width:'15%'},
             ],
 
             headers_popup_detailshifts : [
                 { text: 'No', value:'no'},
-                { text: 'Time', value:'date'},
-                { text: 'Date', value:'time_start_end'},
-                { text: 'Room', value:'room_name'},
-                { text: 'Status Node', value:'status_node_name'},
-                { text: 'Message', value:'message'},
-                { text: 'Scan Time', value:'scan_time'},
+                { text: 'Waktu', value:'date'},
+                { text: 'Tanggal', value:'time_start_end'},
+                { text: 'Ruangan', value:'room_name'},
+                { text: 'Kondisi', value:'status_node_name'},
+                { text: 'Pesan', value:'message'},
+                { text: 'Waktu Scan', value:'scan_time'},
 
             ],
 

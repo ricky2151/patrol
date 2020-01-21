@@ -242,8 +242,8 @@ export default {
         delete_data(id_data_delete){
             
             swal({
-                    title: "Are you sure want to delete this item?",
-                    text: "Once deleted, it can't be undone",
+                    title: "Apakah Anda yakin ingin menghapus data ini?",
+                    text: "Apabila sudah dihapus, tidak bisa dikembalikan",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
@@ -267,7 +267,7 @@ export default {
                             else
                             {
                                 this.get_data();
-                                swal("Good job!", "Data Deleted !", "success");
+                                swal("Berhasil !", "Data Tersimpan !", "success");
                                 
 
                             }

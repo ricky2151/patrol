@@ -1,6 +1,6 @@
 <div>
     <v-container fluid>
-        <h3>Shift Today</h3>
+        <h3>Jadwal Hari Ini</h3>
     </v-container>
 </div>
 
@@ -15,7 +15,7 @@
             <v-flex xs6>
                 <div class='marginleft30 margintop10'>
                     <v-icon class='icontitledatatable'>list</v-icon>
-                    <h2 class='titledatatable'>Shift Today</h2>
+                    <h2 class='titledatatable'>Jadwal Hari Ini</h2>
                    
                 </div>
                 
@@ -112,12 +112,12 @@ export default {
 
             headers: [
                 { text: 'No', value: 'no'},
-                { text: 'Room', value: 'room_name', sort:0},
-                { text: 'Time', value: 'time_start_end',sort:2},
-                { text: 'User', value: 'user_name',sort:3},
-                { text: 'Status', value: 'status_node_name',sort:4},
-                { text: 'Message', value: 'message', width:'30%',sort:5},
-                { text: 'Scan Time', value: 'scan_time',sort:6},
+                { text: 'Ruangan', value: 'room_name', sort:0},
+                { text: 'Waktu', value: 'time_start_end',sort:2},
+                { text: 'Satpam', value: 'user_name',sort:3},
+                { text: 'Kondisi', value: 'status_node_name',sort:4},
+                { text: 'Pesan', value: 'message', width:'30%',sort:5},
+                { text: 'Waktu Scan', value: 'scan_time',sort:6},
                
 
             ],
