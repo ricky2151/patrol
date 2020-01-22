@@ -38,6 +38,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 	//shift today
 	Route::get('/shifts/shifttoday', 'ShiftsController@getShiftToday');
 
+	//get photos
+	Route::get('/shifts/{id}/getPhotos', 'ShiftsController@getPhotos');
+
 	//route resource
 	Route::resource('shifts', 'ShiftsController');
 	Route::resource('floors', 'FloorController');

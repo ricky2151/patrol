@@ -36,6 +36,7 @@ class Shift extends Model
         ->leftJoin('status_nodes', 'status_nodes.id','status_node_id')
         ->select(
             [
+                'shifts.id as id',
                 'shifts.date as date',
                 'rooms.name as room_name',
                 'users.name as user_name',
@@ -79,6 +80,7 @@ class Shift extends Model
         ->leftJoin('status_nodes', 'status_nodes.id','status_node_id')
         ->select(
             [
+                'shifts.id as id',
                 'rooms.name as room_name',
                 'users.name as user_name',
                 DB::raw('times.start || " - " || times.end as time_start_end'),
@@ -120,6 +122,12 @@ class Shift extends Model
 
         return $data;
         
+    }
+    public function getPhotos()
+    {
+
+        $photos = $this->photos()->get();
+        return $photos;
     }
     public static function showSmallReport()
     {

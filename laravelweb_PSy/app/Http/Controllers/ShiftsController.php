@@ -49,6 +49,12 @@ class ShiftsController extends Controller
         return response()->json(['error' => false, 'data'=>$result]);
     }
 
+    public function getPhotos($id)
+    {
+        $data = $this->shift->find($id)->getPhotos();
+        return response()->json(['error' => false, 'data'=>$data]);
+    }
+
     // public function list()
     // {
     //     $data = $this->shift->list();
