@@ -74,7 +74,7 @@ export default {
                 console.log(error)
                 if(error.response.status == 422)
                 {
-                    swal('Request Failed', 'Check your internet connection !', 'error');
+                    swal('Request Gagal', 'Cek koneksi internet Anda !', 'error');
                 }
                 else
                 {
@@ -137,7 +137,7 @@ export default {
                     	this.clear_input();
                         this.get_data();
                         this.closedialog_createedit();
-                        swal("Good job!", "Data saved !", "success");
+                        swal("Berhasil !", "Data Tersimpan !", "success");
                         this.id_data_edit = -1;
                         
                     }).catch((error) =>
@@ -146,7 +146,7 @@ export default {
                         this.showLoading(false);
                         if(error.response.status == 422)
                         {
-                            swal('Request Failed', 'Check your internet connection !', 'error');
+                            swal('Request Gagal', 'Cek koneksi internet Anda !', 'error');
                         }
                         else
                         {
@@ -173,7 +173,7 @@ export default {
                         this.clear_input();
                         this.get_data();
                         this.closedialog_createedit();
-                        swal("Good job!", "Data saved !", "success");
+                        swal("Berhasil !", "Data tersimpan !", "success");
                     }).catch((error) =>
                     {
                         console.log('terjadi error guys 2');
@@ -181,7 +181,7 @@ export default {
                         console.log('adoh');
                         if(error.response.status == 422)
                         {
-                            swal('Request Failed', 'Check your internet connection !', 'error');
+                            swal('Request Gagal', 'Cek koneksi internet Anda !', 'error');
                         }
                         else
                         {
@@ -199,7 +199,7 @@ export default {
             }
             else
             {
-                swal('Cannot Submit !', 'Please fill input correctly !', 'error');
+                swal('Gagal Submit !', 'Silahkan isi input dengan benar !', 'error');
             }
         },
 
@@ -314,7 +314,7 @@ export default {
                 console.log(error)
                 if(error.response.status == 422)
                 {
-                    swal('Request Failed', 'Check your internet connection !', 'error');
+                    swal('Request Gagal', 'Cek koneksi internet Anda !', 'error');
                 }
                 else
                 {

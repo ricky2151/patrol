@@ -88,6 +88,17 @@
             rowOrange : props.item.status_node_id == 2,
             rowGreen : props.item.status_node_id == 1,
             }'>{{ props.item.scan_time }}</td>
+
+            <td v-bind:class='
+            {
+            rowRed: props.item.status_node_id == 3,
+            rowOrange : props.item.status_node_id == 2,
+            rowGreen : props.item.status_node_id == 1,
+            }'>
+                <v-btn small depressed color="light-blue darken-4" dark>
+                    <label>Lihat Foto</label>
+                </v-btn>
+            </td>
             
         </template>
         </v-data-table>
@@ -118,6 +129,7 @@ export default {
                 { text: 'Kondisi', value: 'status_node_name',sort:4},
                 { text: 'Pesan', value: 'message', width:'30%',sort:5},
                 { text: 'Waktu Scan', value: 'scan_time',sort:6},
+                { text: 'Foto', value: '',sort:6},
                
 
             ],
