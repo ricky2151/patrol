@@ -11,7 +11,7 @@ use DB;
 
 class Shift extends Model
 {
-    protected $fillable = ['user_id', 'room_id', 'time_id', 'date', 'status_node_id', 'message', 'scan_time'];
+    protected $fillable = ['user_id', 'room_id', 'time_id', 'date'];
 
 
     public static function index(){
@@ -33,7 +33,6 @@ class Shift extends Model
         ->join('rooms', 'rooms.id','room_id')
         ->join('users', 'users.id','user_id')
         ->join('times', 'times.id','time_id')
-        ->leftJoin('status_nodes', 'status_nodes.id','status_node_id')
         ->select(
             [
                 'shifts.id as id',
@@ -41,8 +40,6 @@ class Shift extends Model
                 'rooms.name as room_name',
                 'users.name as user_name',
                 DB::raw('times.start || " - " || times.end as time_start_end'),
-                'status_nodes.name as status_node_name',
-                'status_nodes.id as status_node_id',
                 'message',
                 'scan_time',
             ]
@@ -51,7 +48,6 @@ class Shift extends Model
         ->orderBy('time_start_end', 'DESC')
         ->orderBy('rooms.name','ASC')
         ->orderBy('user_name', 'ASC')
-        ->orderBy('status_node_name', 'ASC')
         ->orderBy('message', 'ASC')
         ->get();
 
@@ -77,22 +73,18 @@ class Shift extends Model
         ->join('rooms', 'rooms.id','room_id')
         ->join('users', 'users.id','user_id')
         ->join('times', 'times.id','time_id')
-        ->leftJoin('status_nodes', 'status_nodes.id','status_node_id')
         ->select(
             [
                 'shifts.id as id',
                 'rooms.name as room_name',
                 'users.name as user_name',
                 DB::raw('times.start || " - " || times.end as time_start_end'),
-                'status_nodes.name as status_node_name',
-                'status_nodes.id as status_node_id',
                 'message',
                 'scan_time',
             ]
         )->orderBy('rooms.name','ASC')
         ->orderBy('time_start_end', 'DESC')
         ->orderBy('user_name', 'ASC')
-        ->orderBy('status_node_name', 'ASC')
         ->orderBy('message', 'ASC')
         ->get();
 
@@ -107,6 +99,8 @@ class Shift extends Model
 
         return $data;
     }
+
+    
    
     public static function showGraph()
     {
@@ -123,11 +117,18 @@ class Shift extends Model
         return $data;
         
     }
-    public function getPhotos()
+    public function getHistories()
     {
 
-        $photos = $this->photos()->get();
-        return $photos;
+        $histories = $this->histories()->get();
+        $histories = $histories->map(function ($item) {
+            $item['photos'] = $item->photos()->get();
+            $item['status_node_name'] = $item->status_node()->get()[0]['name'];
+            //$item = collect($item)->put('photos', $item->photos()->get());
+            //$item = collect($item)->put('status_node_name', $item->status_node()->get());
+            return $item;
+        });
+        return $histories;
     }
     public static function showSmallReport()
     {
@@ -216,14 +217,9 @@ class Shift extends Model
     	return $this->belongsTo('App\Models\Time', 'time_id', 'id');
     }
 
-    public function status_node()
+    public function histories()
     {
-    	return $this->belongsTo('App\Models\StatusNode', 'status_node_id', 'id');
-    }
-
-    public function photos()
-    {
-        return $this->hasMany('App\Models\Photo'); 
+    	return $this->hasMany('App\Models\History');
     }
 
     

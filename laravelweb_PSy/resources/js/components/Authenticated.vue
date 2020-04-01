@@ -216,14 +216,14 @@ export default {
                             subaction: "/building" 
                         },
                         {
-                            subicon:"surround_sound",
-                            subtitle:"Gateway",
-                            subaction: "/gateway" 
-                        },
-                        {
                             subicon:"list",
                             subtitle:"Lantai",
                             subaction: "/floor"
+                        },
+                        {
+                            subicon:"surround_sound",
+                            subtitle:"Gateway",
+                            subaction: "/gateway" 
                         },
                         {
                             subicon:"meeting_room",

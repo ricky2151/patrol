@@ -38,8 +38,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 	//shift today
 	Route::get('/shifts/shifttoday', 'ShiftsController@getShiftToday');
 
-	//get photos
-	Route::get('/shifts/{id}/getPhotos', 'ShiftsController@getPhotos');
+	//get histories
+	Route::get('/shifts/{id}/getHistories', 'ShiftsController@getHistories');
 
 	//route resource
 	Route::resource('shifts', 'ShiftsController');
@@ -60,7 +60,9 @@ Route::group(['prefix' => 'guard', 'middleware' => 'RoleGuard'], function()
 	//user
 	Route::get('/users/shifts', 'UserController@shifts');
 	Route::get('/users/getMasterData', 'UserController@getMasterData');
-	Route::patch('/users/submitShift', 'UserController@submitShift');
+	Route::get('/users/viewHistoryScan/{id}', 'UserController@viewHistoryScan');
+	Route::post('/users/submitScan', 'UserController@submitScan');
+	
 
 	//Route::resource('shifts', 'AndroidShiftController');
 });

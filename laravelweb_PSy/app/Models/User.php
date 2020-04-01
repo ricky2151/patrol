@@ -24,7 +24,6 @@ class User extends Authenticatable implements JWTSubject
         ->whereDate('date', '>', Carbon::now())
         ->join('rooms', 'rooms.id','shifts.room_id')
         ->join('times', 'times.id','shifts.time_id')
-        ->leftJoin('status_nodes', 'status_nodes.id','shifts.status_node_id')
         ->select(
             [
                 'shifts.date',
@@ -37,7 +36,6 @@ class User extends Authenticatable implements JWTSubject
         ->orderBy('date', 'DESC')
         ->orderBy('time_start_end', 'DESC')
         ->orderBy('rooms.name','ASC')
-        ->orderBy('status_node_name', 'ASC')
         ->orderBy('message', 'ASC')
         ->get();
        
@@ -75,29 +73,53 @@ class User extends Authenticatable implements JWTSubject
        
         return $user;
     }
+    public function viewHistoryScan($id)
+    {
+        //dd($this->shifts()->get());
+        $shifts = $this->shifts()->where('id',$id)->get()->map(function($item)
+        {
+            return [
+                'shift_id' => $item['id'],
+                'histories' => $item->histories()->get()->map(function($item){
+                    return [
+                        'id' => $item['id'],
+                        'status_node_id' => $item['status_node_id'],
+                        'status_node_name' => $item->status_node()->get()[0]['name'],
+                        'message' => $item['message'],
+                        'scan_time' => $item['scan_time'],
+                        'photos' => $item->photos()->get()->map(function($item) {
+                            return [
+                                'id' => $item['id'],
+                                'url' => $item['url'],
+                            ];
+                        }),
+                    ];
+                }),
+            ];
+        });
+        //dd($shifts);
+        return $shifts;
+    }
     public function getAllShifts($id)
     {
         $data = DB::table('shifts')
         ->where('shifts.user_id', $id)
         ->join('rooms', 'rooms.id','shifts.room_id')
         ->join('times', 'times.id','shifts.time_id')
-        ->leftJoin('status_nodes', 'status_nodes.id','shifts.status_node_id')
         ->select(
             [
+                'shifts.id as id',
                 'shifts.user_id',
                 'shifts.date',
                 'rooms.name as room_name',
                 DB::raw('times.start || " - " || times.end as time_start_end'),
-                'status_nodes.name as status_node_name',
-                'status_nodes.id as status_node_id',
-                'message',
-                'scan_time',
+                'message as message',
+                'scan_time as scan_time',
             ]
         )
         ->orderBy('date', 'DESC')
         ->orderBy('time_start_end', 'DESC')
         ->orderBy('rooms.name','ASC')
-        ->orderBy('status_node_name', 'ASC')
         ->orderBy('message', 'ASC')
         ->get();
 
@@ -123,10 +145,8 @@ class User extends Authenticatable implements JWTSubject
                 'time_start' => $item['time']['start'],
                 'time_end' => $item['time']['end'],
                 'date' => $item['date'],
-                'status_node' => $item['status_node']['name'],
-                'message' => $item['message'],
-                'scan_time' => $item['scan_time'],
                 'user_id' => $item['user_id'],
+                'countScanned' => $item['histories'], //todo sek masih error
             ];
         });
         return $shifts;
@@ -180,6 +200,7 @@ class User extends Authenticatable implements JWTSubject
                 $this->shifts()->create($shift);
             }
             else if($shift['type'] == 0) {
+                //dd($this->shifts()->get());
                 $this->shifts()->find($shift['id'])->update($shift);
             } else {
                 $this->shifts()->find($shift['id'])->delete();

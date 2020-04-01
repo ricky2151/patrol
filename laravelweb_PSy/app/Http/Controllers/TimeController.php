@@ -80,7 +80,9 @@ class TimeController extends Controller
      */
     public function edit($id)
     {
-        //
+        $time = $this->time->find($id);
+        
+        return response()->json(['error' => false, 'data'=>['time'=>$time]]);
     }
 
     /**

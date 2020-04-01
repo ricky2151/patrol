@@ -50,9 +50,6 @@ class ShiftsTableSeeder extends Seeder
                 'room_id' => 1,
                 'time_id' => 1,
                 'date' => $today,
-                'status_node_id' => 1,
-                'message' => 'Aman pak !', 
-                'scan_time' => '',
             ]);
 
         DB::table('shifts')->insert([
@@ -60,9 +57,6 @@ class ShiftsTableSeeder extends Seeder
                 'room_id' => 2,
                 'time_id' => 1,
                 'date' => $today,
-                'status_node_id' => 1,
-                'message' => 'Sepertinya ada pencuri !', 
-                'scan_time' => '12:10:10',
             ]);
 
         DB::table('shifts')->insert([
@@ -70,28 +64,19 @@ class ShiftsTableSeeder extends Seeder
                 'room_id' => 2,
                 'time_id' => 3,
                 'date' => $today,
-                'status_node_id' => 2,
-                'message' => 'Mencurigakan pak !', 
-                'scan_time' => '',
             ]);
         DB::table('shifts')->insert([
                 'user_id' => 1,
                 'room_id' => 1,
                 'time_id' => 1,
                 'date' => $todayBeforeThisMonth,
-                'status_node_id' => 2,
-                'message' => 'Aman pak !', 
-                'scan_time' => '10:10:10',
             ]);
 
         DB::table('shifts')->insert([
                 'user_id' => 1,
                 'room_id' => 2,
                 'time_id' => 1,
-                'date' => $todayBeforeThisMonth,
-                'status_node_id' => 2,
-                'message' => 'Sepertinya ada pencuri !', 
-                'scan_time' => '10:10:10',
+                'date' => $todayBeforeThisMonth, 
             ]);
 
         DB::table('shifts')->insert([
@@ -99,9 +84,6 @@ class ShiftsTableSeeder extends Seeder
                 'room_id' => 2,
                 'time_id' => 3,
                 'date' => $todayBeforeThisMonth,
-                'status_node_id' => 1,
-                'message' => 'Mencurigakan pak !', 
-                'scan_time' => '',
             ]);
 
 
@@ -111,9 +93,6 @@ class ShiftsTableSeeder extends Seeder
     			'room_id' => mt_rand(1,10),
     			'time_id' => mt_rand(1,4),
     			'date' => $faker->date($format = 'Y-m-d', $max = 'now'),
-    			'status_node_id' => mt_rand(1,3),
-    			'message' => 'Aman pak !', 
-    			'scan_time' => '',
     		]);
  
     	}

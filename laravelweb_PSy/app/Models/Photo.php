@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Photo extends Model
 {
     protected $table = 'photos';
-    protected $fillable = ['url', 'shift_id'];
+    protected $fillable = ['url', 'history_id'];
 
     //detail
     public function getPhoto()
@@ -15,7 +15,7 @@ class Photo extends Model
         $detail = [
                 'id' => $this['id'],
                 'url' => $this['url'],
-                'shift_id' => $this['shift']['id'],
+                'history_id' => $this['history']['id'],
             ];
        
         return $detail;
@@ -41,9 +41,9 @@ class Photo extends Model
 
     
 
-    public function shift()
+    public function history()
     {
-    	return $this->belongsTo('App\Models\Shift');
+    	return $this->belongsTo('App\Models\History', 'history_id', 'id');
     }
 
     

@@ -80,7 +80,9 @@ class FloorController extends Controller
      */
     public function edit($id)
     {
-        //
+        $floor = $this->floor->find($id);
+        
+        return response()->json(['error' => false, 'data'=>['floor'=>$floor]]);
     }
 
     /**

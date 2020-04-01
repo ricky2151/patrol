@@ -90,8 +90,7 @@ class RoomController extends Controller
     {
         $room = $this->room->find($id);
         
-        $roomWithId = $room->getRoom();
-        return response()->json(['error' => false, 'data'=>['room'=>$roomWithId]]);
+        return response()->json(['error' => false, 'data'=>['room'=>$room]]);
     }
 
     /**

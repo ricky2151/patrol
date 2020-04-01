@@ -27,7 +27,8 @@ class StoreRoom extends FormRequest
         return [
             'name' => 'required|string',
             'floor_id' => 'required|integer',
-            'building_id' => 'required|integer'
+            'building_id' => 'required|integer',
+            'gateway_id' => 'required|integer'
         ];
     }
 }

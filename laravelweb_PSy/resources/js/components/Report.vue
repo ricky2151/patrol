@@ -206,6 +206,7 @@ export default {
         },
         show_dialog_photos(id)
         {
+            
             axios.get('/api/admin/shifts/' + id + '/getPhotos', {
                     params:{
                         token: localStorage.getItem('token')

@@ -80,7 +80,9 @@ class StatusNodeController extends Controller
      */
     public function edit($id)
     {
-        //
+        $status_node = $this->status_node->find($id);
+        
+        return response()->json(['error' => false, 'data'=>['status_node'=>$status_node]]);
     }
 
     /**
@@ -106,7 +108,7 @@ class StatusNodeController extends Controller
     {
         DB::beginTransaction();
         try {
-            $this->status_node->find($id)->shifts()->delete();
+            $this->status_node->find($id)->histories()->delete();
             $this->status_node->find($id)->delete();
             DB::commit();
         }catch (\Throwable $e) {

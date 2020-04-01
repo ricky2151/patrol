@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreUser;
 use App\Http\Requests\UpdateUser;
-use App\Http\Requests\SubmitShift;
+use App\Http\Requests\SubmitScan;
 use App\Models\User;
 use App\Models\Shift;
+use App\Models\History;
 use App\Models\StatusNode;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -61,6 +62,13 @@ class UserController extends Controller
         return response()->json(['error' => false, 'data'=>$data]);
     }
 
+    public function viewHistoryScan($id)
+    {
+        $iduser = Auth::user()->id;
+        $data = $this->user->find($iduser)->viewHistoryScan($id);
+        return response()->json(['error' => false, 'data'=>$data]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -79,15 +87,16 @@ class UserController extends Controller
         
     }
 
-    public function submitShift(SubmitShift $request)
+    public function submitScan(SubmitScan $request)
     {
         $data = $request->validated();
         $id = $data['id'];
         unset($data['id']);
-        $temp_shift = Shift::find($id);
-        $temp_shift->status_node_id = $data['status_node_id'];
-        $temp_shift->scan_time = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
-        isset($data['message']) ? $temp_shift->message = $data['message'] : $temp_shift->message = '';
+        $temp_shift = [];
+        $temp_shift['shift_id'] = $id;
+        $temp_shift['status_node_id'] = $data['status_node_id'];
+        $temp_shift['scan_time'] = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
+        isset($data['message']) ? $temp_shift['message'] = $data['message'] : $temp_shift['message'] = '';
         //set image
         $photosSaved = [];
         if($request->file('photos'))
@@ -114,9 +123,12 @@ class UserController extends Controller
         }
         
         //saving
-        $temp_shift->save();
+        $history = new History();
+        $history = $history->create($temp_shift);
+//        $temp_shift->save();
+        //dd($photosSaved);
         if(count($photosSaved) > 0)
-            $temp_shift->photos()->createMany($photosSaved);
+            $history->photos()->createMany($photosSaved);
 
         return response()->json(['error' => false, 'message'=>'submit data success !']);
     }

@@ -49,9 +49,9 @@ class ShiftsController extends Controller
         return response()->json(['error' => false, 'data'=>$result]);
     }
 
-    public function getPhotos($id)
+    public function getHistories($id)
     {
-        $data = $this->shift->find($id)->getPhotos();
+        $data = $this->shift->find($id)->getHistories();
         return response()->json(['error' => false, 'data'=>$data]);
     }
 

@@ -8,9 +8,9 @@ class StatusNode extends Model
 {
 	protected $table = 'status_nodes';
     protected $fillable = ['name']; 
-    public function shifts()
+    public function histories()
     {
-    	return $this->hasMany('App\Models\Shift');
+    	return $this->hasMany('App\Models\History');
     }
 
     

@@ -80,7 +80,9 @@ class BuildingController extends Controller
      */
     public function edit($id)
     {
-        //
+        $building = $this->building->find($id);
+        
+        return response()->json(['error' => false, 'data'=>['building'=>$building]]);
     }
 
     /**

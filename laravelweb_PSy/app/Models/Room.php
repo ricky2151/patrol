@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Room extends Model
 {
     protected $table = 'rooms';
-    protected $fillable = ['name', 'floor_id','building_id'];
+    protected $fillable = ['name', 'floor_id','building_id', 'gateway_id'];
 
     //detail
     public function getRoom()

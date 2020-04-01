@@ -82,7 +82,9 @@ class GatewayController extends Controller
      */
     public function edit($id)
     {
-        //
+        $gateway = $this->gateway->find($id);
+        
+        return response()->json(['error' => false, 'data'=>['gateway'=>$gateway]]);
     }
 
     /**
