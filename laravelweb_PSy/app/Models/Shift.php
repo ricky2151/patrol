@@ -119,16 +119,24 @@ class Shift extends Model
     }
     public function getHistories()
     {
-
+        $result = $this;
+        $result['room_name'] = $result->room()->get()[0]['name'];
+        $result['time_name'] = $result->time()->get()[0]['start'] . ' - ' . $result->time()->get()[0]['end'];
         $histories = $this->histories()->get();
         $histories = $histories->map(function ($item) {
-            $item['photos'] = $item->photos()->get();
             $item['status_node_name'] = $item->status_node()->get()[0]['name'];
+            $item['photos'] = $item->photos()->get()->map(function($item) {
+                return [
+                    'id' => $item['id'],
+                    'url' => $item['url'],
+                ];
+            });
             //$item = collect($item)->put('photos', $item->photos()->get());
             //$item = collect($item)->put('status_node_name', $item->status_node()->get());
             return $item;
         });
-        return $histories;
+        $result['histories'] = $histories;
+        return $result;
     }
     public static function showSmallReport()
     {

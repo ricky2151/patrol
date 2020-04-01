@@ -113,14 +113,11 @@ class User extends Authenticatable implements JWTSubject
                 'shifts.date',
                 'rooms.name as room_name',
                 DB::raw('times.start || " - " || times.end as time_start_end'),
-                'message as message',
-                'scan_time as scan_time',
             ]
         )
         ->orderBy('date', 'DESC')
         ->orderBy('time_start_end', 'DESC')
         ->orderBy('rooms.name','ASC')
-        ->orderBy('message', 'ASC')
         ->get();
 
         // $data = $data->map(function ($data) { 
@@ -146,7 +143,7 @@ class User extends Authenticatable implements JWTSubject
                 'time_end' => $item['time']['end'],
                 'date' => $item['date'],
                 'user_id' => $item['user_id'],
-                'countScanned' => $item['histories'], //todo sek masih error
+                'countScanned' => $item->histories()->get()->count(), 
             ];
         });
         return $shifts;

@@ -26,7 +26,8 @@ class UpdateRoom extends FormRequest
         return [
             'name' => 'nullable|string',
             'floor_id' => 'nullable|integer',
-            'building_id' => 'nullable|integer'
+            'building_id' => 'nullable|integer',
+            'gateway_id' => 'nullable|integer'
         ];
     }
 }

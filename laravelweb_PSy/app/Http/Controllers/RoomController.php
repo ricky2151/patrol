@@ -31,7 +31,8 @@ class RoomController extends Controller
         $data = $data->map(function ($data) { 
             $data = Arr::add($data, 'floor_name', $data['floor']['name']);
             $data = Arr::add($data, 'building_name', $data['building']['name']);
-            return Arr::except($data, ['floor', 'building']);
+            $data = Arr::add($data, 'gateway_name', $data['gateway']['name']);
+            return Arr::except($data, ['floor', 'building', 'gateway']);
         });
         
         return response()->json(['error' => false, 'data'=>$data]);

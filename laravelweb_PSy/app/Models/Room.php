@@ -17,6 +17,7 @@ class Room extends Model
                 'name' => $this['name'],
                 'floor_id' => $this['floor']['id'],
                 'building_id' => $this['building']['id'],
+                'gateway_id' => $this['gateway']['id'],
                 
                 
             ];
@@ -37,6 +38,10 @@ class Room extends Model
                     'id' => $this['building']['id'],
                     'name' => $this['building']['name'],
                 ],
+                'gateway' => [
+                    'id' => $this['gateway']['id'],
+                    'name' => $this['gateway']['name'],
+                ],
                 
             ];
        
@@ -44,7 +49,7 @@ class Room extends Model
     }
 
     public static function allDataCreate(){
-        return ['floors' => Floor::all(['id','name']), 'buildings' => Building::all(['id','name'])];
+        return ['floors' => Floor::all(['id','name']), 'buildings' => Building::all(['id','name']), 'gateways' => Gateway::all(['id','name'])];
     }
 
     public function floor()
