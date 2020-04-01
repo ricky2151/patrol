@@ -6,7 +6,11 @@
 
 <template>
     <div>
-        
+
+        <!-- POPUP HISTORY SHIFT -->
+        <cp-history ref='cpHistory'></cp-history>
+
+
         <!-- POPUP DETAIL SHIFT -->
         <v-dialog v-model="dialog_detailshifts">
             <v-card>
@@ -14,7 +18,7 @@
                     <v-btn icon dark v-on:click="closedialog_detailshifts()">
                         <v-icon>close</v-icon>
                     </v-btn>
-                    <v-toolbar-title>Detail Satpam</v-toolbar-title>
+                    <v-toolbar-title>Detail Shift</v-toolbar-title>
 
                 </v-toolbar>
                 <div style='padding:30px'>
@@ -39,9 +43,18 @@
                         <td>{{ props.item.date }}</td>
                         <td>{{ props.item.time_start_end }}</td>
                         <td>{{ props.item.room_name }}</td>
-                        <td>{{ props.item.status_node_name }}</td>
-                        <td>{{ props.item.message }}</td>
-                        <td>{{ props.item.scan_time }}</td>
+                        <td>
+                            <v-btn
+                                color="menu"
+                                dark
+                                class='btnaction'
+                                @click='open_history(props.item.id)'
+                                >
+                                Lihat Riwayat
+                            </v-btn>
+                            
+
+                        </td>
                     </template>
                     </v-data-table>
                 </div>
@@ -406,11 +419,13 @@
 <script>
 import axios from 'axios'
 import mxCrudChildForm from '../mixin/mxCrudChildForm';
+import cpHistory from './cpHistory.vue';
+
 export default {
-    errorCaptured (err, vm, info) {
-    this.error = `${err.stack}\n\nfound in ${info} of component`
-    return false
-  },
+    components:{
+        cpHistory,
+    },
+    
     data () {
         return {
             name_table:'users',
@@ -524,10 +539,7 @@ export default {
                 { text: 'Waktu', value:'date'},
                 { text: 'Tanggal', value:'time_start_end'},
                 { text: 'Ruangan', value:'room_name'},
-                { text: 'Kondisi', value:'status_node_name'},
-                { text: 'Pesan', value:'message'},
-                { text: 'Waktu Scan', value:'scan_time'},
-
+                { text: 'Riwayat Scan', value:''},
             ],
 
             
@@ -542,9 +554,6 @@ export default {
                     room:null,
                     time:null,
                     date:null,
-                    status_node:null,
-                    message:null,
-                    scan_time:null,
                 },
                
             ],
@@ -554,6 +563,10 @@ export default {
         }
     },
     methods: {
+        open_history(id)
+        {
+            this.$refs['cpHistory'].show_dialog_histories(id);
+        },
         add_shift_from_checker(data)
         {
 
@@ -729,7 +742,6 @@ export default {
             this.ref_input.role = r.data.roles;
             this.ref_input.room = r.data.rooms;
             this.ref_input.time = r.data.times;
-            this.ref_input.status_node = r.data.status_nodes;
             this.ref_input.shift_future = r.data.shift_future;
             for(var i = 0;i<this.ref_input.shift_future;i++){
                 this.ref_input.shift_future[i].no = i + 1;

@@ -23,6 +23,7 @@
                     <v-text-field :rules="this.$list_validation.max_req" v-model='input.name' label="nama" required></v-text-field>
                     <v-select class='pa-2' :rules="this.$list_validation.selectdata_req"  v-model='input.building_id' :items="ref_input.building" item-text='name' item-value='id' label="Pilih Gedung"></v-select>
                     <v-select class='pa-2' :rules="this.$list_validation.selectdata_req"  v-model='input.floor_id' :items="ref_input.floor" item-text='name' item-value='id' label="Pilih Lantai"></v-select>
+                    <v-select class='pa-2' :rules="this.$list_validation.selectdata_req"  v-model='input.gateway_id' :items="ref_input.gateway" item-text='name' item-value='id' label="Pilih Gateway"></v-select>
                     <v-btn v-on:click='save_data()' >Simpan</v-btn>
                     
                 </v-form>
@@ -63,6 +64,7 @@
             <td>{{ props.item.no }}</td>
             <td>{{ props.item.floor_name }}</td>
             <td>{{ props.item.building_name }}</td>
+            <td>{{ props.item.gateway_name }}</td>
             <td>{{ props.item.name }}</td>
 
             <td>
@@ -130,12 +132,14 @@ export default {
             {
                 building:[],
                 floor:[],
+                gateway:[],
             },
 
             headers: [
                 { text: 'No', value: 'no'},
                 { text: 'Lantai', value: 'floors'},
                 { text: 'Gedung', value: 'buildings'},
+                { text: 'Gateway', value: 'gateways'},
                 { text: 'Nama', value: 'name'},
                 { text: 'Pilihan', align:'left',sortable:false, width:'15%'},
 
@@ -168,6 +172,7 @@ export default {
             
             this.ref_input.floor = r.data.floors;
             this.ref_input.building = r.data.buildings;
+            this.ref_input.gateway = r.data.gateways;
             
         },
         convert_data_input(r)
@@ -178,6 +183,7 @@ export default {
             this.input.name = temp_r.name;
             this.input.building_id = parseInt(temp_r.building_id);
             this.input.floor_id = parseInt(temp_r.floor_id);
+            this.input.gateway_id = parseInt(temp_r.gateway_id);
 
             this.input_before_edit = JSON.parse(JSON.stringify(this.input));
         },
@@ -190,6 +196,7 @@ export default {
                 formData.append('name', this.input.name);
                 formData.append('building_id', this.input.building_id);
                 formData.append('floor_id', this.input.floor_id);
+                formData.append('gateway_id', this.input.gateway_id);
             }
             else //jika edit data
             {
@@ -199,6 +206,8 @@ export default {
                     formData.append('building_id', this.input.building_id);
                 if(this.input.floor_id != this.input_before_edit.floor_id) 
                     formData.append('floor_id', this.input.floor_id);
+                if(this.input.gateway_id != this.input_before_edit.gateway_id) 
+                    formData.append('gateway_id', this.input.gateway_id);
                 formData.append('_method','patch');
             }
             formData.append('token', localStorage.getItem('token'));
