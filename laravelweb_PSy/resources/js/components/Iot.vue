@@ -69,8 +69,16 @@ export default {
                 }
             }).then(r=> {
                 console.log(r.data);
-                swal('Berhasil !', 'Pengaturan LoRa Berhasil Direfresh !', 'success');
-                this.data_config = JSON.stringify(r.data.information);
+                if(r.data.error == false)
+                {
+                    swal('Berhasil !', 'Pengaturan LoRa Berhasil Direfresh !', 'success');
+                    this.data_config = JSON.stringify(r.data.information);
+                }
+                else
+                {
+                    swal('Gagal !', 'Pastikan Anda menjalankan server degnan benar !', 'error');
+                }
+                
                 this.showLoading(false);
             })
             .catch((error) =>
