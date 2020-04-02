@@ -207,6 +207,12 @@ export default {
 
                 },
                 {
+                    icon: "build",
+                    title: "IoT",
+                    action:"/iot",
+
+                },
+                {
                     icon: "store",
                     title: "Master Data",
                     subroutes:[

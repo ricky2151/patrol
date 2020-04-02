@@ -13,6 +13,7 @@ import Time from './components/Time'
 import StatusNode from './components/StatusNode'
 import Report from './components/Report'
 import ShiftToday from './components/ShiftToday'
+import Iot from './components/Iot'
 
 
 import Home from './components/Home';
@@ -33,6 +34,7 @@ const routes = [
         path:'/', component: Authenticated,
         children: [
             { path: '/', component: Home },
+            { path: '/iot', component: Iot },
             { path: '/floor', component: Floor },
             { path: '/room', component: Room },
             { path: '/user', component: User },
