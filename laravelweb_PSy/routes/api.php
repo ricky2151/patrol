@@ -30,6 +30,9 @@ Route::group(['prefix'=>'auth'], function()
 
 Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 {
+	//iot
+	Route::get('/iot/configGateway', 'IotController@configGateway');
+	//Route::get('/iot/runPython', 'IotController@runPython');
 
 	//dashboard
 	Route::get('/shifts/graph', 'ShiftsController@graph');
