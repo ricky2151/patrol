@@ -105,10 +105,12 @@ class Shift extends Model
     public static function showGraph()
     {
         $thisyear = date("Y");
-        $data = DB::table('shifts')->select(DB::raw('strftime("%Y",date) as year, strftime("%m",date) as month, status_nodes.name as status_nodes, count(*) as count'))
+        $data = DB::table('histories')->select(DB::raw('strftime("%Y",shifts.date) as year, strftime("%m",shifts.date) as month, status_nodes.name as status_nodes, count(*) as count'))
+        //$data = DB::table('shifts')->select(DB::raw('strftime("%Y",date) as year, strftime("%m",date) as month, status_nodes.name as status_nodes, count(*) as count'))
         ->groupBy('month', 'status_nodes')
         ->where('year', $thisyear)
         ->join('status_nodes', 'status_node_id','status_nodes.id')
+        ->join('shifts', 'shift_id','shifts.id')
         ->get();
         // $data = Shift::latest()->get()->groupBy(function($d) {
         //     return Carbon::parse($d->date)->format('m');
@@ -184,7 +186,10 @@ class Shift extends Model
 
         //get current event
         $totalRooms = Room::count();
-        $currentEvent = Shift::where('date', $thisDay)->where('scan_time', '!=', '')->limit($totalRooms)->with('room:id,name')->get();
+        $currentEvent = History::with(["shift" => function($q) use ($thisDay){
+            $q->where('shifts.date', '=', $thisDay);
+        }])->where('scan_time', '!=', '')->limit($totalRooms)->with('shift.room:id,name')->get();
+        //$currentEvent = Shift::where('date', $thisDay)->where('scan_time', '!=', '')->limit($totalRooms)->with('room:id,name')->get();
         
         $result = [];
         $result['securePercentageThisMonth'] = $securePercentageThisMonth;

@@ -3,19 +3,21 @@
 		<div id='dashboard-top'>
 			<v-layout row align-center>
 				<v-flex>
-					<img width=80 height=160 src='/assets/images/iconsatpam.png'></img>
+					<center>
+						<img width=80 height=160 src='/assets/images/iconsatpam.png' style='margin-left:-80px'></img>
+					</center>
 				</v-flex>
 				<v-flex>
-					<h1> Selamat Datang !</h1>
+					<h1 style='font-size:34px'> Selamat Datang !</h1>
 					<br>
-					<h3>Kondisi sekarang :</h3>
-					<div id='list-current-events'>
+					<h3 style='font-size:20px'>Kondisi terkini :</h3>
+					<div style='font-size:15px' id='list-current-events'>
 						<p v-for='(item,index) in current_event'>{{index}} : {{item}}</p>
 					</div>
 				</v-flex>
 				<v-spacer>
 				</v-spacer>
-				<v-flex>
+				<!-- <v-flex>
 					<v-layout row>
 							
 					</v-layout>
@@ -70,7 +72,7 @@
 							</div>
 						</div>
 					</v-layout>
-				</v-flex>
+				</v-flex> -->
 			</v-layout>
 		</div>
 
@@ -220,9 +222,9 @@
 
 	                	//- isi current event
 	                	this.current_event = {};
-	                	for(var  i = r_report.currentEvent.length - 1;i>=0;i--)
+	                	for(var  i = 0;i<r_report.currentEvent.length;i++)
 	                	{
-	                		this.current_event[r_report.currentEvent[i].room.name] = r_report.currentEvent[i].message;
+	                		this.current_event[r_report.currentEvent[i].shift.room.name] = r_report.currentEvent[i].message;
 	                	}
 	                	console.log('cek this');
 	                	console.log(this.current_event);
