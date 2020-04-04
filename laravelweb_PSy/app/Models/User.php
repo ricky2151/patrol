@@ -142,7 +142,6 @@ class User extends Authenticatable implements JWTSubject
                 'time_start' => $item['time']['start'],
                 'time_end' => $item['time']['end'],
                 'date' => $item['date'],
-                'user_id' => $item['user_id'],
                 'countScanned' => $item->histories()->get()->count(), 
             ];
         });
