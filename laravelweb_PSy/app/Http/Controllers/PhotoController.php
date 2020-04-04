@@ -23,10 +23,10 @@ class PhotoController extends Controller
     {
         $data = $this->photo->orderBy('id', 'desc')->get();
 
-        $data = $data->map(function ($data) { 
-            $data = Arr::add($data, 'shift_name', $data['shift']['scan_time']);
-            return Arr::except($data, ['shift']);
-        });
+        // $data = $data->map(function ($data) { 
+        //     $data = Arr::add($data, 'shift_name', $data['shift']['scan_time']);
+        //     return Arr::except($data, ['shift']);
+        // });
         
         return response()->json(['error' => false, 'data'=>$data]);
     }

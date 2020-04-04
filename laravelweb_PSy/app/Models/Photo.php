@@ -21,21 +21,7 @@ class Photo extends Model
         return $detail;
     }
 
-    public function getPhotoWIthId()
-    {
-        $photo = [
-                'id' => $this['id'],
-                'url' => $this['url'],
-                'shift' => [
-                    'id' => $this['shift']['id'],
-                    'name' => $this['shift']['scan_time'],
-                ],
-                
-                
-            ];
-       
-        return $photo;
-    }
+  
 
     
 

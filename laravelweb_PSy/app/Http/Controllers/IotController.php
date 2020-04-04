@@ -18,13 +18,25 @@ class IotController extends Controller
     public function runPython()
     {
         //masih belum bisa ndeteksi error saat jalanin python 
-        // try {
-        //     $command = escapeshellcmd('py storage/python/dbintegrate.py');
-        //     $output = shell_exec($command);
-        //     return response()->json(['error' => false, 'message'=>"python running"]);
-        // } catch (\Throwable $th) {
-        //     return response()->json(['error' => true, 'message'=>"python not running"]);
-        // }
+        // $pool = Pool::create();
+        // $pool->add(function () use ($thing) {
+        //     $command = escapeshellcmd('start /MIN "" py storage/python/dbintegrate.py > NUL 2> NUL');
+        //     $output = exec($command);
+        // })->then(function ($output) {
+        //     // Handle success
+        // })->catch(function (Throwable $exception) {
+        //     // Handle exception
+        // });
+        // return response()->json(['error' => false, 'message'=>"python running"]);
+        try {
+            $command = escapeshellcmd('start py storage/python/dbintegrate.py');
+            //$output = exec($command);
+            pclose(popen("start /B ". $command, "r")); 
+            return response()->json(['error' => false, 'message'=>"python running"]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => true, 'message'=>"python not running"]);
+        }
+        return "wew";
         
         
         //     dd("z");

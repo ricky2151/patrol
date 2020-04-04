@@ -40,15 +40,12 @@ class Shift extends Model
                 'rooms.name as room_name',
                 'users.name as user_name',
                 DB::raw('times.start || " - " || times.end as time_start_end'),
-                'message',
-                'scan_time',
             ]
         )
         ->orderBy('date', 'DESC')
         ->orderBy('time_start_end', 'DESC')
         ->orderBy('rooms.name','ASC')
         ->orderBy('user_name', 'ASC')
-        ->orderBy('message', 'ASC')
         ->get();
 
         // $data = $data->map(function ($data) { 
@@ -79,13 +76,10 @@ class Shift extends Model
                 'rooms.name as room_name',
                 'users.name as user_name',
                 DB::raw('times.start || " - " || times.end as time_start_end'),
-                'message',
-                'scan_time',
             ]
         )->orderBy('rooms.name','ASC')
         ->orderBy('time_start_end', 'DESC')
         ->orderBy('user_name', 'ASC')
-        ->orderBy('message', 'ASC')
         ->get();
 
         // $data = $data->map(function ($data) { 
@@ -148,48 +142,12 @@ class Shift extends Model
         $beforeThisMonth = date("m", strtotime("-1 months"));
 
 
-        //get secure
-        $totalSecureThisMonth = Shift::whereMonth('date', $thisMonth)->whereYear('date', $thisYear)->where('status_node_id','1')->count();
-        $totalDataThisMonth = Shift::whereMonth('date', $thisMonth)->whereYear('date', $thisYear)->count();
-        if($totalDataThisMonth == 0)
-        {
-            $totalDataThisMonth = 1; //karena jika totaldatathismonth = 0, pasti totalsecurethismonth = 0, maka dari itu nilainya dibkin 1 agar pas dibagi hasilnya 0
-        }
-        $totalSecureBeforeThisMonth = Shift::whereMonth('date', $beforeThisMonth)->whereYear('date', $thisYear)->where('status_node_id','1')->count();
-        $totalDataBeforeThisMonth = Shift::whereMonth('date', $beforeThisMonth)->whereYear('date', $thisYear)->count();
-        if($totalDataBeforeThisMonth == 0)
-        {
-            $totalDataBeforeThisMonth = 1; 
-        }
-
-        $securePercentageThisMonth = floor(($totalSecureThisMonth / $totalDataThisMonth) * 100);
-        $securePercentageBeforeThisMonth = floor(($totalSecureBeforeThisMonth / $totalDataBeforeThisMonth) * 100);
-
-        $differentSecureBetweenMonth = $securePercentageThisMonth - $securePercentageBeforeThisMonth;
-
-
-
-        //get presence
-        $totalPresenceThisMonth = Shift::whereMonth('date', $thisMonth)->whereYear('date', $thisYear)->where('scan_time', '!=', '')->count();
-        
-        $totalPresenceBeforeThisMonth = Shift::whereMonth('date', $beforeThisMonth)->whereYear('date', $thisYear)->where('scan_time', '!=', '')->count();
-        
-
-        $presencePercentageThisMonth = floor(($totalPresenceThisMonth / $totalDataThisMonth) * 100);
-        $presencePercentageBeforeThisMonth = floor(($totalPresenceBeforeThisMonth / $totalDataBeforeThisMonth) * 100);
-
-        $differentPresenceBetweenMonth = $presencePercentageThisMonth - $presencePercentageBeforeThisMonth;
-
-        
-        
-        
-
         //get current event
         $totalRooms = Room::count();
         $currentEvent = History::with(["shift" => function($q) use ($thisDay){
             $q->where('shifts.date', '=', $thisDay);
         }])->where('scan_time', '!=', '')->limit($totalRooms)->with('shift.room:id,name')->get();
-        //$currentEvent = Shift::where('date', $thisDay)->where('scan_time', '!=', '')->limit($totalRooms)->with('room:id,name')->get();
+        
         
         $result = [];
         $result['securePercentageThisMonth'] = $securePercentageThisMonth;

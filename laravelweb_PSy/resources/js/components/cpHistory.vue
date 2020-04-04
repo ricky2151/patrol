@@ -150,7 +150,7 @@ export default {
                 }
                 else
                 {
-                    swal('Foto tidak ditemukan !', 'Shift ini tidak memiliki foto sama sekali!', 'error');
+                    swal('Riwayat Tidak Ditemukan !', 'Shift ini belum di scan sama sekali!', 'error');
                 }
                 
 

@@ -35,9 +35,6 @@ class StoreUser extends FormRequest
             'shifts.*.room_id' => 'nullable|integer',
             'shifts.*.time_id' => 'nullable|integer',
             'shifts.*.date' => 'nullable|string',
-            'shifts.*.status_node_id' => 'nullable|string',
-            'shifts.*.message' => 'nullable|string',
-            'shifts.*.scan_time' => 'nullable|string',
 
             
         ];

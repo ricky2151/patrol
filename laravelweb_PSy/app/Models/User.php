@@ -152,7 +152,7 @@ class User extends Authenticatable implements JWTSubject
     public function getShiftWithId()
     {
         $resultShifts = [];
-        $shifts =  $this->shifts->where('scan_time', null);
+        $shifts =  $this->shifts()->doesntHave('histories')->get();
         
         $shifts = $shifts->map(function($item)
         {
@@ -165,13 +165,13 @@ class User extends Authenticatable implements JWTSubject
                     ],
                     'time' => $item->time()->select(DB::raw("id, (start || '-' || end) AS name"))->get()[0]
                     ,
-                    'status_node' => [
-                        'id' => $item['status_node']['id'],
-                        'name' => $item['status_node']['name'],
-                    ],
+                    // 'status_node' => [
+                    //     'id' => $item['status_node']['id'],
+                    //     'name' => $item['status_node']['name'],
+                    // ],
                     'date' => $item['date'],
-                    'message' => $item['message'],
-                    'scan_time' => $item['scan_time'],
+                    //'message' => $item['message'],
+                    //'scan_time' => $item['scan_time'],
                 ];
 
             

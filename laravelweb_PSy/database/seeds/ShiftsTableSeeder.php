@@ -92,7 +92,8 @@ class ShiftsTableSeeder extends Seeder
     			'user_id' => mt_rand(1,25),
     			'room_id' => mt_rand(1,10),
     			'time_id' => mt_rand(1,4),
-    			'date' => $faker->date($format = 'Y-m-d', $max = 'now'),
+                //'date' => $faker->date($format = 'Y-m-d', $max = 'now'),
+                'date' => $today,
     		]);
  
     	}
