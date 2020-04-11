@@ -17,6 +17,10 @@
                 <label>Refresh Pengaturan LoRa</label>
             </v-btn>
             <br>
+            <v-btn depressed color="light-blue darken-4" dark @click='run_python'>
+                <label>Jalankan Server Python</label>
+            </v-btn>
+            <br>
             <br>
             <div v-if='data_config != null' style='text-align:left;width:300px;overflow:auto'>
                 <p>Pengaturan LoRa : </p>
@@ -54,6 +58,48 @@ export default {
             {
                 document.getElementById('myLoading').style.display = 'none';
             }
+        },
+        run_python()
+        {
+            swal({
+                title: "Pastikan tidak ada server python yang sedang berjalan",
+                text: "Apabila ada, maka akan terestart. Klik OK untuk melanjutkan",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((runPython) => {
+                this.showLoading(true);
+                if (runPython) {
+
+                    axios.get('/api/admin/iot/runPython', {
+                            params:{
+                                token: localStorage.getItem('token')
+                            }
+                    },{
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-type': 'application/json'
+                        }
+                    }).then(r=> {
+                        console.log(r.data);
+                        if(r.data.error == false)
+                        {
+                            swal('Berhasil !', 'Server Python Berhasil Dijalankan !', 'success');
+                        }
+                        else
+                        {
+                            swal('Gagal !', 'Pastikan Anda menjalankan server degnan benar !', 'error');
+                        }
+                        
+                        this.showLoading(false);
+                    });
+                }
+                else
+                {
+                    this.showLoading(false);
+                }
+        });
         },
         refresh_config()
         {

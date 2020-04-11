@@ -28,15 +28,32 @@ class IotController extends Controller
         //     // Handle exception
         // });
         // return response()->json(['error' => false, 'message'=>"python running"]);
+
+        //=== coba windows ===
+        // try {
+        //     $command = escapeshellcmd('start py storage/python/dbintegrate.py');
+        //     //$output = exec($command);
+        //     pclose(popen("start /B ". $command, "r")); 
+        //     return response()->json(['error' => false, 'message'=>"python running"]);
+        // } catch (\Throwable $th) {
+        //     return response()->json(['error' => true, 'message'=>"python not running"]);
+        // }
+        
+        //=== coba linux ===
         try {
-            $command = escapeshellcmd('start py storage/python/dbintegrate.py');
-            //$output = exec($command);
-            pclose(popen("start /B ". $command, "r")); 
+            $commandKillPython = escapeshellcmd('killall -9 python');
+            $commandRunPython = escapeshellcmd('gnome-terminal -e \'python storage/python/dbintegrate.py 2>&1 &\' --title=RickyPython');
+            //passthru('python storage/python/dbintegrate.py 2>&1 &');process
+            //$res;
+            shell_exec($commandKillPython);
+            shell_exec($commandRunPython);
+            //return $res;
+            
+            //echo $output;
             return response()->json(['error' => false, 'message'=>"python running"]);
         } catch (\Throwable $th) {
             return response()->json(['error' => true, 'message'=>"python not running"]);
         }
-        return "wew";
         
         
         //     dd("z");
