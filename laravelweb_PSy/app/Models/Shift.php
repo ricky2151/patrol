@@ -150,10 +150,10 @@ class Shift extends Model
         
         
         $result = [];
-        $result['securePercentageThisMonth'] = $securePercentageThisMonth;
-        $result['differentSecureBetweenMonth'] = $differentSecureBetweenMonth;
-        $result['presencePercentageThisMonth'] = $presencePercentageThisMonth;
-        $result['differentPresenceBetweenMonth'] = $differentPresenceBetweenMonth;
+        //$result['securePercentageThisMonth'] = $securePercentageThisMonth;
+        //$result['differentSecureBetweenMonth'] = $differentSecureBetweenMonth;
+        //$result['presencePercentageThisMonth'] = $presencePercentageThisMonth;
+        //$result['differentPresenceBetweenMonth'] = $differentPresenceBetweenMonth;
         $result['currentEvent'] = $currentEvent;
         return $result;
     }
