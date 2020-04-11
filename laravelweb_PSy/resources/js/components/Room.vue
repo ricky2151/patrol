@@ -62,6 +62,7 @@
         >
         <template v-slot:items="props">
             <td>{{ props.item.no }}</td>
+            <td>{{ props.item.id }}</td>
             <td>{{ props.item.floor_name }}</td>
             <td>{{ props.item.building_name }}</td>
             <td>{{ props.item.gateway_name }}</td>
@@ -137,6 +138,7 @@ export default {
 
             headers: [
                 { text: 'No', value: 'no'},
+                { text: 'ID Ruangan', value: 'id'},
                 { text: 'Lantai', value: 'floors'},
                 { text: 'Gedung', value: 'buildings'},
                 { text: 'Gateway', value: 'gateways'},
