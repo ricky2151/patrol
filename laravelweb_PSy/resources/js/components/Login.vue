@@ -7,7 +7,7 @@
                         <v-form @submit.prevent="req_login">
                             <v-card class="elevation-12">
                                 <v-toolbar dark color="primary">
-                                    <v-toolbar-title>Patrolie Admin Dashboard</v-toolbar-title>
+                                    <v-toolbar-title>Patrolee Admin Dashboard</v-toolbar-title>
 
                                 </v-toolbar>
                                 <v-card-text>
