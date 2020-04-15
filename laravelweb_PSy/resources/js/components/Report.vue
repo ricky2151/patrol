@@ -44,58 +44,23 @@
         >
         <template v-slot:items="props">
             
-                <td v-bind:class='
-            {
-            rowRed: props.item.status_node_id == 3,
-            rowOrange : props.item.status_node_id == 2,
-            rowGreen : props.item.status_node_id == 1,
-            }'>{{ props.item.no }}</td>
+            <td>{{ props.item.no }}</td>
                 
                 
-            <td v-bind:class='
-            {
-            rowRed: props.item.status_node_id == 3,
-            rowOrange : props.item.status_node_id == 2,
-            rowGreen : props.item.status_node_id == 1,
-            }'>{{ props.item.date }}</td>
+            <td>{{ props.item.date }}</td>
 
-                <td v-bind:class='
-            {
-            rowRed: props.item.status_node_id == 3,
-            rowOrange : props.item.status_node_id == 2,
-            rowGreen : props.item.status_node_id == 1,
-            }'>{{ props.item.time_start_end }}</td>
+            <td>{{ props.item.time_start_end }}</td>
                 
 
-            <td v-bind:class='
-            {
-            rowRed: props.item.status_node_id == 3,
-            rowOrange : props.item.status_node_id == 2,
-            rowGreen : props.item.status_node_id == 1,
-            }'>{{ props.item.room_name }}</td>
+            <td>{{ props.item.room_name }}</td>
 
-            <td v-bind:class='
-            {
-            rowRed: props.item.status_node_id == 3,
-            rowOrange : props.item.status_node_id == 2,
-            rowGreen : props.item.status_node_id == 1,
-            }'>{{ props.item.user_name }}</td>
+            <td>{{ props.item.user_name }}</td>
 
 
-                <!-- UNTUK NGETEST MENAMPILKAN ID SHIFT -->
-                <!-- <td v-bind:class='
-            {
-            rowRed: props.item.status_node_id == 3,
-            rowOrange : props.item.status_node_id == 2,
-            rowGreen : props.item.status_node_id == 1,
-            }'>{{ props.item.id }}</td> -->
+            <!-- UNTUK NGETEST MENAMPILKAN ID SHIFT -->
+            <!-- <td>{{ props.item.id }}</td> -->
 
-            <td v-bind:class='
-            {
-            rowRed: props.item.status_node_id == 3,
-            rowOrange : props.item.status_node_id == 2,
-            rowGreen : props.item.status_node_id == 1,
-            }'>
+            <td>
                 <v-btn small depressed color="light-blue darken-4" dark @click='open_history(props.item.id)'>
                     <label>Riwayat Scan</label>
                 </v-btn>
@@ -132,8 +97,6 @@ export default {
                 { text: 'Satpam', value: 'user_name'},
                 //{ text: 'NGETEST ID', value: 'id'},
                 { text: 'Riwayat', value: ''},
-               
-
             ],
 
 
