@@ -136,6 +136,9 @@ class User extends Authenticatable implements JWTSubject
         //return ($this->shifts()->get()->toArray());
         $shifts = $this->shifts()->where('date',Carbon::today()->format('Y-m-d'))->get()->map(function($item)
         {
+            $last_scan = $item->histories()->latest('scan_time')->first();
+            unset($last_scan['created_at']);
+            unset($last_scan['updated_at']);
             return [
                 'id' => $item['id'],
                 'room' => $item['room']['name'],
@@ -143,6 +146,7 @@ class User extends Authenticatable implements JWTSubject
                 'time_end' => $item['time']['end'],
                 'date' => $item['date'],
                 'countScanned' => $item->histories()->get()->count(), 
+                'last_scan' => $last_scan,
             ];
         });
         return $shifts;
