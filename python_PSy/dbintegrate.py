@@ -8,6 +8,9 @@ import sqlite3
 global startShiftTime
 startShiftTime={}
 
+usernameMQTT = "samuelricky-skripsi-coba"
+passwordMQTT = "PAKE PASSWORDMU SENDIRI"
+
 def konversi(jam):
       ptr=conn.execute("select id,start from  times ")
       for n in ptr:
@@ -48,7 +51,7 @@ def sendShiftQRCode(idTimes,date):
       qrCodeData=md.enkrip(shiftId,masterKeyUser)
       md.dekrip(qrCodeData,shiftId,masterKeyUser)
       print(qrCodeData)
-      topic='ruang/'+room
+      topic='qrcode/'+room
       print("kirim ke "+topic)
       
       ##!kirim ke stiap node sesuai room_id
@@ -58,9 +61,10 @@ def sendShiftQRCode(idTimes,date):
 
 #__MAIN
 #create connection to broker MQTT
-mqtt.createConnection("broker.shiftr.io",1883,60,"SERVER","904e4807","cfdc8ca761caadf9")
+print("run success")
+mqtt.createConnection("broker.shiftr.io",1883,60,"SERVER",usernameMQTT,passwordMQTT)
 #create connection to database
-conn = sqlite3.connect('C:/xampp/htdocs/patrol/laravelweb_PSy/database/satpam.sq3')
+conn = sqlite3.connect('E:/xampp7/htdocs/patrol_fix/patrol/laravelweb_PSy/database/satpam.sq3')
 print ("Opened database successfully")
 print ("==========================================")
 
@@ -85,7 +89,7 @@ while(True):
       print ("==========================================")
       print ("scanning time"+str(current))
       oldMinute = newMinute
-      mqtt.createConnection("broker.shiftr.io",1883,60,"SERVER","904e4807","cfdc8ca761caadf9")
+      mqtt.createConnection("broker.shiftr.io",1883,60,"SERVER",usernameMQTT,passwordMQTT)
       
       currentHour = ("{:02d}".format(current.hour))
       currentDate = ("{:04d}-{:02d}-{:02d}".format(current.year,current.month,current.day))
