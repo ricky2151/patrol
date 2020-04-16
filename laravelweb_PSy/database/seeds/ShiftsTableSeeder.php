@@ -86,16 +86,47 @@ class ShiftsTableSeeder extends Seeder
                 'date' => $todayBeforeThisMonth,
             ]);
 
+        $shiftAdded = array();
+        //random until room & time not already exist, and insert until 20 rows
+        while(count($shiftAdded) != 60)
+        {
+            $temp_rand_room = mt_rand(1,10);
+            $temp_rand_time = mt_rand(1,4);
+            $temp_rand_user = mt_rand(1,5);
+            $added = false;
+            for($j = 0;$j<count($shiftAdded);$j++)
+            {
+                if($shiftAdded[0] == $temp_rand_room && $shiftAdded[1] == $temp_rand_time && $shiftAdded[2] == $temp_rand_user)
+                {
+                    $added = true;
+                    break;
+                }
+            }
+            if($added == false)
+            {
+                $roomTimeUserArray = array();
+                array_push($roomTimeUserArray, $temp_rand_room);
+                array_push($roomTimeUserArray, $temp_rand_time);
+                array_push($roomTimeUserArray, $temp_rand_user);
+                array_push($shiftAdded,$roomTimeUserArray);
 
-    	for($i = 1; $i <= 100; $i++){    		
-    		DB::table('shifts')->insert([
-    			'user_id' => mt_rand(1,25),
-    			'room_id' => mt_rand(1,10),
-    			'time_id' => mt_rand(1,4),
-                //'date' => $faker->date($format = 'Y-m-d', $max = 'now'),
-                'date' => $today,
-    		]);
+                DB::table('shifts')->insert([
+                    'user_id' => $temp_rand_user,
+                    'room_id' => $temp_rand_room,
+                    'time_id' => $temp_rand_time,
+                    //'date' => $faker->date($format = 'Y-m-d', $max = 'now'),
+                    'date' => $today,
+                ]);
+            }
+        }
+            
+            
+            
+
+    		
+            
+            
  
-    	}
+    	
     }
 }
