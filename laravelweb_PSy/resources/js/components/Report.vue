@@ -58,7 +58,7 @@
 
 
             <!-- UNTUK NGETEST MENAMPILKAN ID SHIFT -->
-            <!-- <td>{{ props.item.id }}</td> -->
+            <td>{{ props.item.id }}</td>
 
             <td>
                 <v-btn small depressed color="light-blue darken-4" dark @click='open_history(props.item.id)'>
@@ -95,7 +95,7 @@ export default {
                 { text: 'Waktu', value: 'time_start_end'},
                 { text: 'Ruangan', value: 'room_name'},
                 { text: 'Satpam', value: 'user_name'},
-                //{ text: 'NGETEST ID', value: 'id'},
+                { text: 'NGETEST ID', value: 'id'},
                 { text: 'Riwayat', value: ''},
             ],
 
