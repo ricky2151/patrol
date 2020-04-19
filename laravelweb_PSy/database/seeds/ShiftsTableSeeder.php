@@ -45,50 +45,50 @@ class ShiftsTableSeeder extends Seeder
 
         // }
 
-        DB::table('shifts')->insert([
-                'user_id' => 1,
-                'room_id' => 1,
-                'time_id' => 1,
-                'date' => $today,
-            ]);
+        // DB::table('shifts')->insert([
+        //         'user_id' => 1,
+        //         'room_id' => 1,
+        //         'time_id' => 1,
+        //         'date' => $today,
+        //     ]);
 
-        DB::table('shifts')->insert([
-                'user_id' => 1,
-                'room_id' => 2,
-                'time_id' => 1,
-                'date' => $today,
-            ]);
+        // DB::table('shifts')->insert([
+        //         'user_id' => 1,
+        //         'room_id' => 2,
+        //         'time_id' => 1,
+        //         'date' => $today,
+        //     ]);
 
-        DB::table('shifts')->insert([
-                'user_id' => 1,
-                'room_id' => 2,
-                'time_id' => 3,
-                'date' => $today,
-            ]);
-        DB::table('shifts')->insert([
-                'user_id' => 1,
-                'room_id' => 1,
-                'time_id' => 1,
-                'date' => $todayBeforeThisMonth,
-            ]);
+        // DB::table('shifts')->insert([
+        //         'user_id' => 1,
+        //         'room_id' => 2,
+        //         'time_id' => 3,
+        //         'date' => $today,
+        //     ]);
+        // DB::table('shifts')->insert([
+        //         'user_id' => 1,
+        //         'room_id' => 1,
+        //         'time_id' => 1,
+        //         'date' => $todayBeforeThisMonth,
+        //     ]);
 
-        DB::table('shifts')->insert([
-                'user_id' => 1,
-                'room_id' => 2,
-                'time_id' => 1,
-                'date' => $todayBeforeThisMonth, 
-            ]);
+        // DB::table('shifts')->insert([
+        //         'user_id' => 1,
+        //         'room_id' => 2,
+        //         'time_id' => 1,
+        //         'date' => $todayBeforeThisMonth, 
+        //     ]);
 
-        DB::table('shifts')->insert([
-                'user_id' => 1,
-                'room_id' => 2,
-                'time_id' => 3,
-                'date' => $todayBeforeThisMonth,
-            ]);
+        // DB::table('shifts')->insert([
+        //         'user_id' => 1,
+        //         'room_id' => 2,
+        //         'time_id' => 3,
+        //         'date' => $todayBeforeThisMonth,
+        //     ]);
 
         $shiftAdded = array();
         //random until room & time not already exist, and insert until 20 rows
-        while(count($shiftAdded) != 60)
+        while(count($shiftAdded) != 10)
         {
             $temp_rand_room = mt_rand(1,10);
             $temp_rand_time = mt_rand(1,4);
@@ -96,11 +96,18 @@ class ShiftsTableSeeder extends Seeder
             $added = false;
             for($j = 0;$j<count($shiftAdded);$j++)
             {
-                if($shiftAdded[0] == $temp_rand_room && $shiftAdded[1] == $temp_rand_time && $shiftAdded[2] == $temp_rand_user)
+                //room_id & time_id not allowed to repeat
+                if($shiftAdded[$j][0] == $temp_rand_room && $shiftAdded[$j][1] == $temp_rand_time)
                 {
                     $added = true;
                     break;
                 }
+                else if($shiftAdded[$j][1] == $temp_rand_time && $shiftAdded[$j][2] == $temp_rand_user)
+                {
+                    $added = true;
+                    break;
+                }
+                
             }
             if($added == false)
             {

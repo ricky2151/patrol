@@ -14,7 +14,7 @@
             <p style='margin: 0px;font-size:16px'>Apabila ada tambahan node atau perubahan gateway, silahkan tekan tombol dibawah ini </p>
             <br>
             <v-btn depressed color="light-blue darken-4" dark @click='refresh_config'>
-                <label>Refresh Pengaturan LoRa</label>
+                <label>Refresh Pengaturan LoRa/nRF</label>
             </v-btn>
             <br>
             <v-btn depressed color="light-blue darken-4" dark @click='run_python'>
@@ -23,7 +23,7 @@
             <br>
             <br>
             <div v-if='data_config != null' style='text-align:left;width:300px;overflow:auto'>
-                <p>Pengaturan LoRa : </p>
+                <p>Pengaturan LoRa/nRF : </p>
                 <pre>{{ data_config | pretty }}</pre>
             </div>
         </center>
@@ -117,7 +117,7 @@ export default {
                 console.log(r.data);
                 if(r.data.error == false)
                 {
-                    swal('Berhasil !', 'Pengaturan LoRa Berhasil Direfresh !', 'success');
+                    swal('Berhasil !', 'Pengaturan LoRa/nRF Berhasil Direfresh !', 'success');
                     this.data_config = JSON.stringify(r.data.information);
                 }
                 else
