@@ -91,46 +91,133 @@ class UserController extends Controller
     {
         $data = $request->validated();
         $id = $data['id'];
+        error_log('Submitted shift : ' . $id);
         unset($data['id']);
-        $temp_shift = [];
-        $temp_shift['shift_id'] = $id;
-        $temp_shift['status_node_id'] = $data['status_node_id'];
-        $temp_shift['scan_time'] = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
-        isset($data['message']) ? $temp_shift['message'] = $data['message'] : $temp_shift['message'] = '';
-        //set image
-        $photosSaved = [];
-        if($request->file('photos'))
+        $shift = new Shift();
+        $shift = $shift->find($id);
+        $idUserThisShift = $shift->user()->get()[0]->id;
+
+        $dataIsRight = false;
+        //check user is right
+        if($idUserThisShift == Auth::user()->id)
         {
-            foreach($request->file('photos') as $image)
+            //check time is right
+            $timeNow = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
+            $dateNow = Carbon::now()->timezone('Asia/Jakarta')->format('Y-m-d');    
+            $dateYesterday = date('Y-m-d', strtotime('-1 day', strtotime($dateNow)));
+
+            $timeShift = $shift->time()->get()[0];
+            $startTimeShift = $timeShift['start'];
+            $endTimeShift = $timeShift['end'];
+            $dateShift = $shift->date;
+            //dd($dateNow);
+            //dd(strtotime("2020-03-20") >= strtotime("2020-04-19"));
+            
+
+            //if normal
+            //ex : 10:00 - 14:00
+            if(strtotime($startTimeShift) < strtotime($endTimeShift))
             {
-                $path = '';
-                $folder = 'photos';
-                $name =  $id.Str::random(10);
-
-                if(!is_null($image)){
-                    $name = strtolower(preg_replace('/[^a-zA-Z0-9-_\.]/','',$name));
-
-                    $path = $image->storeAs($folder, $name . ".jpg");
+                //check if date is same
+                if(strtotime($dateShift) == strtotime($dateNow))
+                {
+                    //check if timenow is in between starttimeshift and endtimeshift
+                    if(strtotime($timeNow) >= strtotime($startTimeShift) && strtotime($timeNow) < strtotime($endTimeShift))
+                    {
+                        $dataIsRight = true;
+                    }
+                    else
+                    {
+                        return response()->json(['error' => true, 'message'=>"your time scan is not correct"]);
+                    }
                 }
-                else{
-                    $path = $folder."/default.png";
+                else
+                {
+                    return response()->json(['error' => true, 'message'=>"your date scan is not correct"]);
                 }
+            }
+            else
+            {
+                //if overlap date
+                //ex : 18:00 - 10:00
+                //check if date is same
+                if(strtotime($dateShift) == strtotime($dateNow))
+                {
+                    //scan time is must greather than startimteshift & endtimeshift
+                    //ex, scan time : 20:00
+                    if(strtotime($timeNow) > strtotime($startTimeShift) && strtotime($timeNow) > strtotime($endTimeShift))
+                    {
+                        $dataIsRight = true;
+                    }
+                    else
+                    {
+                        return response()->json(['error' => true, 'message'=>"your time scan is not correct"]);
+                    }
+                }
+                else if(strtotime($dateShift) == strtotime($dateYesterday)) //ex, shift date is 2020-04-19, and dateNow is 2020-04-20, then this is overlap date
+                {
+                    //scan time is must less than starttimeshift & endtimeshift
+                    //ex, time shift : 18:00 - 10:00
+                    //scan time : 09:00
+                    if(strtotime($timeNow) < strtotime($startTimeShift) && strtotime($timeNow) < strtotime($endTimeShift))
+                    {
+                        $dataIsRight = true;
+                    }
+                    else
+                    {
+                        return response()->json(['error' => true, 'message'=>"your time scan is not correct"]);
+                    }
+                }
+                else
+                {
+                    return response()->json(['error' => true, 'message'=>"your date scan is not correct"]);
+                }
+            }
+        }
 
-                $photosSaved[] = ['url' => $path];
+        if($dataIsRight)
+        {
+            $temp_shift = [];
+            $temp_shift['shift_id'] = $id;
+            $temp_shift['status_node_id'] = $data['status_node_id'];
+            $temp_shift['scan_time'] = $timeNow;
+            isset($data['message']) ? $temp_shift['message'] = $data['message'] : $temp_shift['message'] = '';
+            //set image
+            $photosSaved = [];
+            if($request->file('photos'))
+            {
+                foreach($request->file('photos') as $image)
+                {
+                    $path = '';
+                    $folder = 'photos';
+                    $name =  $id.Str::random(10);
+
+                    if(!is_null($image)){
+                        $name = strtolower(preg_replace('/[^a-zA-Z0-9-_\.]/','',$name));
+
+                        $path = $image->storeAs($folder, $name . ".jpg");
+                    }
+                    else{
+                        $path = $folder."/default.png";
+                    }
+
+                    $photosSaved[] = ['url' => $path];
+
+                }
 
             }
+            
+            //saving
+            $history = new History();
+            $history = $history->create($temp_shift);
+    //        $temp_shift->save();
+            //dd($photosSaved);
+            if(count($photosSaved) > 0)
+                $history->photos()->createMany($photosSaved);
 
+            return response()->json(['error' => false, 'message'=>'submit data success !']);
         }
         
-        //saving
-        $history = new History();
-        $history = $history->create($temp_shift);
-//        $temp_shift->save();
-        //dd($photosSaved);
-        if(count($photosSaved) > 0)
-            $history->photos()->createMany($photosSaved);
-
-        return response()->json(['error' => false, 'message'=>'submit data success !']);
     }
 
     /**
