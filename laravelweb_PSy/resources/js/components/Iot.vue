@@ -8,17 +8,52 @@
 <script src="Treant.min.js"></script>
 <template>
     <div style='padding:20px'>
+
+        <!-- POPUP PANDUAN -->
+        <v-dialog v-model="dialog_panduan" width=750>
+            <v-card>
+                <v-toolbar dark color="menu">
+                    <v-btn icon dark v-on:click="closedialog_panduan()">
+                        <v-icon>close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title v-html='"Panduan Instalasi Alat Lora/nRF"'></v-toolbar-title>
+
+                </v-toolbar>
+                <div style='padding:30px'>
+                    <label>1. Pasang semua alat LoRa/nRF pada tempatnya</label>
+                    <br>
+                    <label>2. Pastikan LoRa/nRF Gateway sudah connect WiFi dan connect MQTT</label>
+                    <br>
+                    <label>3. Buka halaman admin, atur room, gateway, jadwal shift, dll</label>
+                    <br>
+                    <label>4. Di halaman admin, masuk ke menu IoT, klik refresh pengaturan LoRa/nRF</label>
+                    <br>
+                    <label>5. Setelah itu, pastikan LoRa/nRF Gateway sudah subscribe ke id LoRa/nRF node dengan benar</label>
+                    <br>
+                    <label>6. Jalankan python dengan mengklik tombol "jalankan server python" atau menjalankannya secara manual melalui terminal</label>
+                    <br>
+                    <label>7. Buka aplikasi patrolee, dan sistem sudah siap digunakan !</label>
+                    <br>
+                </div>
+            </v-card>
+        </v-dialog>
+
+
         <center>
             <img style='margin:40px 0px' src="/assets/images/logo.png" width=300 height=300 alt="">
             <br>
-            <p style='margin: 0px;font-size:16px'>Apabila ada tambahan node atau perubahan gateway, silahkan tekan tombol dibawah ini </p>
+            <p style='padding:30px 70px; margin: 0px;font-size:16px'>Instruksi instalasi alat dapat dilihat dengan cara klik tombol "Panduan Instalasi". Apabila ada tambahan node atau perubahan gateway, klik tombol "Refresh Pengaturan LoRa/nRF", dan untuk menjalankan server python klik tombol "Jalankan Server Python" </p>
+            
+            <v-btn depressed color="light-blue darken-4" dark @click='opendialog_panduan'>
+                <label><v-icon left>menu_book</v-icon>Panduan Instalasi Lora/nRF</label>
+            </v-btn>
             <br>
             <v-btn depressed color="light-blue darken-4" dark @click='refresh_config'>
-                <label>Refresh Pengaturan LoRa/nRF</label>
+                <label><v-icon left>router</v-icon>Refresh Pengaturan LoRa/nRF</label>
             </v-btn>
             <br>
             <v-btn depressed color="light-blue darken-4" dark @click='run_python'>
-                <label>Jalankan Server Python</label>
+                <label><v-icon left>dns</v-icon>Jalankan Server Python</label>
             </v-btn>
             <br>
             <br>
@@ -39,6 +74,7 @@ export default {
         return {
 
            data_config : null,
+           dialog_panduan : false,
             
         }
     },
@@ -48,6 +84,14 @@ export default {
         }
     },
     methods: {
+        closedialog_panduan()
+        {
+            this.dialog_panduan = false;
+        },
+        opendialog_panduan()
+        {
+            this.dialog_panduan = true;
+        },
         showLoading(state)
         {
             if(state)
