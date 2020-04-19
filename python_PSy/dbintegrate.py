@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import time
 import mqtt as mqtt
@@ -74,6 +74,7 @@ bStart = False
 startShiftTime=timeShift("start")
 endShiftTime=timeShift("end")
 count=0
+mqtt.createConnection("broker.shiftr.io",1883,60,"SERVER",usernameMQTT,passwordMQTT)
 while(True):
    current = datetime.now()
    
@@ -89,18 +90,34 @@ while(True):
       print ("==========================================")
       print ("scanning time"+str(current))
       oldMinute = newMinute
-      mqtt.createConnection("broker.shiftr.io",1883,60,"SERVER",usernameMQTT,passwordMQTT)
+      
       
       currentHour = ("{:02d}".format(current.hour))
       currentDate = ("{:04d}-{:02d}-{:02d}".format(current.year,current.month,current.day))
+      timeDateYesterday = datetime.today() - timedelta(days=1)
+      dateYesterday = timeDateYesterday.strftime("%Y") + "-" + timeDateYesterday.strftime("%m") + "-" + timeDateYesterday.strftime("%d")
       print("Jam Sekarang: ",currentHour)
       print("date = "+currentDate)
-            
+      print("date yesterday = " + dateYesterday)
       #check currentHour in range start-end time shift and convert to id timeShift
       for n in range(1,len(startShiftTime)+1):
+         #kalau lebih besar, berarti melewati jam 12 malam. 
+         #contoh : 23:00 sampai 01:00
+         if(startShiftTime[n] > endShiftTime[n]):
+            if(currentHour >= startShiftTime[n] and currentHour >= endShiftTime[n]):
+               print('hayo')
+               print(startShiftTime[n])
+               sendShiftQRCode(dict((v,k) for k,v in startShiftTime.items()).get(startShiftTime[n]),currentDate)  
+               
+            else:
+               if(currentHour < endShiftTime[n] and currentHour < startShiftTime[n]):
+                  sendShiftQRCode(dict((v,k) for k,v in startShiftTime.items()).get(startShiftTime[n]),dateYesterday)
+                  
+
+               
          if(currentHour>=startShiftTime[n] and currentHour<endShiftTime[n]):
             sendShiftQRCode(dict((v,k) for k,v in startShiftTime.items()).get(startShiftTime[n]),currentDate)  
-            break
+            
          
       print ("==========================================")
       
