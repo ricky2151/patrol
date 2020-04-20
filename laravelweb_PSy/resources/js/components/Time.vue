@@ -22,7 +22,7 @@
                 <v-form v-model="valid" style='padding:30px' ref='formCreateEdit'>
                     <v-text-field :rules="this.$list_validation.time_shift" v-model='input.start' label="Mulai" required></v-text-field>
                     <v-text-field :rules="this.$list_validation.time_shift" v-model='input.end' label="Berakhir" required></v-text-field>
-                    <v-btn v-on:click='save_data()' >Simpan</v-btn>
+                    <v-btn v-on:click='confirmationForm()' >Simpan</v-btn>
                 </v-form>
             </v-card>
         </v-dialog>
@@ -153,7 +153,29 @@ export default {
             }
         },
 
-
+        confirmationForm()
+        {
+            if((this.input.start) > (this.input.end))
+            {
+                swal({
+                    title: "Apakah Anda yakin waktu melewati jam 12 malam ?",
+                    text: "Apabila yakin, silahkan klik yes",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((yes) => {
+                    
+                    if (yes) {
+                        this.save_data();
+                    }
+                });
+            }
+            else{
+                this.save_data();
+            }
+            
+        },
 
         convert_data_input(tempobject)
         {
