@@ -72,4 +72,9 @@ class Room extends Model
     	return $this->hasMany('App\Models\Shift'); 
     }
 
+    public function acknowledges()
+    {
+    	return $this->hasMany('App\Models\Acknowledge'); 
+    }
+
 }

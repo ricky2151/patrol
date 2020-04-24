@@ -27,6 +27,8 @@ Route::group(['prefix'=>'auth'], function()
 
 });
 
+//for node device
+Route::resource('acknowledges', 'AcknowledgeController');
 
 Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 {
@@ -55,7 +57,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 	Route::resource('status_nodes', 'StatusNodeController');
 	Route::resource('times', 'TimeController');
 	Route::resource('users', 'UserController');
-
 });
 
 Route::group(['prefix' => 'guard', 'middleware' => 'RoleGuard'], function()
