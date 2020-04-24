@@ -37,12 +37,45 @@
                 </div>
             </v-card>
         </v-dialog>
+        
+
+        <!-- POPUP ACKNOWLEDGE NODE -->
+        <v-dialog v-model="dialog_acknowledge" fullscreen>
+            <v-card>
+                <v-toolbar dark color="menu">
+                    <v-btn icon dark v-on:click="closedialog_acknowledge()">
+                        <v-icon>close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title v-html='"Log Acknowledge Pada Node/NrF"'></v-toolbar-title>
+
+                </v-toolbar>
+                <div style='padding:30px'>
+                    <v-data-table
+                        disable-initial-sort
+                        :headers="headers_acknowledges"
+                        :items="data_acknowledges"
+                        :search="search_data_acknowledges"
+                        class="datatable"
+                        :rowsPerPageItems="[10, 20, 30, 40, 50]"
+                    >
+                    <template v-slot:items="props">
+                        <td>{{ props.item.no }}</td>
+                        <td>{{ props.item.room_id }}</td>
+                        <td>{{ props.item.room_name }}</td>
+                        <td>{{ props.item.sent }}</td>
+                        <td>{{ props.item.time }}</td>
+                        <td>{{ props.item.created_at }}</td>
+                    </template>
+                    </v-data-table>
+                </div>
+            </v-card>
+        </v-dialog>
 
 
         <center>
             <img style='margin:40px 0px' src="/assets/images/logo.png" width=300 height=300 alt="">
             <br>
-            <p style='padding:30px 70px; margin: 0px;font-size:16px'>Instruksi instalasi alat dapat dilihat dengan cara klik tombol "Panduan Instalasi". Apabila ada tambahan node atau perubahan gateway, klik tombol "Refresh Pengaturan LoRa/nRF", dan untuk menjalankan server python klik tombol "Jalankan Server Python" </p>
+            <p style='padding:30px 70px; margin: 0px;font-size:16px'>Instruksi instalasi alat dapat dilihat dengan cara klik tombol "Panduan Instalasi". Apabila ada tambahan node atau perubahan gateway, klik tombol "Refresh Pengaturan LoRa/nRF", untuk menjalankan server python klik tombol "Jalankan Server Python", dan untuk melihat log acknowledges klik tombol "Log Acknowledges" </p>
             
             <v-btn depressed color="light-blue darken-4" dark @click='opendialog_panduan'>
                 <label><v-icon left>menu_book</v-icon>Panduan Instalasi Lora/nRF</label>
@@ -54,6 +87,10 @@
             <br>
             <v-btn depressed color="light-blue darken-4" dark @click='run_python'>
                 <label><v-icon left>dns</v-icon>Jalankan Server Python</label>
+            </v-btn>
+            <br>
+            <v-btn depressed color="light-blue darken-4" dark @click='opendialog_acknowledge'>
+                <label><v-icon left>dns</v-icon>Log Acknowledges</label>
             </v-btn>
             <br>
             <br>
@@ -75,7 +112,22 @@ export default {
 
            data_config : null,
            dialog_panduan : false,
-            
+           dialog_acknowledge : false,
+
+
+           headers_acknowledges: [
+                { text: 'No', value: 'no'},
+                { text: 'ID Ruangan / ID Node', value: 'room_id'},
+                { text: 'Ruangan', value: 'room_name'},
+                { text: 'Berhasil / Tidak', value: 'sent'},
+                { text: 'Selisih Waktu (mikrodetik)', value: 'time'},
+                { text: 'Waktu Terkirim', value: 'created_at'},
+
+            ],
+
+
+            data_acknowledges:[],
+            search_data_acknowledges: null,
         }
     },
     filters: {
@@ -91,6 +143,47 @@ export default {
         opendialog_panduan()
         {
             this.dialog_panduan = true;
+        },
+        closedialog_acknowledge()
+        {
+            this.dialog_acknowledge = false;
+        },
+        opendialog_acknowledge()
+        {
+            this.dialog_acknowledge = true;
+            this.showLoading(true);
+            axios.get('/api/acknowledges', {
+                    params:{
+                        token: localStorage.getItem('token')
+                    }
+            },this.header_api).then((r) => {
+                this.showLoading(false);
+                r = r.data;
+                if(r.message == "Your are not admin")
+                {
+                    this.$router.replace('/login');
+                }
+            	else
+                {
+                    this.data_acknowledges = r.data;
+                	for(var i = 0;i<this.data_acknowledges.length;i++)
+                	{
+                        this.data_acknowledges[i].no = this.data_acknowledges.length - i;
+                        if(this.data_acknowledges[i].sent == "0")
+                        {
+                            this.data_acknowledges[i].sent = "Gagal";
+                        }
+                        else
+                        {
+                            this.data_acknowledges[i].sent = "Berhasil";
+                        }
+                    }
+                    console.log('cek data_acknowleges');
+                    console.log(this.data_acknowledges);
+                    
+
+                }
+            });
         },
         showLoading(state)
         {
