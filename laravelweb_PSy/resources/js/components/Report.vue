@@ -17,11 +17,13 @@
                 <div class='marginleft30 margintop10'>
                     <v-icon class='icontitledatatable'>list</v-icon>
                     <h2 class='titledatatable'>Laporan</h2>
-                   
+                    <v-btn v-on:click='delete_report' color="menu" dark style='margin-left:15px'>
+                        Backup dan Hapus Laporan
+                    </v-btn>
                 </div>
                 
             </v-flex>
-            <v-flex xs12 class="text-xs-right">
+            <v-flex xs6 class="text-xs-right">
                 <v-text-field
                     class='d-inline-block searchdatatable'
                     v-model="search_data"
@@ -106,6 +108,47 @@ export default {
         }
     },
     methods: {
+        delete_report()
+        {
+            
+            swal({
+                title: "Backup & Hapus Laporan Lama",
+                text: "Yakin ingin melakukan backup & hapus laporan lama ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((runPython) => {
+                this.showLoading(true);
+                if (runPython) {
+                    const formData = new FormData();
+                    formData.append('token', localStorage.getItem('token'));
+                    axios.post('/api/admin/shifts/removeAndBackup', formData,{
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-type': 'application/json'
+                        }
+                    }).then(r=> {
+                        console.log(r.data);
+                        if(r.data.error == false)
+                        {
+                            swal('Berhasil !', 'Backup & Hapus Laporan Lama Berhasil Dilakukan !', 'success');
+                        }
+                        else
+                        {
+                            swal('Gagal !', 'Pastikan Anda menjalankan server dengan benar !', 'error');
+                        }
+                        
+                        this.showLoading(false);
+                    });
+                }
+                else
+                {
+                    this.showLoading(false);
+                }
+            });
+        
+        },
         open_history(id)
         {
             this.$refs['cpHistory'].show_dialog_histories(id);

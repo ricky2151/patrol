@@ -47,6 +47,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 	//get histories
 	Route::get('/shifts/{id}/getHistories', 'ShiftsController@getHistories');
 
+	//remove all shifts that have history
+	Route::post('/shifts/removeAndBackup', 'ShiftsController@removeAndBackup');
+
 	//route resource
 	Route::resource('shifts', 'ShiftsController');
 	Route::resource('floors', 'FloorController');
