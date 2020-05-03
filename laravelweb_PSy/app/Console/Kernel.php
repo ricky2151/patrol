@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Kernel extends ConsoleKernel
 {
@@ -14,7 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands =
     [
-        \App\Console\Commands\RealTimeShift::class,
+        
         
     ];
 
@@ -26,6 +28,23 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // $schedule->call(function () {
+            
+        //     // $process = new Process(['python', 'storage/app/public/dbintegrate3.py']);
+        //     // $process->run();
+
+        //     // // executes after the command finishes
+        //     // if (!$process->isSuccessful()) {
+        //     //     throw new ProcessFailedException($process);
+        //     // }
+
+
+        //     //or
+        //     shell_exec("python storage/app/public/dbintegrate3.py 2>&1");
+        // })->daily();
+        //$schedule->exec('python /home/oem/monitoringsystem/patrol/laravelweb_PSy/storage/app/public/python/dbintegrate3.py')->everyMinute();
+        $schedule->exec('python python_server/dbintegrate3.py')->everyMinute();
+        //$schedule->command('backup:run')->everyMinute();
         // $schedule->command('RealTimeShift:run')
         //          ->everyMinute()
         //          ->sendOutputTo('storage/logs/realtimeshiftlog.log');

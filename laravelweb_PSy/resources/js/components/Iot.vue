@@ -50,6 +50,9 @@
 
                 </v-toolbar>
                 <div style='padding:30px'>
+                    <v-btn v-on:click='get_acknowledges' color="menu" dark class='btnadddata'>
+                        Reload
+                    </v-btn>
                     <v-data-table
                         disable-initial-sort
                         :headers="headers_acknowledges"
@@ -75,7 +78,7 @@
         <center>
             <img style='margin:40px 0px' src="/assets/images/logo.png" width=300 height=300 alt="">
             <br>
-            <p style='padding:30px 70px; margin: 0px;font-size:16px'>Instruksi instalasi alat dapat dilihat dengan cara klik tombol "Panduan Instalasi". Apabila ada tambahan node atau perubahan gateway, klik tombol "Refresh Pengaturan LoRa/nRF", untuk menjalankan server python klik tombol "Jalankan Server Python", dan untuk melihat log acknowledges klik tombol "Log Acknowledges" </p>
+            <p style='padding:30px 70px; margin: 0px;font-size:16px'>Instruksi instalasi alat dapat dilihat dengan cara klik tombol "Panduan Instalasi". Apabila ada tambahan node atau perubahan gateway, klik tombol "Refresh Pengaturan LoRa/nRF", dan untuk melihat log pengiriman data LoRa/nRF dari gateway ke node  klik tombol "Log Acknowledges"</p>
             
             <v-btn depressed color="light-blue darken-4" dark @click='opendialog_panduan'>
                 <label><v-icon left>menu_book</v-icon>Panduan Instalasi Lora/nRF</label>
@@ -83,10 +86,6 @@
             <br>
             <v-btn depressed color="light-blue darken-4" dark @click='refresh_config'>
                 <label><v-icon left>router</v-icon>Refresh Pengaturan LoRa/nRF</label>
-            </v-btn>
-            <br>
-            <v-btn depressed color="light-blue darken-4" dark @click='run_python'>
-                <label><v-icon left>dns</v-icon>Jalankan Server Python</label>
             </v-btn>
             <br>
             <v-btn depressed color="light-blue darken-4" dark @click='opendialog_acknowledge'>
@@ -148,10 +147,8 @@ export default {
         {
             this.dialog_acknowledge = false;
         },
-        opendialog_acknowledge()
+        get_acknowledges()
         {
-            this.dialog_acknowledge = true;
-            this.showLoading(true);
             axios.get('/api/acknowledges', {
                     params:{
                         token: localStorage.getItem('token')
@@ -185,6 +182,12 @@ export default {
                 }
             });
         },
+        opendialog_acknowledge()
+        {
+            this.dialog_acknowledge = true;
+            this.showLoading(true);
+            this.get_acknowledges();
+        },
         showLoading(state)
         {
             if(state)
@@ -195,48 +198,6 @@ export default {
             {
                 document.getElementById('myLoading').style.display = 'none';
             }
-        },
-        run_python()
-        {
-            swal({
-                title: "Pastikan tidak ada server python yang sedang berjalan",
-                text: "Apabila ada, maka akan terestart. Klik OK untuk melanjutkan",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((runPython) => {
-                this.showLoading(true);
-                if (runPython) {
-
-                    axios.get('/api/admin/iot/runPython', {
-                            params:{
-                                token: localStorage.getItem('token')
-                            }
-                    },{
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-type': 'application/json'
-                        }
-                    }).then(r=> {
-                        console.log(r.data);
-                        if(r.data.error == false)
-                        {
-                            swal('Berhasil !', 'Server Python Berhasil Dijalankan !', 'success');
-                        }
-                        else
-                        {
-                            swal('Gagal !', 'Pastikan Anda menjalankan server degnan benar !', 'error');
-                        }
-                        
-                        this.showLoading(false);
-                    });
-                }
-                else
-                {
-                    this.showLoading(false);
-                }
-        });
         },
         refresh_config()
         {
