@@ -68,58 +68,47 @@ conn = sqlite3.connect('/home/oem/monitoringsystem/patrol/laravelweb_PSy/databas
 print ("Opened database successfully")
 print ("==========================================")
 
-
+current = datetime.now()
 bStart = False
 #get seluruh waktu awal shift 
 startShiftTime=timeShift("start")
 endShiftTime=timeShift("end")
 count=0
 mqtt.createConnection("broker.shiftr.io",1883,60,"SERVER",usernameMQTT,passwordMQTT)
-while(True):
-   current = datetime.now()
-   
-   if(not bStart): 
-      newMinute = current.minute
-      oldMinute = newMinute - 1
-      bStart = True
-   
-   if(newMinute < oldMinute): newMinute = 60 + current.minute
-   else: newMinute = current.minute
 
-   if(newMinute-oldMinute >= 1):
-      print ("==========================================")
-      print ("scanning time"+str(current))
-      oldMinute = newMinute
-      
-      
-      currentHour = ("{:02d}".format(current.hour))
-      currentDate = ("{:04d}-{:02d}-{:02d}".format(current.year,current.month,current.day))
-      timeDateYesterday = datetime.today() - timedelta(days=1)
-      dateYesterday = timeDateYesterday.strftime("%Y") + "-" + timeDateYesterday.strftime("%m") + "-" + timeDateYesterday.strftime("%d")
-      print("Jam Sekarang: ",currentHour)
-      print("date = "+currentDate)
-      print("date yesterday = " + dateYesterday)
-      #check currentHour in range start-end time shift and convert to id timeShift
-      for n in range(1,len(startShiftTime)+1):
-         #kalau lebih besar, berarti melewati jam 12 malam. 
-         #contoh : 23:00 sampai 01:00
-         if(startShiftTime[n] > endShiftTime[n]):
-            if(currentHour >= startShiftTime[n] and currentHour >= endShiftTime[n]):
-               print('hayo')
-               print(startShiftTime[n])
-               sendShiftQRCode(dict((v,k) for k,v in startShiftTime.items()).get(startShiftTime[n]),currentDate)  
-               
-            else:
-               if(currentHour < endShiftTime[n] and currentHour < startShiftTime[n]):
-                  sendShiftQRCode(dict((v,k) for k,v in startShiftTime.items()).get(startShiftTime[n]),dateYesterday)
-                  
+print ("==========================================")
+print ("scanning time"+str(current))
 
-               
-         if(currentHour>=startShiftTime[n] and currentHour<endShiftTime[n]):
-            sendShiftQRCode(dict((v,k) for k,v in startShiftTime.items()).get(startShiftTime[n]),currentDate)  
-            
+
+
+currentHour = ("{:02d}".format(current.hour))
+currentDate = ("{:04d}-{:02d}-{:02d}".format(current.year,current.month,current.day))
+timeDateYesterday = datetime.today() - timedelta(days=1)
+dateYesterday = timeDateYesterday.strftime("%Y") + "-" + timeDateYesterday.strftime("%m") + "-" + timeDateYesterday.strftime("%d")
+print("Jam Sekarang: ",currentHour)
+print("date = "+currentDate)
+print("date yesterday = " + dateYesterday)
+#check currentHour in range start-end time shift and convert to id timeShift
+for n in range(1,len(startShiftTime)+1):
+   #kalau lebih besar, berarti melewati jam 12 malam. 
+   #contoh : 23:00 sampai 01:00
+   if(startShiftTime[n] > endShiftTime[n]):
+      if(currentHour >= startShiftTime[n] and currentHour >= endShiftTime[n]):
+         print('hayo')
+         print(startShiftTime[n])
+         sendShiftQRCode(dict((v,k) for k,v in startShiftTime.items()).get(startShiftTime[n]),currentDate)  
          
-      print ("==========================================")
+      else:
+         if(currentHour < endShiftTime[n] and currentHour < startShiftTime[n]):
+            sendShiftQRCode(dict((v,k) for k,v in startShiftTime.items()).get(startShiftTime[n]),dateYesterday)
+            
+
+         
+   if(currentHour>=startShiftTime[n] and currentHour<endShiftTime[n]):
+      sendShiftQRCode(dict((v,k) for k,v in startShiftTime.items()).get(startShiftTime[n]),currentDate)  
+      
+   
+print ("==========================================")
       
       
   
