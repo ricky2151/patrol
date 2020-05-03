@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
 
+
 class UserController extends Controller
 {
     private $user;
@@ -91,7 +92,7 @@ class UserController extends Controller
     {
         $data = $request->validated();
         $id = $data['id'];
-        error_log('Submitted shift : ' . $id);
+//        error_log('Submitted shift : ' . $id);
         unset($data['id']);
         $shift = new Shift();
         $shift = $shift->find($id);
@@ -113,70 +114,25 @@ class UserController extends Controller
             //dd($dateNow);
             //dd(strtotime("2020-03-20") >= strtotime("2020-04-19"));
             
-
-            //if normal
-            //ex : 10:00 - 14:00
-            if(strtotime($startTimeShift) < strtotime($endTimeShift))
+            
+            $verifyTime = checkRangeTimeShift($timeNow, $dateNow, $dateYesterday, $dateShift, $startTimeShift, $endTimeShift, "between");
+            if($verifyTime == true)
             {
-                //check if date is same
-                if(strtotime($dateShift) == strtotime($dateNow))
-                {
-                    //check if timenow is in between starttimeshift and endtimeshift
-                    if(strtotime($timeNow) >= strtotime($startTimeShift) && strtotime($timeNow) < strtotime($endTimeShift))
-                    {
-                        $dataIsRight = true;
-                    }
-                    else
-                    {
-                        return response()->json(['error' => true, 'message'=>"your time scan is not correct"]);
-                    }
-                }
-                else
-                {
-                    return response()->json(['error' => true, 'message'=>"your date scan is not correct"]);
-                }
+                $dataIsRight = true;
             }
             else
             {
-                //if overlap date
-                //ex : 18:00 - 10:00
-                //check if date is same
-                if(strtotime($dateShift) == strtotime($dateNow))
-                {
-                    //scan time is must greather than startimteshift & endtimeshift
-                    //ex, scan time : 20:00
-                    if(strtotime($timeNow) > strtotime($startTimeShift) && strtotime($timeNow) > strtotime($endTimeShift))
-                    {
-                        $dataIsRight = true;
-                    }
-                    else
-                    {
-                        return response()->json(['error' => true, 'message'=>"your time scan is not correct"]);
-                    }
-                }
-                else if(strtotime($dateShift) == strtotime($dateYesterday)) //ex, shift date is 2020-04-19, and dateNow is 2020-04-20, then this is overlap date
-                {
-                    //scan time is must less than starttimeshift & endtimeshift
-                    //ex, time shift : 18:00 - 10:00
-                    //scan time : 09:00
-                    if(strtotime($timeNow) < strtotime($startTimeShift) && strtotime($timeNow) < strtotime($endTimeShift))
-                    {
-                        $dataIsRight = true;
-                    }
-                    else
-                    {
-                        return response()->json(['error' => true, 'message'=>"your time scan is not correct"]);
-                    }
-                }
-                else
-                {
-                    return response()->json(['error' => true, 'message'=>"your date scan is not correct"]);
-                }
+                return response()->json(['error' => true, 'message'=>"your time scan is not correct"]);
             }
+
+
         }
 
         if($dataIsRight)
         {
+            //get room name
+            
+            $room_name = Shift::find($id)->room()->get()[0]->name;
             $temp_shift = [];
             $temp_shift['shift_id'] = $id;
             $temp_shift['status_node_id'] = $data['status_node_id'];
@@ -186,15 +142,14 @@ class UserController extends Controller
             $photosSaved = [];
             if($request->file('photos'))
             {
+                $indexPhoto = 0;
                 foreach($request->file('photos') as $image)
                 {
                     $path = '';
                     $folder = 'photos';
-                    $name =  $id.Str::random(10);
 
                     if(!is_null($image)){
-                        $name = strtolower(preg_replace('/[^a-zA-Z0-9-_\.]/','',$name));
-
+                        $name = preg_replace('/[^a-zA-Z0-9-_\.]/','',$room_name . " - " . Auth::user()->name . " - " . $timeNow . " - " . $indexPhoto);
                         $path = $image->storeAs($folder, $name . ".jpg");
                     }
                     else{
@@ -202,7 +157,7 @@ class UserController extends Controller
                     }
 
                     $photosSaved[] = ['url' => $path];
-
+                    $indexPhoto += 1;
                 }
 
             }
