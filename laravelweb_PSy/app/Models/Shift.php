@@ -99,7 +99,7 @@ class Shift extends Model
     public static function showGraph()
     {
         $thisyear = date("Y");
-        $data = DB::table('histories')->select(DB::raw('strftime("%Y",shifts.date) as year, strftime("%m",shifts.date) as month, status_nodes.name as status_nodes, count(*) as count'))
+        $data = DB::table('histories')->select(DB::raw('strftime("%Y",shifts.date) as year, strftime("%m",shifts.date) as month, status_nodes.name as status_nodes, status_nodes.id as status_nodes_id, count(*) as count'))
         //$data = DB::table('shifts')->select(DB::raw('strftime("%Y",date) as year, strftime("%m",date) as month, status_nodes.name as status_nodes, count(*) as count'))
         ->groupBy('month', 'status_nodes')
         ->where('year', $thisyear)

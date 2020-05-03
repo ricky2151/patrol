@@ -110,8 +110,6 @@
 					'Gedung Makarios' : 'Tidak ada apa-apa',
 					'Depan ATM' : 'Tidak ada apa-apa',
 				},
-				secure : ['50', '40', 0, 'February'],
-				presence : ['98', '5', 1, 'February'],
 				chartData: [
 		        	['Month', 'Aman', 'Mencurigakan', 'Tidak Aman'],
 		       
@@ -124,7 +122,7 @@
 		          		width:600,
 		          		
 		        	},
-		        	colors: ['#40ff4d', '#ffa040', '#ff3333'],
+		        	colors: ['#40ff4d', '#ffa040', '#ffe940', '#40ffc6', '#4059ff'],
 		        	hAxis: {
 		        		format: '0',
 		        		title: 'The Number of events'
@@ -226,35 +224,8 @@
 	                	{
 	                		this.current_event[r_report.currentEvent[i].shift.room.name] = r_report.currentEvent[i].message;
 	                	}
-	                	console.log('cek this');
+	                	console.log('cek current event');
 	                	console.log(this.current_event);
-
-	                	//- isi percentage
-	     //            	secure : ['50', '40', 0, 'February'],
-						// presence : ['98', '5', 1, 'February'],
-						this.secure[0] = r_report.securePercentageThisMonth;
-						this.secure[1] = Math.abs(r_report.differentSecureBetweenMonth);
-						if(r_report.differentSecureBetweenMonth < 0)
-						{
-							this.secure[2] = 0;
-						}
-						else
-						{
-							this.secure[2] = 1;
-						}
-						this.secure[3] = 'Bulan Lalu';
-
-						this.presence[0] = r_report.presencePercentageThisMonth;
-						this.presence[1] = Math.abs(r_report.differentPresenceBetweenMonth);
-						if(r_report.differentPresenceBetweenMonth < 0)
-						{
-							this.presence[2] = 0;
-						}
-						else
-						{
-							this.presence[2] = 1;
-						}
-						this.presence[3] = 'Last Month';
 
 
 	                	//isi graph
@@ -287,41 +258,75 @@
 	                			
 	                		}
 	                	}
-	                	
+						
+						var temp_status_node = [];
+						for(var i = 0;i<r.data.statusNodeData.length;i++)
+						{
+							this.chartData[0][i + 1] = r.data.statusNodeData[i].name;
+							temp_status_node.push(r.data.statusNodeData[i]);
+						}
+
 	                	console.log('cek r_graph');
 	                	console.log(r_graph);
 	                	var temp_push = [];
 		                temp_push.push(this.convert_month(r_graph[0].month));
 		                for(var i = 0;i<r_graph.length;i++)
 		                {
-		                	if(r_graph[i].status_nodes == 'Mencurigakan')
-		                	{
-		                		temp_push[2] = parseInt(r_graph[i].count);
-		                	}
-		                	else if(r_graph[i].status_nodes == 'Tidak Aman')
-		                	{
-		                		temp_push[3] = parseInt(r_graph[i].count);
-		                	}
-		                	else if(r_graph[i].status_nodes == 'Aman')
-		                	{
-		                		temp_push[1] = parseInt(r_graph[i].count);
-		                	}
-		                	for(var j = 1;j<=3;j++)
+							//search r_graph[i].status_nodes_id in temp_status_node, and get the index of that
+							//example : 
+							//temp_status_node : 
+							//[0] : {id:1,name:"aman"}
+							//[1] : {id:2,name:"mencurigakan"}
+							//[2] : {id:3,name:"tidak aman"}
+							//[3] : {id:4,name:"sejuk"}
+							//r_graph[i].status_nodes_id = 4
+							//then index_in_temp_status_node is 3
+
+							var index_in_temp_status_node = -1;
+							console.log('cek dulu nih keknya adayg salah');
+							console.log(r_graph);
+							console.log('===');
+							console.log(temp_status_node);
+							for(var j = 0;j<temp_status_node.length;j++)
+							{
+								if(parseInt(r_graph[i].status_nodes_id) == temp_status_node[j].id)
+								{
+									index_in_temp_status_node = j;
+									break;
+								}
+							}
+
+							
+							//put in order
+							//example : 
+							//index_in_temp_status_node : 3
+							//then, put temp_push[3 + 1] = parseInt(r_graph[i].count)
+							//because, temp_push[0] is name of month like "january" or "february" or ...
+							if(index_in_temp_status_node != -1)
+							{
+								temp_push[index_in_temp_status_node +  1] = parseInt(r_graph[i].count);
+							}
+							
+							//fill 0 in temp_push if there is null data 
+		                	for(var j = 1;j<=temp_status_node.length;j++)
 		                	{
 		                		if(!temp_push[j])
 		                			temp_push[j] = 0;
-		                	}
+							}
+							
+
 		                	if(i != r_graph.length - 1 && r_graph[i + 1].month != r_graph[i].month)
 		                	{
 		                		this.chartData.push(temp_push);
 		                		temp_push = [];
-		                		temp_push.push(this.convert_month(r_graph[i + 1].month));
+								temp_push.push(this.convert_month(r_graph[i + 1].month));
 		                	}
 		                	else if(i == r_graph.length - 1)
 		                	{
 		                		this.chartData.push(temp_push);
 		                	}
-		                }
+						}
+						console.log('cek chartdata');
 		                console.log(this.chartData);
 	                }
 	            });
