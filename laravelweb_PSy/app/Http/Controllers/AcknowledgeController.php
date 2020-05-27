@@ -52,6 +52,7 @@ class AcknowledgeController extends Controller
      */
     public function store(StoreAcknowledge $request)
     {
+        error_log('ada request masuk');
         DB::beginTransaction();
         try {
             $data = $request->validated();

@@ -43,7 +43,7 @@ class Kernel extends ConsoleKernel
         //     shell_exec("python storage/app/public/dbintegrate3.py 2>&1");
         // })->daily();
         //$schedule->exec('python /home/oem/monitoringsystem/patrol/laravelweb_PSy/storage/app/public/python/dbintegrate3.py')->everyMinute();
-        $schedule->exec('python python_server/dbintegrate3.py')->everyMinute();
+        $schedule->exec('python python_script/dbintegrate3.py')->everyMinute();
         //$schedule->command('backup:run')->everyMinute();
         // $schedule->command('RealTimeShift:run')
         //          ->everyMinute()
