@@ -9,7 +9,7 @@
 return [
 
     'host' => env('mqtt_host','broker.shiftr.io'),
-    'password' => env('mqtt_password','sesuaikansendiri'),
+    'password' => env('mqtt_password','sukukata123'),
     'username' => env('mqtt_username','samuelricky-skripsi-coba'),
     'certfile' => env('mqtt_cert_file',''),
     'port' => env('mqtt_port','1883'),
