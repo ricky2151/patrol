@@ -19,7 +19,7 @@ def enkrip(data,masterKey):
     #global salt,key
     #kode1= str(code1)
     #kode1= "3105201908:00shift3"
-    salt = bytes(masterKey)
+    salt = bytes(masterKey, encoding='utf8')
     #salt = word1 #<tanggal ddmmyyyy><hh:mm>shift<no3>
     #salt = os.urandom(16)
     
@@ -33,7 +33,7 @@ def enkrip(data,masterKey):
     )
     #kode2=str(code2)
     #kode2="164e417kuncoro"
-    uniqueKey = kdf.derive(bytes(data))
+    uniqueKey = kdf.derive(bytes(data, encoding='utf8'))
     encUniqueKey = base64.b64encode(uniqueKey)
     #key = kdf.derive(b"164e417kuncoro") #<nomor induk satpam><nama satpam>
     #print(key)
@@ -48,7 +48,7 @@ def enkrip(data,masterKey):
     return encUniqueKey
 
 def dekrip(dataQR,shift,masterKey):
-    salt = bytes(masterKey)
+    salt = bytes(masterKey, encoding='utf8')
     ####*key success###########
     #?key2 = b'\xc2\xf4\x1bA\n\x08d\x9fP\xb2\x1c\x0f\xeaT\xa1\x19\xde\x02\xc8B\xbfaJ\x1d\xaa\x0f\x13\x8e\xfc\x1ctn'
     ####*key doesn't match#####
@@ -64,7 +64,7 @@ def dekrip(dataQR,shift,masterKey):
 
     try:
         qrcode = base64.b64decode(dataQR)
-        kdf.verify(bytes(shift),qrcode)
+        kdf.verify(bytes(shift, encoding='utf8'),qrcode)
         print("success")
     except:
         print("key doesn't match")

@@ -64,7 +64,8 @@ def sendShiftQRCode(idTimes,date):
 print("run success")
 mqtt.createConnection("broker.shiftr.io",1883,60,"SERVER",usernameMQTT,passwordMQTT)
 #create connection to database
-conn = sqlite3.connect('/home/oem/monitoringsystem/patrol/laravelweb_PSy/database/satpam.sq3')
+#conn = sqlite3.connect('/home/oem/monitoringsystem/patrol/laravelweb_PSy/database/satpam.sq3') #for linux
+conn = sqlite3.connect('../database/satpam.sq3') #for windows
 print ("Opened database successfully")
 print ("==========================================")
 
