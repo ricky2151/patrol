@@ -32,10 +32,5 @@ class SubmitScan extends FormRequest
         ];
     }
 
-    // public function messages()
-    // {
-    //     return [];
-    // }
-
     
 }
