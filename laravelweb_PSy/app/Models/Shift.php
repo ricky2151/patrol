@@ -73,6 +73,7 @@ class Shift extends Model
         ->select(
             [
                 'shifts.id as id',
+                'rooms.id as room_id',
                 'rooms.name as room_name',
                 'users.name as user_name',
                 DB::raw('times.start || " - " || times.end as time_start_end'),
@@ -125,6 +126,7 @@ class Shift extends Model
                 return [
                     'id' => $item['id'],
                     'url' => $item['url'],
+                    'photo_time' => $item['photo_time'],
                 ];
             });
             //$item = collect($item)->put('photos', $item->photos()->get());

@@ -27,6 +27,15 @@ class SubmitScan extends FormRequest
             'id' => 'required|integer',
             'status_node_id' => 'required|integer',
             'message' => 'nullable|string',
+            'photos.*.file' => 'required_with:photos.*.photo_time,true|file',
+            'photos.*.photo_time' => 'required_with:photos.*.file, true|regex:"(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})"',
         ];
     }
+
+    // public function messages()
+    // {
+    //     return [];
+    // }
+
+    
 }

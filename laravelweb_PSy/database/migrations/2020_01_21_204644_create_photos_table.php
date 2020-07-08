@@ -17,6 +17,7 @@ class CreatePhotosTable extends Migration
             $table->bigIncrements('id');
             $table->string('url');
             $table->integer('history_id');
+            $table->string('photo_time');
             $table->timestamps();
         });
     }

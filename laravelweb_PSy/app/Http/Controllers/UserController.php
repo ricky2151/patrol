@@ -58,8 +58,9 @@ class UserController extends Controller
     }
     public function shifts()
     {
+        
         $iduser = Auth::user()->id;
-        $data = $this->user->find($iduser)->getShiftToday();
+        $data = $this->user->find($iduser)->getShiftThatCanBeScanned();
         return response()->json(['error' => false, 'data'=>$data]);
     }
 
@@ -90,42 +91,57 @@ class UserController extends Controller
 
     public function submitScan(SubmitScan $request)
     {
+        
         $data = $request->validated();
+        
         $id = $data['id'];
-//        error_log('Submitted shift : ' . $id);
         unset($data['id']);
         $shift = new Shift();
         $shift = $shift->find($id);
         $idUserThisShift = $shift->user()->get()[0]->id;
 
         $dataIsRight = false;
-        //check user is right
+
+        //make variable that store time
+        $timeNow = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
+        $dateNow = Carbon::now()->timezone('Asia/Jakarta')->format('Y-m-d');    
+        $dateYesterday = date('Y-m-d', strtotime('-1 day', strtotime($dateNow)));
+
+        $timeShift = $shift->time()->get()[0];
+        $startTimeShift = $timeShift['start'];
+        $endTimeShift = $timeShift['end'];
+        $dateShift = $shift->date;
+
+
+        //check user is right or not
         if($idUserThisShift == Auth::user()->id)
-        {
-            //check time is right
-            $timeNow = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
-            $dateNow = Carbon::now()->timezone('Asia/Jakarta')->format('Y-m-d');    
-            $dateYesterday = date('Y-m-d', strtotime('-1 day', strtotime($dateNow)));
-
-            $timeShift = $shift->time()->get()[0];
-            $startTimeShift = $timeShift['start'];
-            $endTimeShift = $timeShift['end'];
-            $dateShift = $shift->date;
-            //dd($dateNow);
-            //dd(strtotime("2020-03-20") >= strtotime("2020-04-19"));
-            
-            
-            $verifyTime = checkRangeTimeShift($timeNow, $dateNow, $dateYesterday, $dateShift, $startTimeShift, $endTimeShift, "between");
-            if($verifyTime == true)
+        {   
+            //check scan time is right or not
+            $verifyScanTime = checkRangeTimeShift($timeNow, $dateNow, $dateYesterday, $dateShift, $startTimeShift, $endTimeShift, "between");
+            if($verifyScanTime == true)
             {
-                $dataIsRight = true;
-            }
-            else
-            {
-                return response()->json(['error' => true, 'message'=>"your time scan is not correct"]);
-            }
-
-
+                //check all photo time is right or not
+                $countRightPhotoTime = 0;
+                if(count($data['photos']) > 0)
+                {
+                    foreach($data['photos'] as $photo)
+                    {
+                        $photoDate = substr($photo['photo_time'],0, 10);
+                        $photoTime = substr($photo['photo_time'],11, 8);
+                        $photoDateYesterday = date('Y-m-d', strtotime('-1 day', strtotime($photoDate)));
+                        
+                        $verifyPhotoTime = checkRangeTimeShift($photoTime, $photoDate, $photoDateYesterday, $dateShift, $startTimeShift, $endTimeShift, "between");
+                        if($verifyPhotoTime == true)
+                        {
+                            $countRightPhotoTime += 1;
+                        }
+                    }
+                    if($countRightPhotoTime == count($data['photos']))
+                    {
+                        $dataIsRight = true;
+                    }
+                }
+            }            
         }
 
         if($dataIsRight)
@@ -140,23 +156,33 @@ class UserController extends Controller
             isset($data['message']) ? $temp_shift['message'] = $data['message'] : $temp_shift['message'] = '';
             //set image
             $photosSaved = [];
-            if($request->file('photos'))
+            if(count($data['photos']) > 0)
             {
                 $indexPhoto = 0;
-                foreach($request->file('photos') as $image)
+                foreach($data['photos'] as $photo)
                 {
+                    
                     $path = '';
                     $folder = 'photos';
+                    $image = $photo['file'];
+                    $photo_time = $photo['photo_time'];
 
                     if(!is_null($image)){
-                        $name = preg_replace('/[^a-zA-Z0-9-_\.]/','',$room_name . " - " . Auth::user()->name . " - " . $timeNow . " - " . $indexPhoto);
+
+                        //make file name
+                        //[photo time]-[user fullname]-[room name]-[index photo]
+                        //example : 
+                        //132324-ricky-RuanganPosSatpamAgape-0
+                        $name = preg_replace('/[^a-zA-Z0-9-_\.]/','',$photo_time . " - " . Auth::user()->name . " - " . $room_name . " - " . $indexPhoto);
                         $path = $image->storeAs($folder, $name . ".jpg");
+                       
                     }
                     else{
                         $path = $folder."/default.png";
                     }
 
-                    $photosSaved[] = ['url' => $path];
+                    $photosSaved[] = ['url' => $path, 'photo_time' => $photo_time];
+                    
                     $indexPhoto += 1;
                 }
 
@@ -166,11 +192,14 @@ class UserController extends Controller
             $history = new History();
             $history = $history->create($temp_shift);
     //        $temp_shift->save();
-            //dd($photosSaved);
+
             if(count($photosSaved) > 0)
                 $history->photos()->createMany($photosSaved);
-
+            
             return response()->json(['error' => false, 'message'=>'submit data success !']);
+        }
+        else{
+            return response()->json(['error' => true, 'message'=>"your time scan is not correct"]);
         }
         
     }
@@ -201,7 +230,7 @@ class UserController extends Controller
             
             
 
-            //dd($data);
+            
             
 
             $user = $this->user->create($data);

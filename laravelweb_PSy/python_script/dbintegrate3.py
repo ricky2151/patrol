@@ -11,13 +11,14 @@ startShiftTime={}
 usernameMQTT = "samuelricky-skripsi-coba"
 passwordMQTT = "sukukata123"
 
-def konversi(jam):
-      ptr=conn.execute("select id,start from  times ")
-      for n in ptr:
-            convert_id=(str(n[0]))
-            convert_jam=(str(n[1][0:2]))
-            if(jam in convert_jam):
-                  return convert_id
+
+# def konversi(jam):
+#       ptr=conn.execute("select id,start from  times ")
+#       for n in ptr:
+#             convert_id=(str(n[0]))
+#             convert_jam=(str(n[1][0:2]))
+#             if(jam in convert_jam):
+#                   return convert_id
 
 ###! ambil timeshift
 def timeShift(mode="start"):
@@ -71,7 +72,7 @@ print ("==========================================")
 
 current = datetime.now()
 bStart = False
-#get seluruh waktu awal shift 
+#get seluruh waktu awal & akhir shift 
 startShiftTime=timeShift("start")
 endShiftTime=timeShift("end")
 count=0

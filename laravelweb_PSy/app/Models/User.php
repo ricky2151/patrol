@@ -91,6 +91,7 @@ class User extends Authenticatable implements JWTSubject
                             return [
                                 'id' => $item['id'],
                                 'url' => $item['url'],
+                                'photo_time' => $item['photo_time'],
                             ];
                         }),
                     ];
@@ -131,10 +132,13 @@ class User extends Authenticatable implements JWTSubject
 
         return $data;
     }
-    public function getShiftToday()
+    public function getShiftThatCanBeScanned()
     {
+        
         //return ($this->shifts()->get()->toArray());
-        $shifts = $this->shifts()->where('date',Carbon::today()->format('Y-m-d'))->get()->map(function($item)
+        $shiftsToday = $this->shifts()
+        ->where('date',Carbon::today()->format('Y-m-d'))
+        ->get()->map(function($item)
         {
             $last_scan = $item->histories()->latest('scan_time')->first();
             unset($last_scan['created_at']);
@@ -149,7 +153,40 @@ class User extends Authenticatable implements JWTSubject
                 'last_scan' => $last_scan,
             ];
         });
-        return $shifts;
+        
+        $shiftsToday = $shiftsToday->filter(function($value, $key){
+            return $value != null;
+        });
+        
+
+        $shiftsYesterday = $this->shifts()
+        ->where('date',Carbon::yesterday()->format('Y-m-d'))
+        ->get()->map(function($item)
+        {
+            $last_scan = $item->histories()->latest('scan_time')->first();
+            unset($last_scan['created_at']);
+            unset($last_scan['updated_at']);
+            if(strtotime($item['time']['start']) > strtotime($item['time']['end']))
+            {
+                return [
+                    'id' => $item['id'],
+                    'room' => $item['room']['name'],
+                    'time_start' => $item['time']['start'],
+                    'time_end' => $item['time']['end'],
+                    'date' => $item['date'],
+                    'countScanned' => $item->histories()->get()->count(), 
+                    'last_scan' => $last_scan,
+                ];
+            }
+        });
+        $shiftsYesterday = $shiftsYesterday->filter(function($value, $key){
+            return $value != null;
+        });
+        
+        
+        $result = $shiftsToday->concat($shiftsYesterday);
+
+        return $result;
     }
 
     public function getShiftWithId()
