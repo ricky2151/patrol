@@ -46,6 +46,7 @@
         >
         <template v-slot:items="props">
             <td>{{ props.item.no }}</td>
+            <td>{{ props.item.room_id }}</td>
             <td>{{ props.item.room_name }}</td>
             <td>{{ props.item.time_start_end }}</td>
             <td>{{ props.item.user_name }}</td>
@@ -79,6 +80,7 @@ export default {
 
             headers: [
                 { text: 'No', value: 'no'},
+                { text: 'ID Ruangan', value: 'room_id', sort:1},
                 { text: 'Ruangan', value: 'room_name', sort:0},
                 { text: 'Waktu', value: 'time_start_end',sort:2},
                 { text: 'Satpam', value: 'user_name',sort:3},

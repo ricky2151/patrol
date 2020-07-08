@@ -132,6 +132,7 @@ export default {
                         console.log(r.data);
                         if(r.data.error == false)
                         {
+                            this.get_data();
                             swal('Berhasil !', 'Backup & Hapus Laporan Lama Berhasil Dilakukan !', 'success');
                         }
                         else

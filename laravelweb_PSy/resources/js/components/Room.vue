@@ -63,11 +63,10 @@
         <template v-slot:items="props">
             <td>{{ props.item.no }}</td>
             <td>{{ props.item.id }}</td>
+            <td>{{ props.item.name }}</td>
             <td>{{ props.item.floor_name }}</td>
             <td>{{ props.item.building_name }}</td>
             <td>{{ props.item.gateway_name }}</td>
-            <td>{{ props.item.name }}</td>
-
             <td>
                 <div class="text-xs-left">
                     <v-menu offset-y>
@@ -139,10 +138,10 @@ export default {
             headers: [
                 { text: 'No', value: 'no'},
                 { text: 'ID Ruangan', value: 'id'},
+                { text: 'Nama Ruangan', value: 'name'},
                 { text: 'Lantai', value: 'floors'},
                 { text: 'Gedung', value: 'buildings'},
                 { text: 'Gateway', value: 'gateways'},
-                { text: 'Nama', value: 'name'},
                 { text: 'Pilihan', align:'left',sortable:false, width:'15%'},
 
             ],
