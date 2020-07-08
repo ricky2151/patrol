@@ -28,7 +28,9 @@ Route::group(['prefix'=>'auth'], function()
 });
 
 //for node device
+Route::get('/acknowledges/testConnection', 'AcknowledgeController@testConnection');
 Route::resource('acknowledges', 'AcknowledgeController');
+
 
 Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 {

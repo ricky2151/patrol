@@ -18,7 +18,7 @@ class AcknowledgeController extends Controller
      */
     public function __construct(Acknowledge $acknowledge)
     {
-        $this->middleware('RoleAdmin', ['except' => ['store']]);
+        $this->middleware('RoleAdmin', ['except' => ['store', 'testConnection']]);
         $this->acknowledge = $acknowledge;
     }
     public function index()
@@ -32,6 +32,10 @@ class AcknowledgeController extends Controller
 
         
         return response()->json(['error' => false, 'data'=>$data]);
+    }
+
+    public function testConnection(){
+        return response()->json(['error' => false, 'message' => 'This is test connection to server']);
     }
 
     /**
