@@ -35,6 +35,7 @@ class Shift extends Model
         ->join('times', 'times.id','time_id')
         ->select(
             [
+                //'histories.*',
                 'shifts.id as id',
                 'shifts.date as date',
                 'rooms.name as room_name',
@@ -48,14 +49,10 @@ class Shift extends Model
         ->orderBy('user_name', 'ASC')
         ->get();
 
-        // $data = $data->map(function ($data) { 
-        //     $data = Arr::add($data, 'room_name', $data['room']['name']);
-        //     $data = Arr::add($data, 'status_node_name', $data['status_node']['name']);
-        //     $data = Arr::add($data, 'user_name', $data['user']['name']);
-        //     $data = Arr::add($data, 'time_start_end', $data['time']['start'] . ' - ' . $data['time']['end']);
-        //     return Arr::except($data, ['room', 'status_node', 'time']);
-        // });
-        
+        $data->map(function($item){
+            $total_histories = Shift::find($item->id)->histories()->count();
+            $item->total_histories = $total_histories;
+        });
 
         return $data;
         
@@ -83,13 +80,12 @@ class Shift extends Model
         ->orderBy('user_name', 'ASC')
         ->get();
 
-        // $data = $data->map(function ($data) { 
-        //     $data = Arr::add($data, 'room_name', $data['room']['name']);
-        //     $data = Arr::add($data, 'status_node_name', $data['status_node']['name']);
-        //     $data = Arr::add($data, 'user_name', $data['user']['name']);
-        //     $data = Arr::add($data, 'time_start_end', $data['time']['start'] . ' - ' . $data['time']['end']);
-        //     return Arr::except($data, ['room', 'status_node', 'time']);
-        // });
+        $data->map(function($item){
+            $total_histories = Shift::find($item->id)->histories()->count();
+            $item->total_histories = $total_histories;
+        });
+
+  
         
 
         return $data;
