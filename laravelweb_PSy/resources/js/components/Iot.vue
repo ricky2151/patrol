@@ -88,9 +88,9 @@
                 <label><v-icon left>router</v-icon>Refresh Pengaturan LoRa/nRF</label>
             </v-btn>
             <br>
-            <v-btn depressed color="light-blue darken-4" dark @click='opendialog_acknowledge'>
+            <!-- <v-btn depressed color="light-blue darken-4" dark @click='opendialog_acknowledge'>
                 <label><v-icon left>dns</v-icon>Log Acknowledges</label>
-            </v-btn>
+            </v-btn> -->
             <br>
             <br>
             <div v-if='data_config != null' style='text-align:left;width:300px;overflow:auto'>
