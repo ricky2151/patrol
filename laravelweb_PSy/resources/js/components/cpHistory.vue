@@ -135,6 +135,8 @@ export default {
         },
         show_dialog_histories(id)
         {
+            this.index_photo = 0;
+            this.index_history = 0;
             axios.get('/api/admin/shifts/' + id + '/getHistories', {
                     params:{
                         token: localStorage.getItem('token')
