@@ -50,6 +50,7 @@
             <td>{{ props.item.room_name }}</td>
             <td>{{ props.item.time_start_end }}</td>
             <td>{{ props.item.user_name }}</td>
+            <td>{{ props.item.total_histories }}</td>
             <td>
                 <v-btn small depressed color="light-blue darken-4" dark @click='open_history(props.item.id)'>
                     <label>Riwayat Scan</label>
@@ -84,6 +85,7 @@ export default {
                 { text: 'Ruangan', value: 'room_name', sort:0},
                 { text: 'Waktu', value: 'time_start_end',sort:2},
                 { text: 'Satpam', value: 'user_name',sort:3},
+                { text: 'Jumlah Riwayat', value: 'id'},
                 { text: 'Riwayat', value: '',sort:6},
             ],
 
