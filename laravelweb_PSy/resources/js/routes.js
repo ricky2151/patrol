@@ -24,9 +24,9 @@ Vue.use(VueRouter);
 
 const routes = [
     {
-        path:'/login', component: Unauthenticated,
+        path:'/login', component: Unauthenticated,name: 'login',
         children: [
-            { path: '/login', component: Login },
+            { path: '/login', component: Login, },
         ]
     },
 
@@ -47,7 +47,7 @@ const routes = [
             { path: '/logout', component: Logout,},
            
         ],
-        meta: { requiresAuth: false }
+        meta: { requiresAuth: true }
     },
 
 

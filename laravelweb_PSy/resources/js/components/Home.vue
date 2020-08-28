@@ -210,7 +210,13 @@
 	                
 	                if(r.message == "Your are not admin")
 	                {
-	                    this.$router.replace('/login');
+						localStorage.setItem("token", null);
+                        localStorage.setItem("user", null);
+						//next({ path: '/login', replace: true});
+	                    this.$router.push({ path: '/login', replace: true}).catch((err) => {
+                            console.log('ada error');
+                            console.log(err);
+                        });
 	                }
 	            	else
 	                {

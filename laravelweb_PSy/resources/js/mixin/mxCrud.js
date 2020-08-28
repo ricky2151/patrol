@@ -222,20 +222,57 @@ export default {
             },this.header_api).then((r) => {
                 this.showLoading(false);
                 r = r.data;
-                if(r.message == "Your are not admin")
+                if(r != null)
                 {
-                    this.$router.replace('/login');
+                    if(r.message == "Your are not admin")
+                    {
+                        localStorage.setItem("token", null);
+                        localStorage.setItem("user", null);
+                        this.$router.push({ path: '/login' }).catch((err) => {
+                            console.log('ada error');
+                            console.log(err);
+                        });
+                    }
+                    else
+                    {
+
+                        this.showTable(r);
+                        for(var i = 0;i<this.data_table.length;i++)
+                        {
+                            this.data_table[i].no = this.data_table.length - i;
+                        }
+
+                    }
                 }
-            	else
+                else
                 {
-
-                	this.showTable(r);
-                	for(var i = 0;i<this.data_table.length;i++)
-                	{
-                		this.data_table[i].no = this.data_table.length - i;
-                	}
-
+                    swal('Gagal Request !', 'Silahkan cek koneksi internet Anda !', 'error');
                 }
+                
+            }).catch((error) => {
+                //if request failed, then return failed information
+                if(error.response.data)
+                {
+                    if(error.response.data['message'])
+                    {
+                        swal('Failed', error.response.data['message'], 'error');
+                    }
+                    else
+                    {
+                        swal('Failed', 'Check your internet connection !.', 'error');
+                    }
+                }
+                else
+                {
+                    swal('Failed', 'Check your internet connection !.', 'error');
+                }
+                
+                result = {
+                    'status' : 'failed',
+                    'data' : null,
+                };
+                
+                
             });
         },
 
