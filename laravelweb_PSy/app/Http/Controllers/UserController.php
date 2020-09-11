@@ -101,6 +101,7 @@ class UserController extends Controller
         $idUserThisShift = $shift->user()->get()[0]->id;
 
         $dataIsRight = false;
+        $reasonDataIsFalse = "your data is incorrect";
 
         //make variable that store time
         $timeNow = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
@@ -118,11 +119,12 @@ class UserController extends Controller
         {   
             //check scan time is right or not
             $verifyScanTime = checkRangeTimeShift($timeNow, $dateNow, $dateYesterday, $dateShift, $startTimeShift, $endTimeShift, "between");
+            
             if($verifyScanTime == true)
             {
                 //check all photo time is right or not
                 $countRightPhotoTime = 0;
-                if(count($data['photos']) > 0)
+                if(array_key_exists("photos", $data) && count($data['photos']) > 0)
                 {
                     foreach($data['photos'] as $photo)
                     {
@@ -135,13 +137,31 @@ class UserController extends Controller
                         {
                             $countRightPhotoTime += 1;
                         }
+                        
                     }
+                    
                     if($countRightPhotoTime == count($data['photos']))
                     {
                         $dataIsRight = true;
                     }
+                    else
+                    {
+                        $reasonDataIsFalse = "there is an incorrect photo_time data";
+                    }
                 }
-            }            
+                else
+                {
+                    $reasonDataIsFalse = "no photo uploaded";
+                }
+            }  
+            else
+            {
+                $reasonDataIsFalse = "server time is not correct";
+            }          
+        }
+        else
+        {
+            $reasonDataIsFalse = "this user is not have this shift";
         }
 
         if($dataIsRight)
@@ -199,7 +219,7 @@ class UserController extends Controller
             return response()->json(['error' => false, 'message'=>'submit data success !']);
         }
         else{
-            return response()->json(['error' => true, 'message'=>"your time scan is not correct"]);
+            return response()->json(['error' => true, 'message'=>$reasonDataIsFalse]);
         }
         
     }
