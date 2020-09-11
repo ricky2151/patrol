@@ -60,11 +60,13 @@ const router = new VueRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-   
+    console.log('masuk navigation guard');
+    console.log('cek to : ' + to.path);
+    console.log('cek from : ' + from.path);
     // check if the route requires authentication and user is not logged in
     if (to.matched.some(route => route.meta.requiresAuth)) {
         try {
-            if(!localStorage.getItem('token') || localStorage.getItem('token') === 'undefined') {
+            if(!localStorage.getItem('token') || localStorage.getItem('token') === 'undefined' || localStorage.getItem('token') === 'null') {
                 next({ path: '/login', replace: true})
                 return
             }
@@ -75,7 +77,7 @@ router.beforeEach(async (to, from, next) => {
 
     // if logged in redirect to dashboard
     if(to.path === '/login') {
-        if(localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined') {
+        if(localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined' && localStorage.getItem('token') !== 'null') {
             next({ path: '/', replace: true})
             return
         }
