@@ -20,7 +20,7 @@
                                 </v-card-text>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn type="submit" color="primary" v-on:click="req_login" >Masuk</v-btn>
+                                    <v-btn color="primary" v-on:click="req_login" >Masuk</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-form>
@@ -44,7 +44,7 @@
     	methods:
     	{
     		req_login(){
-
+                console.log('request login');
     			axios.post('/api/auth/login',{
     				username:this.in_username,
     				password:this.in_password,
