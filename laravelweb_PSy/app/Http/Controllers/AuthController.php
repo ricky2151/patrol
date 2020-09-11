@@ -30,7 +30,7 @@ class AuthController extends Controller
         } catch (JWTException $e) {
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
-        return $this->respondWithToken($token);
+        //return $this->respondWithToken($token);
         //sampe sini, sudah login
         if($request->isAdmin)
         {
@@ -38,15 +38,26 @@ class AuthController extends Controller
             {
                 return response()->json([
                     'error' => false,
+                    'authenticate' => true,
+                    'access_token' => $token,
                     'user' => Auth::user(),
                     'message' => 'Login Success',
                 ]);        
+            }
+            else
+            {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Login Failed'
+                ]);
             }
         }
         else
         {
             return response()->json([
                 'error' => false,
+                'authenticate' => true,
+                'access_token' => $token,
                 'user' => Auth::user(),
                 'message' => 'Login Success',
             ]);
