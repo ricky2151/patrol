@@ -95,11 +95,15 @@
 </template>
 <script>
 	import { GChart } from 'vue-google-charts'
+	import mxCrud from './../mixin/mxCrud'
 
 	export default {
 		components: {
 		    GChart
-		  },
+		},
+		mixins:[
+			mxCrud
+		],
 		data () {
 			return {
 				
@@ -213,7 +217,7 @@
 						localStorage.setItem("token", null);
                         localStorage.setItem("user", null);
 						//next({ path: '/login', replace: true});
-	                    this.$router.push({ path: '/login', replace: true}).catch((err) => {
+	                    this.$router.push({ path: '/login'}).catch((err) => {
                             console.log('ada error');
                             console.log(err);
                         });
