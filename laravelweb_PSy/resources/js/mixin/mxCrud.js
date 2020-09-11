@@ -383,6 +383,12 @@ export default {
             })
         },
 
+        async cleanAuthenticationAndBackToLogin()
+        {
+            localStorage.setItem("token", null);
+            localStorage.setItem("user", null);
+            this.$router.push({ name: "home" }).catch(()=>{});
+        }
 
         
 	},
