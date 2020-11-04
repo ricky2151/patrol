@@ -570,27 +570,31 @@ export default {
         add_shift_from_checker(data)
         {
 
-          if(!this.input.shifts)
-          {
-              this.input.shifts = [];
-          }
-          //
-          var temp = JSON.parse(JSON.stringify(data));
-          var temp_push = {};
-          temp_push['date'] = temp.date;
-          temp_push['room'] = {};
-          temp_push['room']['id'] = temp.room_id;
-          temp_push['room']['name'] = temp.room_name;
-          temp_push['time'] = {};
-          temp_push['time']['id'] = temp.time_id;
-          temp_push['time']['name'] = temp.time_start_end;
-          this.input.shifts.push(temp_push);
-          console.log('lohlohloh');
-          console.log(temp_push);
-          this.check_shift_not_assign();
-              
-          console.log('cek hasil akhir dari input.shift');
-          console.log(this.input.shifts);
+            if(!this.input.shifts)
+            {
+                this.input.shifts = [];
+            }
+            //
+            var temp = JSON.parse(JSON.stringify(data));
+            var temp_push = {};
+            temp_push['date'] = temp.date;
+            temp_push['room'] = {};
+            temp_push['room']['id'] = temp.room_id;
+            temp_push['room']['name'] = temp.room_name;
+            temp_push['time'] = {};
+            temp_push['time']['id'] = temp.time_id;
+            temp_push['time']['name'] = temp.time_start_end;
+            var isDuplicate = this.check_duplicate_shift(this.input.shifts, temp_push['room']['id'], temp_push['date'], temp_push['time']['id']);
+            if(!isDuplicate) //if not duplicate, then add that data to to this.input.shifts
+            {
+                this.input.shifts.push(temp_push);
+            }
+            console.log('lohlohloh');
+            console.log(temp_push);
+            this.check_shift_not_assign();
+                
+            console.log('cek hasil akhir dari input.shift');
+            console.log(this.input.shifts);
         },
         before_open_dialog(id)
         {
@@ -673,7 +677,12 @@ export default {
                         for(var i = 0;i<self.repeat_time;i++)
                         {
                             var temp = JSON.parse(JSON.stringify(self.temp_input.shifts));
-                            self.input.shifts.push(temp);
+                            var isDuplicate = self.check_duplicate_shift(self.input.shifts, temp.room.id, temp.date, temp.time.id);
+                            if(!isDuplicate) //if not duplicate, then add that data to to this.input.shifts
+                            {
+                                self.input.shifts.push(temp);
+                            }
+
                             var temp_date = new Date(self.temp_input.shifts.date);
                             // add a day
                             temp_date.setDate(temp_date.getDate() + 1);
@@ -683,15 +692,33 @@ export default {
 
                            // console.log(str_temp_date);
                         }
-                        
+                        this.clearTempInput();
                     }
                     else
                     {
-                        self.input.shifts[id_edit] = JSON.parse(JSON.stringify(self.temp_input.shifts));
-                        self.temp_input.id_edit_shifts = -1;
+                        var temp = JSON.parse(JSON.stringify(self.temp_input.shifts));
+                        
+                        var isDuplicate = self.check_duplicate_shift(self.input.shifts, temp.room.id, temp.date, temp.time.id);
+                        if(!isDuplicate) //if not duplicate, then add that data to to this.input.shifts
+                        {
+                            self.input.shifts[id_edit] = temp;
+                            self.temp_input.id_edit_shifts = -1;
+                            this.clearTempInput();
+                        }
+                        else
+                        {
+                            swal('Data Sudah Ada !', 'Data yang Anda masukan sudah ada di daftar!', 'error');
+                        }
+
+
+                        
 
                     }
-                    this.clearTempInput();
+                    if(self.shift_not_assign.data.length > 0)
+                    {
+                        self.check_shift_not_assign();
+                    }
+                    
                 },
                 canceledit(){
                     this.clearTempInput();
@@ -1094,6 +1121,21 @@ export default {
             
         },
 
+
+
+        check_duplicate_shift(listShifts, roomId, date, timeId)
+        {
+            var isDuplicate = false;
+            for(var i = 0;i<listShifts.length;i++)
+            {
+                if(listShifts[i]['date'] == date && listShifts[i]['room']['id'] == roomId && listShifts[i]['time']['id'] == timeId)
+                {
+                    isDuplicate = true;
+                }
+            }
+            return isDuplicate;
+        },
+
        
 
 
@@ -1105,7 +1147,6 @@ export default {
         console.log(this.user);
     },
     mounted(){
-        
         this.get_data();
         this.get_master_data();
        // console.log(this.add_zero_time('1'))
