@@ -32,48 +32,55 @@
 </template>
 
 <script>
-    export default {
-    	data()
-    	{
-    		return {
-                message_error:'',
-	            in_password:'',
-	            in_username:'',
-        	}
-    	},
-    	methods:
-    	{
-    		req_login(){
-                console.log('request login');
-    			axios.post('/api/auth/login',{
-    				username:this.in_username,
-    				password:this.in_password,
-                    isAdmin:true,
-    			}).then(r => {
-                    //console.log(response);
-                    console.log(r.data.message);
-                    if(r.data.message == "Your are not admin" || r.data.message == 'Login Failed')
-                    {
-                        this.in_password = '';
-                        this.in_username = '';
-                        this.message_error = 'Wrong username/password !';
+import api from '../global_function/api';
+
+export default {
+    data()
+    {
+        return {
+            message_error:'',
+            in_password:'',
+            in_username:'',
+        }
+    },
+    methods:
+    {
+        async req_login(){
+            console.log('request login');
+            var body = {
+                username : this.in_username,
+                password : this.in_password,
+                isAdmin : true,
+            }
+            var result = await api.requestApi('login', body);
+            console.log('loh cke result');
+            console.log(result);
+            if(result['success'])
+            {
+                
+                localStorage.setItem('token', result['result']['access_token'])
+                localStorage.setItem('user', JSON.stringify(result['result']['user']))
+                this.in_password = '';
+                this.in_username = '';
+                this.message_error = '';
+                this.$router.replace('/');
+            }
+            else
+            {
+                this.in_password = '';
+                this.in_username = '';
+                if(result['message'] != api.constValue.message.connection)
+                {
+                    this.message_error = 'Wrong username/password !';
+                }
+            }
 
 
-                    }
-                    else 
-                    {
-                        localStorage.setItem('token', r.data.access_token)
-                        localStorage.setItem('user', JSON.stringify(r.data.user))
-                        this.in_password = '';
-                        this.in_username = '';
-                        this.message_error = '';
-                        this.$router.replace('/');
-                        
-                    }
-                });
-    		}
-    	}
+
+            
+        }
     }
+}
 </script>
 
 
