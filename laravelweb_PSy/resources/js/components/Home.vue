@@ -77,7 +77,7 @@
 		</div>
 
 		
-		<center><p style='margin-top:40px;font-size: 40px;font-weight: bold'>Ikhtisar</p></center>
+		<center><p style='margin-top:40px;font-size: 40px;font-weight: bold'>Dashboard</p></center>
 		<br>
 		<div style='overflow-x: auto;overflow-y: hidden;'>
 			<center><h3>Laporan tahun ini : {{total_event}}</h3></center>
