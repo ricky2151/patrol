@@ -1,0 +1,74 @@
+kombinasi antara user, ruangan, tanggal, waktu :
+Contoh Data : 
+user : A,B,C,D
+ruangan : R1,R2,R3
+tanggal : 03/11/2020, 04/11/2020
+waktu : 00:00 - 06:00, 06:00 - 12:00, 
+
+Contoh salah satu kemungkinan: 
+A | R1 | 03/11/2020 | 00:00 - 06:00
+A | R1 | 03/11/2020 | 06:00 - 12:00
+A | R1 | 04/11/2020 | 00:00 - 06:00 x
+A | R1 | 04/11/2020 | 06:00 - 12:00 x
+A | R2 | 03/11/2020 | 00:00 - 06:00 x
+A | R2 | 03/11/2020 | 06:00 - 12:00 x
+A | R2 | 04/11/2020 | 00:00 - 06:00 
+A | R2 | 04/11/2020 | 06:00 - 12:00 
+A | R3 | 03/11/2020 | 00:00 - 06:00 x
+A | R3 | 03/11/2020 | 06:00 - 12:00 x
+A | R3 | 04/11/2020 | 00:00 - 06:00 x
+A | R3 | 04/11/2020 | 06:00 - 12:00 x
+B | R1 | 03/11/2020 | 00:00 - 06:00 x 
+B | R1 | 03/11/2020 | 06:00 - 12:00 x
+B | R1 | 04/11/2020 | 00:00 - 06:00 x
+B | R1 | 04/11/2020 | 06:00 - 12:00 x
+B | R2 | 03/11/2020 | 00:00 - 06:00
+B | R2 | 03/11/2020 | 06:00 - 12:00
+B | R2 | 04/11/2020 | 00:00 - 06:00
+B | R2 | 04/11/2020 | 06:00 - 12:00
+B | R3 | 03/11/2020 | 00:00 - 06:00 x
+B | R3 | 03/11/2020 | 06:00 - 12:00 x
+B | R3 | 04/11/2020 | 00:00 - 06:00 x
+B | R3 | 04/11/2020 | 06:00 - 12:00 x
+
+Rumus Total Kemungkinan :
+RUMUS(P) : [waktu x tanggal] x [jumlah kemungkinan user (dengan maksimal P orang jaga bersamaan) diambil jumlah ruangan]
+CONTOH
+list waktu : 00:00 - 06:00 dan 06:00 - 12:00
+list tanggal : 03/11/2020 dan 04/11/2020
+waktu x tanggal : 
+03/11/2020 | 00:00 - 06:00
+03/11/2020 | 06:00 - 12:00
+04/11/2020 | 00:00 - 06:00
+04/11/2020 | 06:00 - 12:00
+2x2 = 4 kemungkinan
+
+list user : A,B,C,D
+list ruangan : R1,R2,R3
+jumlah kemungkinan user (dengan maksimal P orang jaga bersamaan) : 
+sigma(i = 1 to P) => jumlah user diambil i
+jadi, jumlah kemungkinan user : 
+(4!/1!1!) + (4!/2!2!) = 4 + 6 = 10
+A
+B
+C
+D
+AB
+AC
+AD
+BC
+BD
+CD
+
+jumlah kemungkinan user diambil jumlah ruangan : 
+(10!/7!3!) = 10x3x4 = 120
+(R1 | A), (R2 | B), (R3 | C)
+... (6)
+(R1 | A), (R2 | B), (R3 | CD)
+...
+
+
+sehingga [waktu x tanggal] x [jumlah kemungkinan user (dengan maksimal P orang jaga bersamaan) diambil jumlah ruangan] :
+4 x 120 = 480 kemungkinan
+
+
