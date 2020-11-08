@@ -8,18 +8,16 @@ import sqlite3
 global startShiftTime
 startShiftTime={}
 
-brokerServer ="broker.shiftr.io"
 usernameMQTT = "904e4807"
 passwordMQTT = "cfdc8ca761caadf9"
 
-
-# def konversi(jam):
-#       ptr=conn.execute("select id,start from  times ")
-#       for n in ptr:
-#             convert_id=(str(n[0]))
-#             convert_jam=(str(n[1][0:2]))
-#             if(jam in convert_jam):
-#                   return convert_id
+def konversi(jam):
+      ptr=conn.execute("select id,start from  times ")
+      for n in ptr:
+            convert_id=(str(n[0]))
+            convert_jam=(str(n[1][0:2]))
+            if(jam in convert_jam):
+                  return convert_id
 
 ###! ambil timeshift
 def timeShift(mode="start"):
@@ -64,20 +62,19 @@ def sendShiftQRCode(idTimes,date):
 #__MAIN
 #create connection to broker MQTT
 print("run success")
-mqtt.createConnection(brokerServer,1883,60,"SERVER",usernameMQTT,passwordMQTT)
+mqtt.createConnection("broker.shiftr.io",1883,60,"SERVER",usernameMQTT,passwordMQTT)
 #create connection to database
-#conn = sqlite3.connect('/home/oem/monitoringsystem/patrol/laravelweb_PSy/database/satpam.sq3') #for linux
-conn = sqlite3.connect('../laravelweb_PSy/database/satpam.sq3') #for windows
+conn = sqlite3.connect('/home/oem/monitoringsystem/patrol/laravelweb_PSy/database/satpam.sq3')
 print ("Opened database successfully")
 print ("==========================================")
 
 current = datetime.now()
 bStart = False
-#get seluruh waktu awal & akhir shift 
+#get seluruh waktu awal shift 
 startShiftTime=timeShift("start")
 endShiftTime=timeShift("end")
 count=0
-mqtt.createConnection(brokerServer,1883,60,"SERVER",usernameMQTT,passwordMQTT)
+mqtt.createConnection("broker.shiftr.io",1883,60,"SERVER",usernameMQTT,passwordMQTT)
 
 print ("==========================================")
 print ("scanning time"+str(current))
