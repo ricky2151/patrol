@@ -25,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
     {
         
         date_default_timezone_set('Asia/Jakarta');
+//	\URL::forceScheme('https'); //force HTTPS schema
     }
 }

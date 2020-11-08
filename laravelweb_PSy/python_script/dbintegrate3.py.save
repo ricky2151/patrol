@@ -8,9 +8,8 @@ import sqlite3
 global startShiftTime
 startShiftTime={}
 
-brokerServer ="broker.shiftr.io"
-usernameMQTT = "904e4807"
-passwordMQTT = "cfdc8ca761caadf9"
+usernameMQTT = "samuelricky-skripsi-coba"
+passwordMQTT = "sukukata123"
 
 
 # def konversi(jam):
@@ -64,10 +63,10 @@ def sendShiftQRCode(idTimes,date):
 #__MAIN
 #create connection to broker MQTT
 print("run success")
-mqtt.createConnection(brokerServer,1883,60,"SERVER",usernameMQTT,passwordMQTT)
+mqtt.createConnpatroection("broker.shiftr.io",1883,60,"SERVER",usernameMQTT,passwordMQTT)
 #create connection to database
 #conn = sqlite3.connect('/home/oem/monitoringsystem/patrol/laravelweb_PSy/database/satpam.sq3') #for linux
-conn = sqlite3.connect('../laravelweb_PSy/database/satpam.sq3') #for windows
+conn = sqlite3.connect('../database/satpam.sq3') #for windows
 print ("Opened database successfully")
 print ("==========================================")
 
@@ -77,7 +76,7 @@ bStart = False
 startShiftTime=timeShift("start")
 endShiftTime=timeShift("end")
 count=0
-mqtt.createConnection(brokerServer,1883,60,"SERVER",usernameMQTT,passwordMQTT)
+mqtt.createConnection("broker.shiftr.io",1883,60,"SERVER",usernameMQTT,passwordMQTT)
 
 print ("==========================================")
 print ("scanning time"+str(current))

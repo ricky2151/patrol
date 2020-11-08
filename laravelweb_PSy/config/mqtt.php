@@ -9,8 +9,8 @@
 return [
 
     'host' => env('mqtt_host','broker.shiftr.io'),
-    'password' => env('mqtt_password','sukukata123'),
-    'username' => env('mqtt_username','samuelricky-skripsi-coba'),
+    'password' => env('mqtt_password','cfdc8ca761caadf9'),
+    'username' => env('mqtt_username','904e4807'),
     'certfile' => env('mqtt_cert_file',''),
     'port' => env('mqtt_port','1883'),
     'debug' => env('mqtt_debug',false) //Optional Parameter to enable debugging set it to True
