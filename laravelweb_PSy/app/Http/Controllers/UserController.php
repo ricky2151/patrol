@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 
 class UserController extends Controller
@@ -91,7 +92,7 @@ class UserController extends Controller
 
     public function submitScan(SubmitScan $request)
     {
-        
+        Log::channel('daily')->info('Request from /users/submitScan : ' . json_encode($request->all()));
         $data = $request->validated();
         
         $id = $data['id'];
