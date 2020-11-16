@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\File; 
+use Illuminate\Support\Facades\Storage;
 
 class Photo extends Model
 {
@@ -20,6 +22,18 @@ class Photo extends Model
             ];
        
         return $detail;
+    }
+
+    public function delete()
+    {   
+        error_log("photo.delete");
+        $exists = Storage::disk('local')->exists($this->url);
+        if($exists)
+        {
+            File::delete('storage/' . $this->url);
+        }
+        
+        return parent::delete();
     }
 
   

@@ -305,4 +305,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function delete()
+    {   
+        error_log("user.delete");
+        foreach($this->shifts as $shift) { $shift->delete(); }
+        
+        return parent::delete();
+    }
+
+  
 }

@@ -13,4 +13,14 @@ class Building extends Model
     {
     	return $this->hasMany('App\Models\Room');
     }
+
+    public function delete()
+    {   
+        error_log("building.delete");
+        foreach($this->rooms as $room) { $room->delete(); }
+        
+        return parent::delete();
+    }
+
+    
 }

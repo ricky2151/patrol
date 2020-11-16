@@ -13,5 +13,14 @@ class Time extends Model
     	return $this->hasMany('App\Models\Shift');
     }
 
+    public function delete()
+    {   
+        error_log("time.delete");
+        foreach($this->shifts as $shift) { $shift->delete(); }
+        
+        return parent::delete();
+    }
+
+   
    
 }

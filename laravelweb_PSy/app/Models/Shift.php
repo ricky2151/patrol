@@ -146,6 +146,7 @@ class Shift extends Model
             $q->where('shifts.date', '=', $thisDay);
         }])->where('scan_time', '!=', '')->limit($totalRooms)->with('shift.room:id,name')->get();
         
+        //dd($currentEvent);
         
         $result = [];
         //$result['securePercentageThisMonth'] = $securePercentageThisMonth;
@@ -191,5 +192,13 @@ class Shift extends Model
     	return $this->hasMany('App\Models\History');
     }
 
-    
+    public function delete()
+    {   
+        error_log("shift.delete");
+        foreach($this->histories as $history) { $history->delete(); }
+        
+        return parent::delete();
+    }
+
+ 
 }

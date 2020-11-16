@@ -14,4 +14,13 @@ class Role extends Model
     {
     	return $this->hasMany('App\Models\User');
     }
+    public function delete()
+    {   
+        error_log("role.delete");
+        foreach($this->users as $user) { $user->delete(); }
+        
+        return parent::delete();
+    }
+
+  
 }

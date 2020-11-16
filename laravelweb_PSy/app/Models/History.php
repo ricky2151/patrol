@@ -25,4 +25,13 @@ class History extends Model
         return $this->hasMany('App\Models\Photo'); 
     }
 
+    public function delete()
+    {   
+        error_log("history.delete");
+        foreach($this->photos as $photo) { $photo->delete(); }
+        
+        return parent::delete();
+    }
+
+
 }
