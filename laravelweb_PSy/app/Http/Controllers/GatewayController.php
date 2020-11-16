@@ -109,20 +109,21 @@ class GatewayController extends Controller
     public function destroy($id)
     {
         
-        DB::beginTransaction();
-        try {
-            $this->gateway->find($id)->rooms->map(function($item){
-                $item->shifts()->delete();
-            });
+        // DB::beginTransaction();
+        // try {
+        //     $this->gateway->find($id)->rooms->map(function($item){
+        //         $item->shifts()->delete();
+        //     });
             
-            $this->gateway->find($id)->rooms()->delete();
-            $this->gateway->find($id)->delete();
-            DB::commit();
-        }catch (\Throwable $e) {
-            DB::rollback();
-            dd($e);
+        //     $this->gateway->find($id)->rooms()->delete();
+        //     $this->gateway->find($id)->delete();
+        //     DB::commit();
+        // }catch (\Throwable $e) {
+        //     DB::rollback();
+        //     dd($e);
 
-        }
+        // }
+        $this->gateway->find($id)->delete();
         
 
         return response()->json(['error' => false, 'message'=>'delete data success !']);

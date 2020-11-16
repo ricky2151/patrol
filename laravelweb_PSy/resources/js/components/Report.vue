@@ -137,7 +137,7 @@ export default {
                         }
                         else
                         {
-                            swal('Gagal !', 'Pastikan Anda menjalankan server dengan benar !', 'error');
+                            swal('Gagal !', 'Backup & Hapus Laporan Lama Gagal Dilakukan !', 'error');
                         }
                         
                         this.showLoading(false);

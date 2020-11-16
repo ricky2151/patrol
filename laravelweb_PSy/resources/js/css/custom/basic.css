@@ -342,3 +342,8 @@
 	margin-left: 15px !important;
 	overflow-x: scroll;
 }
+
+.swal-text
+{
+	text-align: center !important;
+}

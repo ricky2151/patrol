@@ -115,16 +115,17 @@ class RoomController extends Controller
      */
     public function destroy($id)
     {
-        DB::beginTransaction();
-        try {
-            $this->room->find($id)->shifts()->delete();
-            $this->room->find($id)->delete();
-            DB::commit();
-        }catch (\Throwable $e) {
-            DB::rollback();
-            dd($e);
+        // DB::beginTransaction();
+        // try {
+        //     $this->room->find($id)->shifts()->delete();
+        //     $this->room->find($id)->delete();
+        //     DB::commit();
+        // }catch (\Throwable $e) {
+        //     DB::rollback();
+        //     dd($e);
 
-        }
+        // }
+        $this->room->find($id)->delete();
         
 
         return response()->json(['error' => false, 'message'=>'delete data success !']);

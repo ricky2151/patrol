@@ -643,7 +643,7 @@ export default {
             }
             else if(idx_action == 3)
             {
-                this.delete_data(id_datatable);
+                this.delete_data(id_datatable, ['Shift', 'Riwayat Scan', 'Foto']);
             }
             //this.action_selected[id_datatable] = null;
         },

@@ -106,20 +106,21 @@ class BuildingController extends Controller
      */
     public function destroy($id)
     {
-        DB::beginTransaction();
-        try {
-            $this->building->find($id)->rooms->map(function($item){
-                $item->shifts()->delete();
-            });
+        // DB::beginTransaction();
+        // try {
+        //     $this->building->find($id)->rooms->map(function($item){
+        //         $item->shifts()->delete();
+        //     });
             
-            $this->building->find($id)->rooms()->delete();
-            $this->building->find($id)->delete();
-            DB::commit();
-        }catch (\Throwable $e) {
-            DB::rollback();
-            dd($e);
+        //     $this->building->find($id)->rooms()->delete();
+        //     $this->building->find($id)->delete();
+        //     DB::commit();
+        // }catch (\Throwable $e) {
+        //     DB::rollback();
+        //     dd($e);
 
-        }
+        // }
+        $this->building->find($id)->delete();
         
 
         return response()->json(['error' => false, 'message'=>'delete data success !']);

@@ -77,4 +77,15 @@ class Room extends Model
     	return $this->hasMany('App\Models\Acknowledge'); 
     }
 
+   
+    public function delete()
+    {   
+        error_log("room.delete");
+        foreach($this->shifts as $shift) { $shift->delete(); }
+        foreach($this->acknowledges as $acknowledge) { $acknowledge->delete(); }
+        
+        return parent::delete();
+    }
+   
+
 }

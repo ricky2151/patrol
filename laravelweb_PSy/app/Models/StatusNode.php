@@ -13,5 +13,14 @@ class StatusNode extends Model
     	return $this->hasMany('App\Models\History');
     }
 
+    public function delete()
+    {   
+        error_log("status_node.delete");
+        foreach($this->histories as $history) { $history->delete(); }
+        
+        return parent::delete();
+    }
+
+ 
     
 }

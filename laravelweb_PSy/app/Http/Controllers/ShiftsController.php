@@ -134,7 +134,9 @@ class ShiftsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->shift->find($id)->delete();
+
+        return response()->json(['error' => false, 'message'=>'delete data success !']);
     }
     public function removeAndBackup()
     {
@@ -186,63 +188,72 @@ class ShiftsController extends Controller
 
        
         Artisan::call("backup:run");
+        $resultArtisanCall = Artisan::output();
+        if(strpos($resultArtisanCall, "Backup failed"))
+        {
+            return response()->json(['error' => true, 'message'=>$resultArtisanCall]);
+        }
+        else
+        {
+            $yangdihapus = [];
         
-
-        $yangdihapus = [];
         
-        
-        $shifts = Shift::get();
+            $shifts = Shift::get();
 
 
-        $shifts->map(function($itemShift) {
-            $deleteThisData = false;
-            //check time is right
-            $timeNow = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
-            $dateNow = Carbon::now()->timezone('Asia/Jakarta')->format('Y-m-d');    
-            $dateYesterday = date('Y-m-d', strtotime('-1 day', strtotime($dateNow)));
+            $shifts->map(function($itemShift) {
+                $deleteThisData = false;
+                //check time is right
+                $timeNow = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
+                $dateNow = Carbon::now()->timezone('Asia/Jakarta')->format('Y-m-d');    
+                $dateYesterday = date('Y-m-d', strtotime('-1 day', strtotime($dateNow)));
 
-            $timeShift = $itemShift->time()->get()[0];
-            $startTimeShift = $timeShift['start'];
-            $endTimeShift = $timeShift['end'];
-            $dateShift = $itemShift->date;
-            //dd($dateNow);
-            //dd(strtotime("2020-03-20") >= strtotime("2020-04-19"));
+                $timeShift = $itemShift->time()->get()[0];
+                $startTimeShift = $timeShift['start'];
+                $endTimeShift = $timeShift['end'];
+                $dateShift = $itemShift->date;
+                //dd($dateNow);
+                //dd(strtotime("2020-03-20") >= strtotime("2020-04-19"));
 
-            //error_log('shiftId : ' . $itemShift->id);
-            //error_log('timeNow : ' . $timeNow);
-            //error_log('dateNow : ' . $dateNow);
-            //error_log('dateYesterday : ' . $dateYesterday);
-            //error_log('startTimeShift : ' . $startTimeShift);
-            //error_log('endTimeShift : ' . $endTimeShift);
-            //error_log('dateShift : ' . $dateShift);
-            $verifyTimeNowIsGreater = checkRangeTimeShift($timeNow, $dateNow, $dateYesterday, $dateShift, $startTimeShift, $endTimeShift, "greater");
-            //error_log("verifyTimeNowIsGreater : " . $verifyTimeNowIsGreater);
-            //error_log("===========================");
-            if($verifyTimeNowIsGreater == true) //if time now is greater than this shift, then delete
-            {
-                $deleteThisData = true;
+                //error_log('shiftId : ' . $itemShift->id);
+                //error_log('timeNow : ' . $timeNow);
+                //error_log('dateNow : ' . $dateNow);
+                //error_log('dateYesterday : ' . $dateYesterday);
+                //error_log('startTimeShift : ' . $startTimeShift);
+                //error_log('endTimeShift : ' . $endTimeShift);
+                //error_log('dateShift : ' . $dateShift);
+                $verifyTimeNowIsGreater = checkRangeTimeShift($timeNow, $dateNow, $dateYesterday, $dateShift, $startTimeShift, $endTimeShift, "greater");
+                //error_log("verifyTimeNowIsGreater : " . $verifyTimeNowIsGreater);
+                //error_log("===========================");
+                if($verifyTimeNowIsGreater == true) //if time now is greater than this shift, then delete
+                {
+                    $deleteThisData = true;
+                    
+                }
                 
-            }
-            
 
-            if($deleteThisData)
-            {
-                $itemShift->histories()->get()->map(function($itemHistory){
-                    $itemHistory->photos()->get()->map(function($itemPhoto){
-                        File::delete("storage/" . $itemPhoto->url);
-                        $itemPhoto->delete();
-                    });
-                    $itemHistory->delete();
-                });
-                $itemShift->delete();
-            }
-            
-        });
+                if($deleteThisData)
+                {
+                    // $itemShift->histories()->get()->map(function($itemHistory){
+                    //     $itemHistory->photos()->get()->map(function($itemPhoto){
+                    //         File::delete("storage/" . $itemPhoto->url);
+                    //         $itemPhoto->delete();
+                    //     });
+                    //     $itemHistory->delete();
+                    // });
+                    $itemShift->delete();
+                }
+                
+            });
+            return response()->json(['error' => false, 'message'=>'success']);
+        }
+
+        
 
 
        
         
-        return response()->json(['error' => false, 'message'=>'success']);
+        
         
     }
 }

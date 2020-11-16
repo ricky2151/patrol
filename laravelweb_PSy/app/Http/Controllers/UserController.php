@@ -345,16 +345,18 @@ class UserController extends Controller
     public function destroy($id)
     {
         
-        DB::beginTransaction();
-        try {
-            $this->user->find($id)->shifts()->delete();
-            $this->user->find($id)->delete();
-            DB::commit();
-        }catch (\Throwable $e) {
-            DB::rollback();
-            dd($e);
+        // DB::beginTransaction();
+        // try {
+        //     $this->user->find($id)->shifts()->delete();
+        //     $this->user->find($id)->delete();
+        //     DB::commit();
+        // }catch (\Throwable $e) {
+        //     DB::rollback();
+        //     dd($e);
 
-        }
+        // }
+
+        $this->user->find($id)->delete();
         
 
         return response()->json(['error' => false, 'message'=>'delete data success !']);

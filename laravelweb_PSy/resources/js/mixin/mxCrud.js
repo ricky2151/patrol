@@ -276,11 +276,11 @@ export default {
             });
         },
 
-        delete_data(id_data_delete){
+        delete_data(id_data_delete, data_also_deleted){
             
             swal({
                     title: "Apakah Anda yakin ingin menghapus data ini?",
-                    text: "Apabila sudah dihapus, tidak bisa dikembalikan",
+                    text: data_also_deleted == null ? "Apabila sudah dihapus, tidak bisa dikembalikan" : (data_also_deleted.toString()) + " yang terkait dengan data ini juga akan terhapus",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
@@ -304,7 +304,7 @@ export default {
                             else
                             {
                                 this.get_data();
-                                swal("Berhasil !", "Data Tersimpan !", "success");
+                                swal("Berhasil !", "Data Terhapus !", "success");
                                 
 
                             }

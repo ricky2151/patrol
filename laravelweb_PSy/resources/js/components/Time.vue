@@ -149,7 +149,7 @@ export default {
             }
             else if(idx_action == 1)
             {
-                this.delete_data(id);
+                this.delete_data(id, ['Shift', 'Riwayat Scan', 'Foto']);
             }
         },
 
