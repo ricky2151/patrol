@@ -110,6 +110,7 @@ export default {
             if(this.index_history > 0)
             {
                 this.index_history -= 1;
+                this.index_photo = 0;
             }
         },
         next_index_history()
@@ -117,6 +118,7 @@ export default {
             if(this.index_history < this.data["histories"].length - 1)
             {
                 this.index_history += 1;
+                this.index_photo = 0;
             }
         },
         prev_index_photo()
