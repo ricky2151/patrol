@@ -145,7 +145,7 @@ export default {
             }
             else if(idx_action == 1)
             {
-                this.delete_data(id);
+                this.delete_data(id, ['Ruangan', 'Shift', 'Acknowledge', 'Riwayat Scan', 'Foto']);
             }
         },
 

@@ -139,9 +139,9 @@ export default {
                 { text: 'No', value: 'no'},
                 { text: 'ID Ruangan', value: 'id'},
                 { text: 'Nama Ruangan', value: 'name'},
-                { text: 'Lantai', value: 'floors'},
-                { text: 'Gedung', value: 'buildings'},
-                { text: 'Gateway', value: 'gateways'},
+                { text: 'Lantai', value: 'floor_name'},
+                { text: 'Gedung', value: 'building_name'},
+                { text: 'Gateway', value: 'gateway_name'},
                 { text: 'Pilihan', align:'left',sortable:false, width:'15%'},
 
             ],
@@ -162,7 +162,7 @@ export default {
             }
             else if(idx_action == 1)
             {
-                this.delete_data(id);
+                this.delete_data(id, ['Shift', 'Acknowledge', 'Riwayat Scan', 'Foto']);
             }
         },
 
