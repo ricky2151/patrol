@@ -106,21 +106,22 @@ class FloorController extends Controller
      */
     public function destroy($id)
     {
-        DB::beginTransaction();
-        try {
+        // DB::beginTransaction();
+        // try {
             
-            $this->floor->find($id)->rooms->map(function($item){
-                $item->shifts()->delete();
-            });
-            $this->floor->find($id)->rooms()->delete();
-            $this->floor->find($id)->delete();
-            DB::commit();
-        }catch (\Throwable $e) {
-            DB::rollback();
-            dd($e);
+        //     $this->floor->find($id)->rooms->map(function($item){
+        //         $item->shifts()->delete();
+        //     });
+        //     $this->floor->find($id)->rooms()->delete();
+        //     $this->floor->find($id)->delete();
+        //     DB::commit();
+        // }catch (\Throwable $e) {
+        //     DB::rollback();
+        //     dd($e);
 
-        }
+        // }
         
+        $this->floor->find($id)->delete();
 
         return response()->json(['error' => false, 'message'=>'delete data success !']);
     }

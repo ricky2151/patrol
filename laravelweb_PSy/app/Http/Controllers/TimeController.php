@@ -106,16 +106,17 @@ class TimeController extends Controller
      */
     public function destroy($id)
     {
-         DB::beginTransaction();
-        try {
-            $this->time->find($id)->shifts()->delete();
-            $this->time->find($id)->delete();
-            DB::commit();
-        }catch (\Throwable $e) {
-            DB::rollback();
-            dd($e);
+        //  DB::beginTransaction();
+        // try {
+        //     $this->time->find($id)->shifts()->delete();
+        //     $this->time->find($id)->delete();
+        //     DB::commit();
+        // }catch (\Throwable $e) {
+        //     DB::rollback();
+        //     dd($e);
 
-        }
+        // }
+        $this->time->find($id)->delete();
         
 
         return response()->json(['error' => false, 'message'=>'delete data success !']);

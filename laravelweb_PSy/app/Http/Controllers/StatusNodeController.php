@@ -106,16 +106,18 @@ class StatusNodeController extends Controller
      */
     public function destroy($id)
     {
-        DB::beginTransaction();
-        try {
-            $this->status_node->find($id)->histories()->delete();
-            $this->status_node->find($id)->delete();
-            DB::commit();
-        }catch (\Throwable $e) {
-            DB::rollback();
-            dd($e);
+        // DB::beginTransaction();
+        // try {
+        //     $this->status_node->find($id)->histories()->delete();
+        //     $this->status_node->find($id)->delete();
+        //     DB::commit();
+        // }catch (\Throwable $e) {
+        //     DB::rollback();
+        //     dd($e);
 
-        }
+        // }
+
+        $this->status_node->find($id)->delete();
         
 
         return response()->json(['error' => false, 'message'=>'delete data success !']);

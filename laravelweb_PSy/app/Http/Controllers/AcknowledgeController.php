@@ -112,6 +112,9 @@ class AcknowledgeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->acknowledge->find($id)->delete();
+        
+
+        return response()->json(['error' => false, 'message'=>'delete data success !']);
     }
 }
