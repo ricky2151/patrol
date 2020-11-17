@@ -17,40 +17,41 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::group(['prefix'=>'auth'], function()
+Route::group(['prefix'=>'auth', 'as'=>'auth.'], function()
 {
 	
-	Route::post('login', 'AuthController@login');
-	Route::post('logout', 'AuthController@logout');
-	Route::post('isLogin', 'AuthController@me');
+	Route::name('login')->post('login', 'AuthController@login');
+	Route::name('logout')->post('logout', 'AuthController@logout');
+	Route::name('me')->post('isLogin', 'AuthController@me');
 
 
 });
 
 //for node device
-Route::get('/acknowledges/testConnection', 'AcknowledgeController@testConnection');
+Route::name('testConnectionIoT')->get('/acknowledges/testConnection', 'AcknowledgeController@testConnection');
 Route::resource('acknowledges', 'AcknowledgeController');
 
 
-Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
+
+Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin', 'as'=>'admin.'], function()
 {
 	//iot
-	Route::get('/iot/configGateway', 'IotController@configGateway');
-	Route::get('/iot/runPython', 'IotController@runPython');
+	Route::name('configGateway')->get('/iot/configGateway', 'IotController@configGateway');
+	Route::name('runPython')->get('/iot/runPython', 'IotController@runPython');
 	
 
 	//dashboard
-	Route::get('/shifts/graph', 'ShiftsController@graph');
-	Route::get('/users/{id}/getAllShifts', 'UserController@getAllShifts');
+	Route::name('graph')->get('/shifts/graph', 'ShiftsController@graph');
+	Route::name('getAllShifts')->get('/users/{id}/getAllShifts', 'UserController@getAllShifts');
 
 	//shift today
-	Route::get('/shifts/shifttoday', 'ShiftsController@getShiftToday');
+	Route::name('getShiftToday')->get('/shifts/shifttoday', 'ShiftsController@getShiftToday');
 
 	//get histories
-	Route::get('/shifts/{id}/getHistories', 'ShiftsController@getHistories');
+	Route::name('getHistories')->get('/shifts/{id}/getHistories', 'ShiftsController@getHistories');
 
 	//remove all shifts that have history
-	Route::post('/shifts/removeAndBackup', 'ShiftsController@removeAndBackup');
+	Route::name('removeAndBackup')->post('/shifts/removeAndBackup', 'ShiftsController@removeAndBackup');
 
 	//route resource
 	Route::resource('shifts', 'ShiftsController');
@@ -64,14 +65,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin'], function()
 	Route::resource('users', 'UserController');
 });
 
-Route::group(['prefix' => 'guard', 'middleware' => 'RoleGuard'], function()
+Route::group(['prefix' => 'guard', 'middleware' => 'RoleGuard', 'as'=>'guard.'], function()
 {
 	//additional route
 	//user
-	Route::get('/users/shifts', 'UserController@shifts');
-	Route::get('/users/getMasterData', 'UserController@getMasterData');
-	Route::get('/users/viewHistoryScan/{id}', 'UserController@viewHistoryScan');
-	Route::post('/users/submitScan', 'UserController@submitScan');
+	Route::name('shifts')->get('/users/shifts', 'UserController@shifts');
+	Route::name('getMasterData')->get('/users/getMasterData', 'UserController@getMasterData');
+	Route::name('viewHistoryScan')->get('/users/viewHistoryScan/{id}', 'UserController@viewHistoryScan');
+	Route::name('submitScan')->post('/users/submitScan', 'UserController@submitScan');
 	
 
 	//Route::resource('shifts', 'AndroidShiftController');
