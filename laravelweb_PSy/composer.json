@@ -16,6 +16,7 @@
         "nao-pon/flysystem-google-drive": "~1.1",
         "nesbot/carbon": "2.17.0 as 1.34.0",
         "salmanzafar/laravel-mqtt": "^1.0",
+        "sentry/sentry-laravel": "^2.3",
         "spatie/laravel-backup": "^6.9",
         "symfony/process": "^4.2",
         "tymon/jwt-auth": "1.0.0-rc.4.1"
