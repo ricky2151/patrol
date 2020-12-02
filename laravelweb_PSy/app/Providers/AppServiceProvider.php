@@ -25,6 +25,21 @@ class AppServiceProvider extends ServiceProvider
     {
         
         date_default_timezone_set('Asia/Jakarta');
-//	\URL::forceScheme('https'); //force HTTPS schema
+
+        $models = [
+            'Auth'
+        ];
+
+        //binding repository
+        foreach ($models as $model) {
+            $this->app->bind("App\Repositories\Contracts\\{$model}RepositoryContract", "App\Repositories\Implementations\\{$model}RepositoryImplementation");
+        }
+
+        //binding services
+        foreach ($models as $model) {
+            $this->app->bind("App\Services\Contracts\\{$model}ServiceContract", "App\Services\Implementations\\{$model}ServiceImplementation");
+        }
+
+
     }
 }
