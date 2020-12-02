@@ -167,6 +167,7 @@ return [
          */
 
         Salman\Mqtt\MqttServiceProvider::class,
+        Sentry\Laravel\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -235,6 +236,8 @@ return [
 
         'Mqtt' => \Salman\Mqtt\Facades\Mqtt::class,
         'Helper' => App\Helpers\Helper::class,
+
+        'Sentry' => Sentry\Laravel\Facade::class,
 
         
 
