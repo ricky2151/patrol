@@ -26,6 +26,7 @@ class ValidateLogin extends FormRequest
         return [
             'username' => 'required:string',
             'password' => 'required:string',
+            'isAdmin' => 'nullable|boolean'
         ];
     }
 }
