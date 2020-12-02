@@ -22,54 +22,17 @@ class AuthController extends Controller
 
     public function login(ValidateLogin $request)
     {
-        $this->authService->login($request);
-        try {
+        $validatedRequest = $request->validated();
 
-            $credentials['username'] = $request->username;
-            $credentials['password'] = $request->password;
+        $data = $this->authService->login($validatedRequest);
 
-            if (! $token = auth()->attempt($credentials)) {
-                 return response()->json([
-                    'error' => true,
-                    'message' => 'Login Failed'
-                 ], 401);
-            }
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'could_not_create_token'], 500);
-        }
-        //return $this->respondWithToken($token);
-        //sampe sini, sudah login
-        if($request->isAdmin)
-        {
-            if(Auth::user()->canPlayARole('Admin'))
-            {
-                return response()->json([
-                    'error' => false,
-                    'authenticate' => true,
-                    'access_token' => $token,
-                    'user' => Auth::user(),
-                    'message' => 'Login Success',
-                ]);        
-            }
-            else
-            {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'Login Failed'
-                ]);
-            }
-        }
-        else
-        {
-            return response()->json([
-                'error' => false,
-                'authenticate' => true,
-                'access_token' => $token,
-                'user' => Auth::user(),
-                'message' => 'Login Success',
-            ]);
-        }
-            
+        return response()->json([
+            'error' => false,
+            'authenticate' => true,
+            'access_token' => $data['access_token'],
+            'user' => $data['user'],
+            'message' => 'Login Success',
+        ]);
 
     
     }
