@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Auth;
 
 class Handler extends ExceptionHandler
 {
@@ -34,6 +35,29 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        if ($this->shouldReport($exception) && app()->bound('sentry')) {
+            app('sentry')->withScope(function (\Sentry\State\Scope $scope) use ($exception): void {
+                //set default codeError (if the exception is not listed on app/exceptions)
+                $codeError = "E-0000";
+                //if exceptions is listed on app/exceptions, then call getCodeException method
+                //to get code error. Ex : E-0001 for login failed
+                if(method_exists($exception, "getCodeException"))
+                {
+                    $codeError = $exception->getCodeException();
+                }
+                //if user is authenticated, then get user id, if not, just fill "null" to userId tag
+                $userId = "null";
+                if(Auth::user())
+                {
+                    $userId = Auth::user()->id;
+                }
+                $scope->setTag('codeError', $codeError);
+                $scope->setTag('userId', $userId);
+                
+                //sent to sentry.io
+                app('sentry')->captureException($exception);
+            });
+        }
         parent::report($exception);
     }
 
@@ -50,8 +74,12 @@ class Handler extends ExceptionHandler
         { 
             return response()->json([
                 "error" => true,
+                "code" => "E-1001",
                 "message" => $exception->errors()
             ], 422);
+        }
+        else if($exception instanceof LoginFailedException){
+            return LoginFailedException::render($exception->getMessage());
         }
         else
         {
