@@ -28,6 +28,7 @@ class LoginTest extends TestCase
         $usernameAny = "ThisIsUsername";
         $usernameEmptyErrorMessage = [
             "error" => true,
+            "code" => "E-1001",
             "message" => [
                 "username" => [
                     "The username field is required."
@@ -36,6 +37,7 @@ class LoginTest extends TestCase
         ];
         $passwordEmptyErrorMessage = [
             "error" => true,
+            "code" => "E-1001",
             "message" => [
                 "password" => [
                     "The password field is required."
@@ -44,7 +46,8 @@ class LoginTest extends TestCase
         ];
         $loginFailedErrorMessage = [
             "error" => true,
-            "message" => "Login Failed"
+            "code" => "E-0001",
+            "message" => ["Wrong Credentials !"]
         ];
         $loginSuccessMessage = [
             "error" => false,
