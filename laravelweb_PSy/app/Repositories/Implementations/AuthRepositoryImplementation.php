@@ -14,6 +14,10 @@ class AuthRepositoryImplementation implements AuthRepositoryContract
             if (! $token = auth()->attempt($credentials)) {
                 throw new LoginFailedException("Wrong Credentials !");
            }
+           else
+           {
+                return ["access_token" => $token, "user" => Auth::user()];
+           }
         } catch (JWTException $e) { 
             throw new LoginFailedException("Could not create token !");
         } catch (LoginFailedException $e)
@@ -29,7 +33,7 @@ class AuthRepositoryImplementation implements AuthRepositoryContract
         $user = Auth::user();
         if($user != null)
         {
-            $thisrole = $this->role->name;
+            $thisrole = $user->role->name;
 
             if($role == 'Guard' && ($thisrole == 'Guard' || $thisrole == 'Admin' || $thisrole == 'Superadmin'))
             {

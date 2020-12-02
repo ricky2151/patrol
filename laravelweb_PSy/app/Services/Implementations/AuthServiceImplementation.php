@@ -20,34 +20,23 @@ class AuthServiceImplementation implements AuthServiceContract
             "username" => $request['username'],
             "password" => $request['password']
         ];
-        if($this->authRepo->login($credentials))
+        if($user = $this->authRepo->login($credentials))
         {
-            if($request->isAdmin)
+            if(array_key_exists('isAdmin', $request) && $request['isAdmin'] == true)
             {
                 if($this->authRepo->canMePlayARole('Admin'))
                 {
-                    return response()->json([
-                        'error' => false,
-                        'authenticate' => true,
-                        'access_token' => $token,
-                        'user' => Auth::user(),
-                        'message' => 'Login Success',
-                    ]);        
+                    return ["access_token" => $user['access_token'], "user" => $user['user']];      
                 }
                 else
                 {
-                    throw new LoginFailedException("Could not create token !");
+                    throw new LoginFailedException("You Are Not Admin !");
                 }
             }
             else
             {
-                return response()->json([
-                    'error' => false,
-                    'authenticate' => true,
-                    'access_token' => $token,
-                    'user' => Auth::user(),
-                    'message' => 'Login Success',
-                ]);
+                return ["access_token" => $user['access_token'], "user" => $user['user']];
+
             }
         }
         else
