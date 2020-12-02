@@ -13,9 +13,14 @@ class LoginTest extends TestCase
      * @dataProvider loginProvider
      * @return void
      */
-    public function testLogin($username, $password, $statusExpected, $jsonExpected)
+    public function testLogin($username, $password, $isAdmin, $statusExpected, $jsonExpected)
     {
-        $response = $this->postJson('/api/auth/login', ['username' => $username, 'password' => $password]);
+        $body = ['username' => $username, 'password' => $password];
+        if($isAdmin)
+        {
+            $body['isAdmin'] = $isAdmin;
+        }
+        $response = $this->postJson('/api/auth/login', $body);
 
         $response
             ->assertStatus($statusExpected)
@@ -24,8 +29,11 @@ class LoginTest extends TestCase
 
     public function loginProvider()
     {
+        //account
         $passwordAny = "ThisIsPassword";
         $usernameAny = "ThisIsUsername";
+
+        //error messages
         $usernameEmptyErrorMessage = [
             "error" => true,
             "code" => "E-1001",
@@ -44,23 +52,45 @@ class LoginTest extends TestCase
                 ]
             ]
         ];
-        $loginFailedErrorMessage = [
+        $isAdminInvalidErrorMessage = [
+            "error" => true,
+            "code" => "E-1001",
+            "message" => [
+                "isAdmin" => [
+                    "The is admin field must be true or false."
+                ]
+            ]
+        ];
+        $authenticationErrorMessage = [
             "error" => true,
             "code" => "E-0001",
             "message" => ["Wrong Credentials !"]
+        ];
+        $authorizationAdminErrorMessage = [
+            "error" => true,
+            "code" => "E-0001",
+            "message" => ["You Are Not Admin !"]
         ];
         $loginSuccessMessage = [
             "error" => false,
             "authenticate" => true,
         ];
         return [
-            'username is undefined' => [null,$passwordAny, 422, $usernameEmptyErrorMessage],
-            'username is empty' => ['', $passwordAny, 422, $usernameEmptyErrorMessage],
-            'username is invalid' => [$usernameAny, $passwordAny, 401, $loginFailedErrorMessage],
-            'password is undefined' => [$usernameAny, null, 422, $passwordEmptyErrorMessage],
-            'password is empty' => [$usernameAny, '', 422, $passwordEmptyErrorMessage],
-            'password is invalid' => ['test_admin', $passwordAny, 401, $loginFailedErrorMessage],
-            'username and password are valid' => ['test_admin', 'secret', 200, $loginSuccessMessage],
+            'username is undefined' => [null,$passwordAny, null, 422, $usernameEmptyErrorMessage],
+            'username is empty' => ['', $passwordAny, null, 422, $usernameEmptyErrorMessage],
+            'username is invalid' => [$usernameAny, $passwordAny, null, 401, $authenticationErrorMessage],
+            'password is undefined' => [$usernameAny, null, null, 422, $passwordEmptyErrorMessage],
+            'password is empty' => [$usernameAny, '', null, 422, $passwordEmptyErrorMessage],
+            'password is invalid' => ['test_admin', $passwordAny, null, 401, $authenticationErrorMessage],
+            'username and password are valid' => ['test_admin', 'secret', null, 200, $loginSuccessMessage],
+
+            'isAdmin is invalid' => [$usernameAny, $passwordAny, "hehe", 422, $isAdminInvalidErrorMessage],
+            'valid guard login as admin' => ['test_guard', 'secret', true, 401, $authorizationAdminErrorMessage],
+            'valid admin login as admin' => ['test_admin', 'secret', true, 200, $loginSuccessMessage],
+            'valid superadmin login as admin' => ['test_superadmin', 'secret', true, 200, $loginSuccessMessage],
+            'valid guard login as guard' => ['test_guard', 'secret', false, 200, $loginSuccessMessage],
+            'valid admin login as guard' => ['test_admin', 'secret', false, 200, $loginSuccessMessage],
+            'valid superadmin login as guard' => ['test_superadmin', 'secret', false, 200, $loginSuccessMessage],
         ];
     }
     
