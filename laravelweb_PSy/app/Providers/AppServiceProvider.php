@@ -32,12 +32,12 @@ class AppServiceProvider extends ServiceProvider
 
         //binding repository
         foreach ($models as $model) {
-            $this->app->bind("App\Repositories\Contracts\\{$model}RepositoryContract", "App\Repositories\Implementations\\{$model}RepositoryImplementation");
+            $this->app->singleton("App\Repositories\Contracts\\{$model}RepositoryContract", "App\Repositories\Implementations\\{$model}RepositoryImplementation");
         }
 
         //binding services
         foreach ($models as $model) {
-            $this->app->bind("App\Services\Contracts\\{$model}ServiceContract", "App\Services\Implementations\\{$model}ServiceImplementation");
+            $this->app->singleton("App\Services\Contracts\\{$model}ServiceContract", "App\Services\Implementations\\{$model}ServiceImplementation");
         }
 
 
