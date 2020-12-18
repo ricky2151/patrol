@@ -75,6 +75,7 @@ class LoginTest extends TestCase
             "error" => false,
             "authenticate" => true,
         ];
+        //[username, password, expectation, status code, message]
         return [
             'username is undefined' => [null,$passwordAny, null, 422, $usernameEmptyErrorMessage],
             'username is empty' => ['', $passwordAny, null, 422, $usernameEmptyErrorMessage],
