@@ -58,5 +58,13 @@ class AuthRepositoryImplementation implements AuthRepositoryContract
         }
         
     }
+
+    public function checkToken() {
+        
+    }
+
+    public function me() {
+
+    }
     
 }

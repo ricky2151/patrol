@@ -6,7 +6,7 @@ interface AuthServiceContract {
     
     public function login($request);
 
-    // public function me();
+    public function me();
 
     // public function logout();
 

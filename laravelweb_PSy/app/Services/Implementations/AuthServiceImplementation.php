@@ -20,28 +20,29 @@ class AuthServiceImplementation implements AuthServiceContract
             "username" => $request['username'],
             "password" => $request['password']
         ];
-        if($user = $this->authRepo->login($credentials))
+
+        $user = $this->authRepo->login($credentials); //throw exception is failed
+        
+        if(array_key_exists('isAdmin', $request) && $request['isAdmin'] == true)
         {
-            if(array_key_exists('isAdmin', $request) && $request['isAdmin'] == true)
+            if($this->authRepo->canMePlayARole('Admin'))
             {
-                if($this->authRepo->canMePlayARole('Admin'))
-                {
-                    return ["access_token" => $user['access_token'], "user" => $user['user']];      
-                }
-                else
-                {
-                    throw new LoginFailedException("You Are Not Admin !");
-                }
+                return ["access_token" => $user['access_token'], "user" => $user['user']];      
             }
             else
             {
-                return ["access_token" => $user['access_token'], "user" => $user['user']];
-
+                throw new LoginFailedException("You Are Not Admin !");
             }
         }
         else
         {
-            return false;
+            return ["access_token" => $user['access_token'], "user" => $user['user']];
+
         }
+        
+    }
+    public function me() 
+    {
+
     }
 }
