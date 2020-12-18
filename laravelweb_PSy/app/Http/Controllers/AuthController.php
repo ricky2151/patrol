@@ -23,6 +23,7 @@ class AuthController extends Controller
     public function login(ValidateLogin $request)
     {
         $validatedRequest = $request->validated();
+        
 
         $data = $this->authService->login($validatedRequest);
 
