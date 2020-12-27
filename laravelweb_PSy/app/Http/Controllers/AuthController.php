@@ -47,16 +47,30 @@ class AuthController extends Controller
         ]);
     }
 
-    public function me()
+    //if user not login or wrong token, then throw exception and return json error
+    //else return user and token data
+    public function isLogin()
     {
-        return response()->json(auth()->user());
+        $data = $this->authService->isLogin();
+
+        return response()->json([
+            'error' => false,
+            'user' => $data['user'],
+            'message' => 'Token is valid',
+        ]);
     }
 
     public function logout()
     {
-        auth()->logout();
+        $this->authService->logout();
+        
+        return response()->json([
+            'error' => false, 
+            'message' => 'Successfully logged out'
+        ]);
+        
 
-        return response()->json(['message' => 'Successfully logged out']);
+        
     }
 
     public function refresh()
