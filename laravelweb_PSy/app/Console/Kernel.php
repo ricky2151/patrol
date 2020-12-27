@@ -28,26 +28,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->call(function () {
-            
-        //     // $process = new Process(['python', 'storage/app/public/dbintegrate3.py']);
-        //     // $process->run();
-
-        //     // // executes after the command finishes
-        //     // if (!$process->isSuccessful()) {
-        //     //     throw new ProcessFailedException($process);
-        //     // }
-
-
-        //     //or
-        //     shell_exec("python storage/app/public/dbintegrate3.py 2>&1");
-        // })->daily();
-        //$schedule->exec('python /home/oem/monitoringsystem/patrol/laravelweb_PSy/storage/app/public/python/dbintegrate3.py')->everyMinute();
         $schedule->exec('python /var/www/html/patrol/laravelweb_PSy/python_script/dbintegrate3.py')->everyMinute();
-        //$schedule->command('backup:run')->everyMinute();
-        // $schedule->command('RealTimeShift:run')
-        //          ->everyMinute()
-        //          ->sendOutputTo('storage/logs/realtimeshiftlog.log');
     }
 
     /**
