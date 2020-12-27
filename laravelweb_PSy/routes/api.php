@@ -17,12 +17,13 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
+
 Route::group(['prefix'=>'auth', 'as'=>'auth.'], function()
 {
 	
 	Route::name('login')->post('login', 'AuthController@login');
 	Route::name('logout')->post('logout', 'AuthController@logout');
-	Route::name('me')->post('isLogin', 'AuthController@me');
+	Route::name('isLogin')->post('isLogin', 'AuthController@isLogin');
 
 
 });
@@ -37,8 +38,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin', 'as'=>'admin.'],
 {
 	//iot
 	Route::name('configGateway')->get('/iot/configGateway', 'IotController@configGateway');
-	Route::name('runPython')->get('/iot/runPython', 'IotController@runPython');
-	
 
 	//dashboard
 	Route::name('graph')->get('/shifts/graph', 'ShiftsController@graph');
@@ -54,15 +53,33 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin', 'as'=>'admin.'],
 	Route::name('removeAndBackup')->post('/shifts/removeAndBackup', 'ShiftsController@removeAndBackup');
 
 	//route resource
-	Route::resource('shifts', 'ShiftsController');
-	Route::resource('floors', 'FloorController');
-	Route::resource('buildings', 'BuildingController');
-	Route::resource('gateways', 'GatewayController');
-	Route::resource('rooms', 'RoomController');
-	Route::resource('photos', 'PhotoController');
-	Route::resource('status_nodes', 'StatusNodeController');
-	Route::resource('times', 'TimeController');
-	Route::resource('users', 'UserController');
+	Route::resource('shifts', 'ShiftsController')->only([
+		'index', 'destroy'
+	]);
+	Route::resource('floors', 'FloorController')->except([
+		'create', 'show'
+	]);
+	Route::resource('buildings', 'BuildingController')->except([
+		'create', 'show'
+	]);
+	Route::resource('gateways', 'GatewayController')->except([
+		'create', 'show'
+	]);
+	Route::resource('rooms', 'RoomController')->except([
+		'show'
+	]);
+	Route::resource('photos', 'PhotoController')->only([
+		'index', 'destroy'
+	]);
+	Route::resource('status_nodes', 'StatusNodeController')->except([
+		'create', 'show'
+	]);
+	Route::resource('times', 'TimeController')->except([
+		'create', 'show'
+	]);
+	Route::resource('users', 'UserController')->except([
+		'show'
+	]);
 });
 
 Route::group(['prefix' => 'guard', 'middleware' => 'RoleGuard', 'as'=>'guard.'], function()
@@ -75,11 +92,17 @@ Route::group(['prefix' => 'guard', 'middleware' => 'RoleGuard', 'as'=>'guard.'],
 	Route::name('submitScan')->post('/users/submitScan', 'UserController@submitScan');
 	
 
-	//Route::resource('shifts', 'AndroidShiftController');
+});
+
+Route::get('/debug-sentry', function () {
+    throw new \App\Exceptions\LoginFailedException("lskadf");
 });
 
 
 
-
-
-//Route::post('')
+Route::any('{any}', function(){
+    return response()->json([
+        'status'    => false,
+        'message'   => 'API Not Found.',
+    ], 404);
+})->where('any', '.*');
