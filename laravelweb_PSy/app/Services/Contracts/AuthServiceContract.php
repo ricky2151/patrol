@@ -6,9 +6,11 @@ interface AuthServiceContract {
     
     public function login($request);
 
-    public function me();
+    public function isLogin();
 
-    // public function logout();
+    public function canMePlayARoleAsAdmin();
+
+    public function logout();
 
     // public function refresh();
 }

@@ -41,8 +41,19 @@ class AuthServiceImplementation implements AuthServiceContract
         }
         
     }
-    public function me() 
-    {
 
+    public function isLogin() 
+    {
+        return $this->authRepo->isLogin();
+    }
+
+    public function canMePlayARoleAsAdmin()
+    {
+        return $this->authRepo->canMePlayARole('Admin');
+    }
+
+    public function logout()
+    {
+        return $this->authRepo->logout();
     }
 }

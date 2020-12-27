@@ -5,6 +5,7 @@ namespace App\Repositories\Implementations;
 use App\Repositories\Contracts\AuthRepositoryContract;
 use Illuminate\Support\Facades\Auth;
 use App\Exceptions\LoginFailedException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthRepositoryImplementation implements AuthRepositoryContract
 {
@@ -59,12 +60,28 @@ class AuthRepositoryImplementation implements AuthRepositoryContract
         
     }
 
-    public function checkToken() {
+    public function isLogin() {
         
+        if(Auth::check())
+        {
+            // echo "authcheck : " . Auth::check() ." \n";
+            // print_r(Auth::user());
+            // echo "\n====\n";
+            return ['user' => Auth::user()];
+        }
+        else
+        {
+            if(JWTAuth::parseToken()->authenticate())
+            {
+                //something wrong with JWT !
+                //if auth::check is false, then it should not enter here !
+                throw App\Exceptions\LoginFailedException("There is problem in authentication server !");
+            }
+        }
     }
 
-    public function me() {
-
+    public function logout() {
+        auth()->logout();
     }
     
 }

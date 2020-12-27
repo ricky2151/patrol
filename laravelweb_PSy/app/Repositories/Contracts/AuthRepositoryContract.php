@@ -6,9 +6,9 @@ interface AuthRepositoryContract
 {
     public function login($credentials);
 
-    public function me();
+    public function isLogin();
 
-    // public function logout();
+    public function logout();
 
     // public function refresh();
 
