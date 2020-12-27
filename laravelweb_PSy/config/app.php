@@ -182,6 +182,9 @@ return [
         App\Providers\HelperServiceProvider::class,
 
         
+        
+
+        
 
     ],
 
@@ -238,6 +241,9 @@ return [
         'Helper' => App\Helpers\Helper::class,
 
         'Sentry' => Sentry\Laravel\Facade::class,
+
+        // 'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        // 'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
 
         
 
