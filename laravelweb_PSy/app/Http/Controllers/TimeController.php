@@ -31,16 +31,6 @@ class TimeController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -62,18 +52,7 @@ class TimeController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Show data by specified id
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -106,16 +85,6 @@ class TimeController extends Controller
      */
     public function destroy($id)
     {
-        //  DB::beginTransaction();
-        // try {
-        //     $this->time->find($id)->shifts()->delete();
-        //     $this->time->find($id)->delete();
-        //     DB::commit();
-        // }catch (\Throwable $e) {
-        //     DB::rollback();
-        //     dd($e);
-
-        // }
         $this->time->find($id)->delete();
         
 

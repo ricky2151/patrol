@@ -15,66 +15,11 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class IotController extends Controller
 {
-    public function runPython()
-    {
-        //masih belum bisa ndeteksi error saat jalanin python 
-        // $pool = Pool::create();
-        // $pool->add(function () use ($thing) {
-        //     $command = escapeshellcmd('start /MIN "" py storage/python/dbintegrate.py > NUL 2> NUL');
-        //     $output = exec($command);
-        // })->then(function ($output) {
-        //     // Handle success
-        // })->catch(function (Throwable $exception) {
-        //     // Handle exception
-        // });
-        // return response()->json(['error' => false, 'message'=>"python running"]);
-
-        //=== coba windows ===
-        // try {
-        //     $command = escapeshellcmd('start py storage/python/dbintegrate.py');
-        //     //$output = exec($command);
-        //     pclose(popen("start /B ". $command, "r")); 
-        //     return response()->json(['error' => false, 'message'=>"python running"]);
-        // } catch (\Throwable $th) {
-        //     return response()->json(['error' => true, 'message'=>"python not running"]);
-        // }
-        
-        //=== coba linux ===
-        try {
-            $commandKillPython = escapeshellcmd('killall -9 python');
-            $commandRunPython = escapeshellcmd('gnome-terminal -e \'python storage/python/dbintegrate.py 2>&1 &\' --title=RickyPython');
-            //passthru('python storage/python/dbintegrate.py 2>&1 &');process
-            //$res;
-            shell_exec($commandKillPython);
-            shell_exec($commandRunPython);
-            //return $res;
-            
-            //echo $output;
-            return response()->json(['error' => false, 'message'=>"python running"]);
-        } catch (\Throwable $th) {
-            return response()->json(['error' => true, 'message'=>"python not running"]);
-        }
-        
-        
-        //     dd("z");
-        // $process = new Process(['py', 'storage/python/jalankanpython.py']);
-        // $process->run();
-
-        // // executes after the command finishes
-        // if (!$process->isSuccessful()) {
-        //     //return "false";
-        //     throw new ProcessFailedException($process);
-        // }
-        // else{
-        //     return "true";
-        // }
-    }
-
 
     public function configGateway()
     {
         
-        $idUser = Auth::user()->id; //Ga tau ini buat apa
+        $idUser = Auth::user()->id; 
         $mqtt = new Mqtt();
 
         //get data
@@ -96,6 +41,8 @@ class IotController extends Controller
         //     "1": "3#4#7#10#",
         //     "5": "6#9#"
         // }
+        //store to $result variable
+
         //and convert to json information like this : 
         // {
         //     "GT-2": [
@@ -105,18 +52,9 @@ class IotController extends Controller
         //     "GT-3": [
         //         "Ruangan Michelle Usada",
         //         "Ruangan Raharja Rajasa S.Farm"
-        //     ],
-        //     "GT-1": [
-        //         "Ruangan Kenari Ardianto S.Psi",
-        //         "Ruangan Wardaya Siregar",
-        //         "Ruangan Farhunnisa Tari Hastuti",
-        //         "Ruangan Oliva Gina Puspita S.IP"
-        //     ],
-        //     "GT-5": [
-        //         "Ruangan Gantar Vino Pranowo M.Ak",
-        //         "Ruangan Restu Suartini"
         //     ]
         // }
+        //store to $information variable
         foreach ($dataRooms as $key => $value) {
             //fill result
             $indexStringResult = (string)$value->gateway_id;

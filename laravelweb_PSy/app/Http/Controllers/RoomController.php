@@ -71,18 +71,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Show data by specified id
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -115,16 +104,6 @@ class RoomController extends Controller
      */
     public function destroy($id)
     {
-        // DB::beginTransaction();
-        // try {
-        //     $this->room->find($id)->shifts()->delete();
-        //     $this->room->find($id)->delete();
-        //     DB::commit();
-        // }catch (\Throwable $e) {
-        //     DB::rollback();
-        //     dd($e);
-
-        // }
         $this->room->find($id)->delete();
         
 

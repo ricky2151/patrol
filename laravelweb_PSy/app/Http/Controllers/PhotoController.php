@@ -22,68 +22,8 @@ class PhotoController extends Controller
     public function index()
     {
         $data = $this->photo->orderBy('id', 'desc')->get();
-
-        // $data = $data->map(function ($data) { 
-        //     $data = Arr::add($data, 'shift_name', $data['shift']['scan_time']);
-        //     return Arr::except($data, ['shift']);
-        // });
         
         return response()->json(['error' => false, 'data'=>$data]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**
@@ -94,15 +34,6 @@ class PhotoController extends Controller
      */
     public function destroy($id)
     {
-        // DB::beginTransaction();
-        // try {
-        //     $this->room->find($id)->delete();
-        //     DB::commit();
-        // }catch (\Throwable $e) {
-        //     DB::rollback();
-        //     dd($e);
-
-        // }
 
         $this->photo->find($id)->delete();
         

@@ -25,19 +25,7 @@ class FloorController extends Controller
     public function index()
     {
         $data = $this->floor->orderBy('id', 'desc')->get();
-
-        
         return response()->json(['error' => false, 'data'=>$data]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -62,18 +50,7 @@ class FloorController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Show data by specified id
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -105,22 +82,7 @@ class FloorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        // DB::beginTransaction();
-        // try {
-            
-        //     $this->floor->find($id)->rooms->map(function($item){
-        //         $item->shifts()->delete();
-        //     });
-        //     $this->floor->find($id)->rooms()->delete();
-        //     $this->floor->find($id)->delete();
-        //     DB::commit();
-        // }catch (\Throwable $e) {
-        //     DB::rollback();
-        //     dd($e);
-
-        // }
-        
+    {   
         $this->floor->find($id)->delete();
 
         return response()->json(['error' => false, 'message'=>'delete data success !']);
