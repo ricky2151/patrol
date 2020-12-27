@@ -8,7 +8,7 @@ use App\Repositories\Contracts\AuthRepositoryContract;
 class AuthServiceTest extends TestCase {
 
     /**
-     * A basic feature test login function.
+     * test login function.
      * @dataProvider loginProvider
      * @return void
      */
@@ -113,22 +113,22 @@ class AuthServiceTest extends TestCase {
 
 
     /**
-     * A basic feature test me function.
-     * @dataProvider meProvider
+     * test IsLogin function.
+     * @dataProvider IsLoginProvider
      * @return void
      */
-    public function testMe($authRepoMe, 
-    $expectedResult, $verifyAuthRepoMeIsCalled) {
+    public function testIsLogin($authRepoIsLogin, 
+    $expectedResult, $verifyAuthRepoIsLoginIsCalled) {
 
         //1. create mock for AuthRepository
-        $authRepoMock = $this->mock(AuthRepositoryContract::class, function ($authRepoMock) use ($authRepoMe){
-            if(is_array($authRepoMe))
+        $authRepoMock = $this->mock(AuthRepositoryContract::class, function ($authRepoMock) use ($authRepoIsLogin){
+            if(is_array($authRepoIsLogin))
             {
-                $authRepoMock->shouldReceive('login')->andReturn($authRepoMock);
+                $authRepoMock->shouldReceive('isLogin')->andReturn($authRepoIsLogin);
             }
             else
             {
-                $authRepoMock->shouldReceive('login')->andThrow($authRepoMock);
+                $authRepoMock->shouldReceive('isLogin')->andThrow($authRepoIsLogin);
             }
         });
         
@@ -138,7 +138,7 @@ class AuthServiceTest extends TestCase {
         //3. call the function to be tested
         $thereIsException = false;
         try {
-            $result = $authService->me();
+            $result = $authService->isLogin();
         }
         catch (\Exception $e) //if there is an exception, then the exception should be same as expectedResult (because, expected result is a exeption)
         {
@@ -153,61 +153,166 @@ class AuthServiceTest extends TestCase {
         }
         
         //5. verify that mocked method is called
-        if($verifyAuthRepoMeIsCalled)
+        if($verifyAuthRepoIsLoginIsCalled)
         {
-            $authRepoMock->shouldReceive('me');
+            $authRepoMock->shouldReceive('isLogin');
         }
         else
         {
-            $authRepoMock->shouldNotReceive('me');
+            $authRepoMock->shouldNotReceive('isLogin');
         }
         
     }
 
-    public function meProvider() {
+    public function IsLoginProvider() {
         
-        $request = ['username' => 'any', 'password' => 'any'];
-        $responseAuthRepoLoginSuccess = ['access_token' => 'xxx', 'user' => []];
-
         $expectedResultSuccess = ['access_token' => 'xxx', 'user' => []];
 
-        $meFailedExceptionWrongCredentials = new \App\Exceptions\LoginFailedException('Wrong Credentials !');
-        $meFailedExceptionNotAdmin = new \App\Exceptions\LoginFailedException('You Are Not Admin !');
-        $loginFailedErrorServer = new \App\Exceptions\LoginFailedException('There is problem in authentication server !');
+        $loginFailedExceptionToken = new \App\Exceptions\LoginFailedException('Token expired !');
+        $loginFailedExceptionServer = new \App\Exceptions\LoginFailedException('There is problem in authentication server !');
+        
 
         //order : 
-        //authrepo.me
-        //expectedresult, verifyAuthRepoMeIsCalled
+        //authrepo.isLogin
+        //expectedresult, verifyAuthRepoIsLoginIsCalled
 
         return [
-            'login with correct admin account' => 
+            'check status when token is valid' => 
                 [
-                    $request, true, $responseAuthRepoLoginSuccess, true,
+                    $expectedResultSuccess,
                     $expectedResultSuccess, true
                 ],
-            'login with incorrect admin role account' => 
+            'check status when token was expired' => 
                 [
-                    $request, true, $responseAuthRepoLoginSuccess, false, 
-                    $loginFailedExceptionNotAdmin, true
+                    $loginFailedExceptionToken,
+                    $loginFailedExceptionToken, true
                 ],
-            'login with incorrect account' => 
+            'check status when there is problem in authentication server' => 
                 [
-                    $request, true, $loginFailedExceptionWrongCredentials, null, 
-                    $loginFailedExceptionWrongCredentials, false
+                    $loginFailedExceptionServer,
+                    $loginFailedExceptionServer, true
                 ],
-            'there is error in authentication server' => 
-                [
-                    $request, true, $loginFailedErrorServer, null, 
-                    $loginFailedErrorServer, false
-                ],
-            'login with correct guard account' => 
-                [
-                    $request, false, $responseAuthRepoLoginSuccess, null, 
-                    $expectedResultSuccess, false
-                ],
-            //'login with incorrect admin credentials account' => ['any', 'any', true, new \App\Exceptions\LoginFailedException("Wrong Credentials !"), null],
+            
         ];
     }
+
+
+    /**
+     * test CanMePlayARoleAsAdmin function.
+     * @dataProvider CanMePlayARoleAsAdminProvider
+     * @return void
+     */
+    public function testCanMePlayARoleAsAdmin($authRepoCanMePlayARole, 
+    $expectedResult) {
+
+        //1. create mock for AuthRepository
+        $authRepoMock = $this->mock(AuthRepositoryContract::class, function ($authRepoMock) use ($authRepoCanMePlayARole){
+            $authRepoMock->shouldReceive('canMePlayARole')->andReturn($authRepoCanMePlayARole);
+        });
+        
+        //2. make object AuthService for testing
+        $authService = new \App\Services\Implementations\AuthServiceImplementation($authRepoMock);
+
+        //3. call the function to be tested
+        $result = $authService->canMePlayARoleAsAdmin();
+
+        //4. assert result just only if there is no exception when calling method 
+        $this->assertSame($result, $expectedResult);
+        
+        //5. verify that mocked method is called
+        $authRepoMock->shouldReceive('canMePlayARole');
+    }
+
+    public function CanMePlayARoleAsAdminProvider() {
+        
+        //order : 
+        //authrepo.canMePlayArole
+        //expectedresult,
+
+        return [
+            'test when auth.canmeplayarole return true' => 
+                [
+                    true,
+                    true, 
+                ],
+            'test when auth.canmeplayarole return false' => 
+                [
+                    false,
+                    false, 
+                ],
+            
+        ];
+    }
+
+    /**
+     * test Logout function.
+     * @dataProvider LogoutProvider
+     * @return void
+     */
+    public function testLogout($authRepoLogout, 
+    $expectedResult) {
+
+        //1. create mock for AuthRepository
+        $authRepoMock = $this->mock(AuthRepositoryContract::class, function ($authRepoMock) use ($authRepoLogout){
+            if(is_bool($authRepoLogout))
+            {
+                $authRepoMock->shouldReceive('logout')->andReturn($authRepoLogout);
+            }
+            else
+            {
+                $authRepoMock->shouldReceive('logout')->andThrow($authRepoLogout);
+            }
+        });
+        
+        //2. make object AuthService for testing
+        $authService = new \App\Services\Implementations\AuthServiceImplementation($authRepoMock);
+
+        //3. call the function to be tested
+        $thereIsException = false;
+        try {
+            $result = $authService->logout();
+        }
+        catch (\Exception $e) //if there is an exception, then the exception should be same as expectedResult (because, expected result is a exeption)
+        {
+            $this->assertEquals($e, $expectedResult);
+            $thereIsException = true;
+        }
+
+        //4. assert result just only if there is no exception when calling method 
+        if(!$thereIsException)
+        {
+            $this->assertSame($result, $expectedResult);
+        }
+        
+        //5. verify that mocked method is called
+        $authRepoMock->shouldReceive('logout');
+        
+    }
+
+    public function LogoutProvider() {
+        
+        $tokenInvalidException = new \Tymon\JWTAuth\Exceptions\TokenInvalidException();
+
+        //order : 
+        //authrepo.logout
+        //expectedresult,
+
+        return [
+            'test when auth.logout throw exception TokenInvalidException' => 
+                [
+                    $tokenInvalidException,
+                    $tokenInvalidException, 
+                ],
+            'test when auth.logout return true' => 
+                [
+                    true,
+                    true, 
+                ],
+            
+        ];
+    }
+
+    
 
 
 

@@ -4,6 +4,9 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Repositories\Contracts\AuthRepositoryContract;
+use App\Repositories\Implementations\AuthRepositoryImplementation;
+
 
 class ExampleTest extends TestCase
 {
@@ -14,6 +17,10 @@ class ExampleTest extends TestCase
      */
     public function testBasicTest()
     {
-        $this->assertTrue(true);
+        $mock = $this->mock(AuthRepositoryContract::class, function ($mock) {
+            $mock->shouldReceive('login')->andReturn(true);
+        });
+
+        $this->assertSame(true, $mock->login("wkwk"));
     }
 }
