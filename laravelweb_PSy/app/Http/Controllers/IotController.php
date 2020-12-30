@@ -30,7 +30,9 @@ class IotController extends Controller
             $data = Arr::add($data, 'gateway_name', $data['gateway']['name']);
             return Arr::except($data, ['floor', 'building', 'gateway']);
         });
-        
+        //dd($dataRooms->toArray());
+        $dataRooms = $dataRooms->toArray();
+        //dd($dataRooms);
         $result = array();
         $information = array();
 
@@ -57,19 +59,19 @@ class IotController extends Controller
         //store to $information variable
         foreach ($dataRooms as $key => $value) {
             //fill result
-            $indexStringResult = (string)$value->gateway_id;
+            $indexStringResult = (string)$value['gateway_id'];
             if(!array_key_exists($indexStringResult, $result))
             {
                 $result[$indexStringResult] = "";
             }
-            $result[$indexStringResult] = $result[$indexStringResult] . $value->id . "#";
+            $result[$indexStringResult] = $result[$indexStringResult] . $value['id'] . "#";
             //fill information
-            $indexStringInformation = (string)$value->gateway_name;
+            $indexStringInformation = (string)$value['gateway_name'];
             if(!array_key_exists($indexStringInformation, $information))
             {
                 $information[$indexStringInformation] = array();
             }
-            array_push($information[$indexStringInformation], $value->name);
+            array_push($information[$indexStringInformation], $value['name']);
         }
         
         //modify result variable
