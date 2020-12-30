@@ -39,16 +39,6 @@ class AcknowledgeController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -56,7 +46,6 @@ class AcknowledgeController extends Controller
      */
     public function store(StoreAcknowledge $request)
     {
-        error_log('ada request masuk');
         DB::beginTransaction();
         try {
             $data = $request->validated();
@@ -68,40 +57,6 @@ class AcknowledgeController extends Controller
             return response()->json(['error' => true, 'message'=>$e->message()]);
         }
         return response()->json(['error' => false, 'message'=>'create data success !']);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show data by specified id
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**

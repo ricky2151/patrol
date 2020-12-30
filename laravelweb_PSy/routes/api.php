@@ -30,8 +30,9 @@ Route::group(['prefix'=>'auth', 'as'=>'auth.'], function()
 
 //for node device
 Route::name('testConnectionIoT')->get('/acknowledges/testConnection', 'AcknowledgeController@testConnection');
-Route::resource('acknowledges', 'AcknowledgeController');
-
+Route::resource('acknowledges', 'AcknowledgeController')->only([
+	'index', 'store', 'destroy'
+]);
 
 
 Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin', 'as'=>'admin.'], function()
