@@ -105,6 +105,9 @@ class Handler extends ExceptionHandler
         else if($exception instanceof LoginFailedException){
             return LoginFailedException::render($exception->getMessage());
         }
+        else if($exception instanceof MqttFailedException){
+            return MqttFailedException::render($exception->getMessage());
+        }
         else
         {
             return parent::render($request, $exception);
