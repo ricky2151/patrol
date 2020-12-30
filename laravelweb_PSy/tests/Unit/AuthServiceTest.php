@@ -4,6 +4,8 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Repositories\Contracts\AuthRepositoryContract;
+use App\Exceptions\LoginFailedException;
+use App\Services\Implementations\AuthServiceImplementation;
 
 class AuthServiceTest extends TestCase {
 
@@ -12,8 +14,7 @@ class AuthServiceTest extends TestCase {
      * @dataProvider loginProvider
      * @return void
      */
-    public function testLogin($request, $isAdmin, $authRepoLogin, 
-    $authRepoCanMePlayARole, $expectedResult, $verifyAuthRepoCanMePlayARoleIsCalled) {
+    public function testLogin($request, $isAdmin, $authRepoLogin, $authRepoCanMePlayARole, $expectedResult, $verifyAuthRepoCanMePlayARoleIsCalled) {
 
         //1. create mock for AuthRepository
         $authRepoMock = $this->mock(AuthRepositoryContract::class, function ($authRepoMock) use ($authRepoLogin, $authRepoCanMePlayARole, $verifyAuthRepoCanMePlayARoleIsCalled){
@@ -34,7 +35,7 @@ class AuthServiceTest extends TestCase {
         });
         
         //2. make object AuthService for testing
-        $authService = new \App\Services\Implementations\AuthServiceImplementation($authRepoMock);
+        $authService = new AuthServiceImplementation($authRepoMock);
 
         //3. call the function to be tested
         $thereIsException = false;
@@ -73,41 +74,40 @@ class AuthServiceTest extends TestCase {
 
         $expectedResultSuccess = ['access_token' => 'xxx', 'user' => []];
 
-        $loginFailedExceptionWrongCredentials = new \App\Exceptions\LoginFailedException('Wrong Credentials !');
-        $loginFailedExceptionNotAdmin = new \App\Exceptions\LoginFailedException('You Are Not Admin !');
-        $loginFailedErrorServer = new \App\Exceptions\LoginFailedException('There is problem in authentication server !');
+        $loginFailedExceptionWrongCredentials = new LoginFailedException('Wrong Credentials !');
+        $loginFailedExceptionNotAdmin = new LoginFailedException('You Are Not Admin !');
+        $loginFailedErrorServer = new LoginFailedException('There is problem in authentication server !');
 
         //order : 
         //request, isAdmin, authrepo.login, authrepo.canmeplayarole,
         //expectedresult, verifyAuthRepoCanMePlayARoleIsCalled
 
         return [
-            'login with correct admin account' => 
+            'when login with correct admin account, then return correct data' => 
                 [
                     $request, true, $responseAuthRepoLoginSuccess, true,
                     $expectedResultSuccess, true
                 ],
-            'login with incorrect admin role account' => 
+            'when login with incorrect admin role account, then return correct error' => 
                 [
                     $request, true, $responseAuthRepoLoginSuccess, false, 
                     $loginFailedExceptionNotAdmin, true
                 ],
-            'login with incorrect account' => 
+            'when login with incorrect account, then return correct error' => 
                 [
                     $request, true, $loginFailedExceptionWrongCredentials, null, 
                     $loginFailedExceptionWrongCredentials, false
                 ],
-            'there is error in authentication server' => 
+            'when there is error in authentication server, then return correct error' => 
                 [
                     $request, true, $loginFailedErrorServer, null, 
                     $loginFailedErrorServer, false
                 ],
-            'login with correct guard account' => 
+            'when login with correct guard account, then return correct data' => 
                 [
                     $request, false, $responseAuthRepoLoginSuccess, null, 
                     $expectedResultSuccess, false
                 ],
-            //'login with incorrect admin credentials account' => ['any', 'any', true, new \App\Exceptions\LoginFailedException("Wrong Credentials !"), null],
         ];
     }
 
@@ -117,8 +117,7 @@ class AuthServiceTest extends TestCase {
      * @dataProvider IsLoginProvider
      * @return void
      */
-    public function testIsLogin($authRepoIsLogin, 
-    $expectedResult, $verifyAuthRepoIsLoginIsCalled) {
+    public function testIsLogin($authRepoIsLogin, $expectedResult, $verifyAuthRepoIsLoginIsCalled) {
 
         //1. create mock for AuthRepository
         $authRepoMock = $this->mock(AuthRepositoryContract::class, function ($authRepoMock) use ($authRepoIsLogin){
@@ -133,7 +132,7 @@ class AuthServiceTest extends TestCase {
         });
         
         //2. make object AuthService for testing
-        $authService = new \App\Services\Implementations\AuthServiceImplementation($authRepoMock);
+        $authService = new AuthServiceImplementation($authRepoMock);
 
         //3. call the function to be tested
         $thereIsException = false;
@@ -168,8 +167,8 @@ class AuthServiceTest extends TestCase {
         
         $expectedResultSuccess = ['access_token' => 'xxx', 'user' => []];
 
-        $loginFailedExceptionToken = new \App\Exceptions\LoginFailedException('Token expired !');
-        $loginFailedExceptionServer = new \App\Exceptions\LoginFailedException('There is problem in authentication server !');
+        $loginFailedExceptionToken = new LoginFailedException('Token expired !');
+        $loginFailedExceptionServer = new LoginFailedException('There is problem in authentication server !');
         
 
         //order : 
@@ -177,17 +176,17 @@ class AuthServiceTest extends TestCase {
         //expectedresult, verifyAuthRepoIsLoginIsCalled
 
         return [
-            'check status when token is valid' => 
+            'when token is valid, then return correct data' => 
                 [
                     $expectedResultSuccess,
                     $expectedResultSuccess, true
                 ],
-            'check status when token was expired' => 
+            'when token is expired, then return correct error' => 
                 [
                     $loginFailedExceptionToken,
                     $loginFailedExceptionToken, true
                 ],
-            'check status when there is problem in authentication server' => 
+            'when there is error when checking token, then return correct error' => 
                 [
                     $loginFailedExceptionServer,
                     $loginFailedExceptionServer, true
@@ -202,8 +201,7 @@ class AuthServiceTest extends TestCase {
      * @dataProvider CanMePlayARoleAsAdminProvider
      * @return void
      */
-    public function testCanMePlayARoleAsAdmin($authRepoCanMePlayARole, 
-    $expectedResult) {
+    public function testCanMePlayARoleAsAdmin($authRepoCanMePlayARole, $expectedResult) {
 
         //1. create mock for AuthRepository
         $authRepoMock = $this->mock(AuthRepositoryContract::class, function ($authRepoMock) use ($authRepoCanMePlayARole){
@@ -211,7 +209,7 @@ class AuthServiceTest extends TestCase {
         });
         
         //2. make object AuthService for testing
-        $authService = new \App\Services\Implementations\AuthServiceImplementation($authRepoMock);
+        $authService = new AuthServiceImplementation($authRepoMock);
 
         //3. call the function to be tested
         $result = $authService->canMePlayARoleAsAdmin();
@@ -230,12 +228,12 @@ class AuthServiceTest extends TestCase {
         //expectedresult,
 
         return [
-            'test when auth.canmeplayarole return true' => 
+            'when canmeplayarole function return true, then return true' => 
                 [
                     true,
                     true, 
                 ],
-            'test when auth.canmeplayarole return false' => 
+                'when canmeplayarole function return false, then return false' => 
                 [
                     false,
                     false, 
@@ -249,8 +247,7 @@ class AuthServiceTest extends TestCase {
      * @dataProvider LogoutProvider
      * @return void
      */
-    public function testLogout($authRepoLogout, 
-    $expectedResult) {
+    public function testLogout($authRepoLogout, $expectedResult) {
 
         //1. create mock for AuthRepository
         $authRepoMock = $this->mock(AuthRepositoryContract::class, function ($authRepoMock) use ($authRepoLogout){
@@ -265,7 +262,7 @@ class AuthServiceTest extends TestCase {
         });
         
         //2. make object AuthService for testing
-        $authService = new \App\Services\Implementations\AuthServiceImplementation($authRepoMock);
+        $authService = new AuthServiceImplementation($authRepoMock);
 
         //3. call the function to be tested
         $thereIsException = false;
@@ -298,12 +295,12 @@ class AuthServiceTest extends TestCase {
         //expectedresult,
 
         return [
-            'test when auth.logout throw exception TokenInvalidException' => 
+            'when logout failed, then throw exception TokenInvalidException' => 
                 [
                     $tokenInvalidException,
                     $tokenInvalidException, 
                 ],
-            'test when auth.logout return true' => 
+            'when logout success, then return true' => 
                 [
                     true,
                     true, 
