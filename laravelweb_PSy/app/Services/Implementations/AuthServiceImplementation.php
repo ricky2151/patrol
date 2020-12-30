@@ -21,9 +21,10 @@ class AuthServiceImplementation implements AuthServiceContract
             "password" => $request['password']
         ];
 
-        $user = $this->authRepo->login($credentials); //throw exception is failed
-        
-        if(array_key_exists('isAdmin', $request) && $request['isAdmin'] == true)
+        $user = $this->authRepo->login($credentials); //throw exception if failed
+
+        //if user send key 'isAdmin' on request AND value of key 'isAdmin' is valid (true/false) //then
+        if(array_key_exists('isAdmin', $request) && filter_var($request['isAdmin'], FILTER_VALIDATE_BOOLEAN) == true) 
         {
             if($this->authRepo->canMePlayARole('Admin'))
             {
