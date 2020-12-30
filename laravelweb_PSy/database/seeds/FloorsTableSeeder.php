@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
+use App\Models\Floor;
 
 class FloorsTableSeeder extends Seeder
 {
@@ -12,13 +12,7 @@ class FloorsTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker::create('id_ID');
- 
-    	for($i = 1; $i <= 5; $i++){    		
-    		DB::table('floors')->insert([
-    			'name' => "Lantai " . $i,
-    		]);
- 
-    	}
+        factory(Floor::class, 5)->create();
+        
     }
 }

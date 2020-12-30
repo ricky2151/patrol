@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\Time;
 
 class TimesTableSeeder extends Seeder
 {
@@ -11,23 +12,23 @@ class TimesTableSeeder extends Seeder
      */
     public function run()
     {
-    	DB::table('times')->insert([
+		factory(Time::class, 1)->create([
 			'start' => '00:00',
 			'end' => '06:00'
 		]);
-        DB::table('times')->insert([
+        factory(Time::class, 1)->create([
 			'start' => '06:00',
 			'end' => '10:00'
 		]);
-		DB::table('times')->insert([
+		factory(Time::class, 1)->create([
 			'start' => '10:00',
 			'end' => '14:00'
 		]);
-		DB::table('times')->insert([
+		factory(Time::class, 1)->create([
 			'start' => '14:00',
 			'end' => '18:00'
 		]);
-		DB::table('times')->insert([
+		factory(Time::class, 1)->create([
 			'start' => '18:00',
 			'end' => '22:00'
 		]);

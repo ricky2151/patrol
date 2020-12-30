@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\StatusNode;
 
 
 class StatusNodesTableSeeder extends Seeder
@@ -13,13 +14,13 @@ class StatusNodesTableSeeder extends Seeder
     public function run()
     {
            		
-		DB::table('status_nodes')->insert([
+		factory(StatusNode::class, 1)->create([
 			'name' => 'Aman'
 		]);
-		DB::table('status_nodes')->insert([
+		factory(StatusNode::class, 1)->create([
 			'name' => 'Mencurigakan'
 		]);
-		DB::table('status_nodes')->insert([
+		factory(StatusNode::class, 1)->create([
 			'name' => 'Tidak Aman'
 		]);
  

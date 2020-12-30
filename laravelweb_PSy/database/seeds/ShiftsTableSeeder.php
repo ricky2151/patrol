@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
-use Faker\Factory as Faker;
+use App\Models\Shift;
 
 class ShiftsTableSeeder extends Seeder
 {
@@ -13,78 +13,8 @@ class ShiftsTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker::create('id_ID');
         $today = Carbon::today()->format('Y-m-d');
         $todayBeforeThisMonth = Carbon::today()->subDays(30)->format('Y-m-d');
-
-        // for($i = 0;$i < 5;$i++) //disetiap waktu
-        // {
-        //     for($j = 4;$j<=7;$j++) //disetiap user
-        //     {
-        //         $today = Carbon::today();
-        //         for($k = 1;$k<=3;$k++) //disetiap room
-        //         {
-                    
-        //             $temp = $today->format('Y-m-d');
-        //             DB::table('shifts')->insert([
-        //                 'user_id' => $j,
-        //                 'time_id' => $i,
-        //                 'room_id' => $k,
-        //                 'date' => $temp,
-        //                 'status_node_id' => mt_rand(1,3),
-        //                 'message' => 'Aman Pak !',
-        //                 'scan_time' => '',
-        //             ]);
-
-        //             $today = $today->add(1, 'day');
-
-
-        //         }
-
-        //     }
-
-        // }
-
-        // DB::table('shifts')->insert([
-        //         'user_id' => 1,
-        //         'room_id' => 1,
-        //         'time_id' => 1,
-        //         'date' => $today,
-        //     ]);
-
-        // DB::table('shifts')->insert([
-        //         'user_id' => 1,
-        //         'room_id' => 2,
-        //         'time_id' => 1,
-        //         'date' => $today,
-        //     ]);
-
-        // DB::table('shifts')->insert([
-        //         'user_id' => 1,
-        //         'room_id' => 2,
-        //         'time_id' => 3,
-        //         'date' => $today,
-        //     ]);
-        // DB::table('shifts')->insert([
-        //         'user_id' => 1,
-        //         'room_id' => 1,
-        //         'time_id' => 1,
-        //         'date' => $todayBeforeThisMonth,
-        //     ]);
-
-        // DB::table('shifts')->insert([
-        //         'user_id' => 1,
-        //         'room_id' => 2,
-        //         'time_id' => 1,
-        //         'date' => $todayBeforeThisMonth, 
-        //     ]);
-
-        // DB::table('shifts')->insert([
-        //         'user_id' => 1,
-        //         'room_id' => 2,
-        //         'time_id' => 3,
-        //         'date' => $todayBeforeThisMonth,
-        //     ]);
 
         $shiftAdded = array();
         //random until room & time not already exist, and insert until 20 rows
@@ -117,22 +47,13 @@ class ShiftsTableSeeder extends Seeder
                 array_push($roomTimeUserArray, $temp_rand_user);
                 array_push($shiftAdded,$roomTimeUserArray);
 
-                DB::table('shifts')->insert([
+                factory(Shift::class, 1)->create([
                     'user_id' => $temp_rand_user,
                     'room_id' => $temp_rand_room,
                     'time_id' => $temp_rand_time,
-                    //'date' => $faker->date($format = 'Y-m-d', $max = 'now'),
-                    'date' => $today,
                 ]);
             }
         }
-            
-            
-            
-
-    		
-            
-            
  
     	
     }

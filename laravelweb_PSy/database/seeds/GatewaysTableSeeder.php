@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
+use App\Models\Gateway;
 
 class GatewaysTableSeeder extends Seeder
 {
@@ -12,13 +12,6 @@ class GatewaysTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker::create('id_ID');
- 
-    	for($i = 1; $i <= 10; $i++){    		
-    		DB::table('gateways')->insert([
-    			'name' => "GT-" . $i,
-    			'location' => "Pojokan ruang" . $faker->name,
-    		]);
-    	}
+        factory(Gateway::class, 10)->create();
     }
 }

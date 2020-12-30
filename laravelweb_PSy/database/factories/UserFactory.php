@@ -19,12 +19,12 @@ use Faker\Generator as Faker;
 $factory->define(User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
-        'age' => 22,
+        'age' => mt_rand(30,60),
         'role_id' => 1, //guard
-        'username' => 'test_guard',
+        'username' => $faker->userName,
         'email' => $faker->unique()->safeEmail,
         'password' => bcrypt('secret'),
-        'phone' => '085727322755',
+        'phone' => $faker->PhoneNumber,
         'master_key' => Str::random(16)
     ];
 });

@@ -18,33 +18,16 @@ class AuthTest extends TestCase
         //1. clear database and migrate 
         Artisan::call('migrate:fresh');
 
-        //2. create role data in database
-        factory(Role::class, 1)->create([
-            'name' => 'Guard'
-        ]);
-        factory(Role::class, 1)->create([
-            'name' => 'Admin'
-        ]);
-        factory(Role::class, 1)->create([
-            'name' => 'Superadmin'
+        //2. run roletableseeder to make role data
+        Artisan::call('db:seed', [
+            '--class' => 'RolesTableSeeder'
         ]);
 
-        //3. create 3 users with role guard, admin, and superadmin
-        //3.a. create user with role guard
-        factory(User::class, 1)->create([
-            'username' => 'test_guard',
-            'role_id' => 1
+        //3. run usertableseeder to make user data
+        Artisan::call('db:seed', [
+            '--class' => 'UsersTableSeeder'
         ]);
-        //3.b. create user with role admin
-        factory(User::class, 1)->create([
-            'username' => 'test_admin',
-            'role_id' => 2
-        ]);
-        //3.c. create user with role superadmin
-        factory(User::class, 1)->create([
-            'username' => 'test_superadmin',
-            'role_id' => 3
-        ]);
+        
     }
     
     //global function to run http request login as guard and make fixture
@@ -162,21 +145,21 @@ class AuthTest extends TestCase
         ];
         //[username, password, isAdmin, status code, message]
         return [
-            'username is undefined' => [null,$passwordAny, null, 422, $usernameEmptyErrorMessage],
-            'username is empty' => ['', $passwordAny, null, 422, $usernameEmptyErrorMessage],
-            'username is invalid' => [$usernameAny, $passwordAny, null, 401, $authenticationErrorMessage],
-            'password is undefined' => [$usernameAny, null, null, 422, $passwordEmptyErrorMessage],
-            'password is empty' => [$usernameAny, '', null, 422, $passwordEmptyErrorMessage],
-            'password is invalid' => ['test_admin', $passwordAny, null, 401, $authenticationErrorMessage],
-            'username and password are valid' => ['test_admin', 'secret', null, 200, $loginSuccessMessage],
+            'when username is undefined, then return correct error' => [null,$passwordAny, null, 422, $usernameEmptyErrorMessage],
+            'when username is empty, then return correct error' => ['', $passwordAny, null, 422, $usernameEmptyErrorMessage],
+            'when username is invalid, then return correct error' => [$usernameAny, $passwordAny, null, 401, $authenticationErrorMessage],
+            'when password is undefined, then return correct error' => [$usernameAny, null, null, 422, $passwordEmptyErrorMessage],
+            'when password is empty, then return correct error' => [$usernameAny, '', null, 422, $passwordEmptyErrorMessage],
+            'when password is invalid, then return correct error' => ['test_admin', $passwordAny, null, 401, $authenticationErrorMessage],
+            'when username and password are valid, then return correct data' => ['test_admin', 'secret', null, 200, $loginSuccessMessage],
 
-            'isAdmin is invalid' => [$usernameAny, $passwordAny, "hehe", 422, $isAdminInvalidErrorMessage],
-            'valid guard login as admin' => ['test_guard', 'secret', true, 401, $authorizationAdminErrorMessage],
-            'valid admin login as admin' => ['test_admin', 'secret', true, 200, $loginSuccessMessage],
-            'valid superadmin login as admin' => ['test_superadmin', 'secret', true, 200, $loginSuccessMessage],
-            'valid guard login as guard' => ['test_guard', 'secret', false, 200, $loginSuccessMessage],
-            'valid admin login as guard' => ['test_admin', 'secret', false, 200, $loginSuccessMessage],
-            'valid superadmin login as guard' => ['test_superadmin', 'secret', false, 200, $loginSuccessMessage],
+            'when isAdmin is invalid, then return correct error' => [$usernameAny, $passwordAny, "hehe", 401, $authenticationErrorMessage],
+            'when valid guard login as admin, then return correct error authorization' => ['test_guard', 'secret', true, 401, $authorizationAdminErrorMessage],
+            'when valid admin login as admin, then return correct data' => ['test_admin', 'secret', true, 200, $loginSuccessMessage],
+            'when valid superadmin login as admin, then return correct data' => ['test_superadmin', 'secret', true, 200, $loginSuccessMessage],
+            'when valid guard login as guard, then return correct data' => ['test_guard', 'secret', false, 200, $loginSuccessMessage],
+            'when valid admin login as guard, then return correct data' => ['test_admin', 'secret', false, 200, $loginSuccessMessage],
+            'when valid superadmin login as guard, then return correct data' => ['test_superadmin', 'secret', false, 200, $loginSuccessMessage],
         ];
     }
 
@@ -277,17 +260,17 @@ class AuthTest extends TestCase
     public function isLoginProvider() {
         //[token, status code, jsonExpected]
         return [
-            'token is undefined' => [null, 400, [
+            'when token is undefined, then return correct error' => [null, 400, [
                 "error" => true,
                 "code" => "E-0002",
                 "message" => ["Error in Authentication !"]
             ]],
-            'token is empty' => ["", 400, [
+            'when token is empty, then return correct error' => ["", 400, [
                 "error" => true,
                 "code" => "E-0002",
                 "message" => ["Error in Authentication !"]
             ]],
-            'token is invalid' => ["xxx", 400, [
+            'when token is invalid, then return correct error' => ["xxx", 400, [
                 "error" => true,
                 "code" => "E-0002",
                 "message" => ['token' => ["Token is Invalid !"]]
@@ -415,17 +398,17 @@ class AuthTest extends TestCase
     public function logoutProvider() {
         //[token, status code, jsonExpected]
         return [
-            'token is undefined' => [null, 400, [
+            'when token is undefined, then return correct error' => [null, 400, [
                 "error" => true,
                 "code" => "E-0002",
                 "message" => ["Error in Authentication !"]
             ]],
-            'token is empty' => ["", 400, [
+            'when token is empty, then return correct error' => ["", 400, [
                 "error" => true,
                 "code" => "E-0002",
                 "message" => ["Error in Authentication !"]
             ]],
-            'token is invalid' => ["", 400, [
+            'when token is invalid, then return correct error' => ["", 400, [
                 "error" => true,
                 "code" => "E-0002",
                 "message" => ["Error in Authentication !"]
