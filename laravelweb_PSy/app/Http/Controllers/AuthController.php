@@ -2,14 +2,9 @@
 
 namespace App\Http\Controllers;
 
-//use Illuminate\Http\Request;
 use App\Http\Requests\ValidateLogin;
 use Illuminate\Support\Facades\Auth;
-// use Tymon\JWTAuth\Facades\JWTAuth;
-// use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Services\Contracts\AuthServiceContract as AuthService;
-
-
 
 class AuthController extends Controller
 {
@@ -24,27 +19,30 @@ class AuthController extends Controller
     {
         $validatedRequest = $request->validated();
         
-
         $data = $this->authService->login($validatedRequest);
 
-        return response()->json([
+        $response = [
             'error' => false,
             'authenticate' => true,
             'access_token' => $data['access_token'],
             'user' => $data['user'],
             'message' => 'Login Success',
-        ]);
+        ];
+
+        return response()->json($response);
 
     
     }
 
     protected function respondWithToken($token)
     {
-        return response()->json([
+        $response = [
             'authenticate' => true,
             'access_token' => $token,
             'user' => auth('api')->user()
-        ]);
+        ];
+
+        return response()->json($response);
     }
 
     //if user not login or wrong token, then throw exception and return json error
@@ -53,21 +51,25 @@ class AuthController extends Controller
     {
         $data = $this->authService->isLogin();
 
-        return response()->json([
+        $response = [
             'error' => false,
             'user' => $data['user'],
             'message' => 'Token is valid',
-        ]);
+        ];
+
+        return response()->json($response);
     }
 
     public function logout()
     {
         $this->authService->logout();
         
-        return response()->json([
+        $response = [
             'error' => false, 
             'message' => 'Successfully logged out'
-        ]);
+        ];
+
+        return response()->json($response);
         
 
         
