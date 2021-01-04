@@ -10,9 +10,6 @@ $factory->define(History::class, function (Faker $faker) {
     //shift with specific id have a time data. get start time data.
     //use start time data to fill scan_time.
     $shiftId = mt_rand(1,2);
-    echo "cek shiftIdnya : " . $shiftId . "\n";
-    echo Shift::find($shiftId)->get()[0]->time()->get();
-    echo "\n===\n";
     $scanTime = Shift::find($shiftId)->get()[0]->time()->get()[0]->start;
     return [
         "shift_id" => $shiftId,
