@@ -29,51 +29,6 @@ class AuthTest extends TestCase
         ]);
         
     }
-    
-    //global function to run http request login as guard and make fixture
-    //so this fixture can be use to test other API that requires login as guard
-    public function testLoginAsGuardAndMakeFixture()
-    {
-        $body = ['username' => 'test_guard', 'password' => 'secret', 'isAdmin' => false];
-        $response = $this->postJson('/api/auth/login', $body);
-        $response
-            ->assertStatus(200)
-            ->assertJson([
-                "error" => false,
-                "authenticate" => true,
-            ]);
-        return $response;
-    }
-
-    //global function to run http request login as admin and make fixture
-    //so this fixture can be use to test other API that requires login as admin
-    public function testLoginAsAdminAndMakeFixture()
-    {
-        $body = ['username' => 'test_admin', 'password' => 'secret', 'isAdmin' => true];
-        $response = $this->postJson('/api/auth/login', $body);
-        $response
-            ->assertStatus(200)
-            ->assertJson([
-                "error" => false,
-                "authenticate" => true,
-            ]);
-        return $response;
-    }
-
-    //global function to run http request login as superadmin and make fixture
-    //so this fixture can be use to test other API that requires login as superadmin
-    public function testLoginAsSuperadminAndMakeFixture()
-    {
-        $body = ['username' => 'test_superadmin', 'password' => 'secret', 'isAdmin' => true];
-        $response = $this->postJson('/api/auth/login', $body);
-        $response
-            ->assertStatus(200)
-            ->assertJson([
-                "error" => false,
-                "authenticate" => true,
-            ]);
-        return $response;
-    }
 
     /**
      * feature test login.
@@ -82,13 +37,17 @@ class AuthTest extends TestCase
      */
     public function testLogin($username, $password, $isAdmin, $statusExpected, $jsonExpected)
     {
+        //1. make body request
         $body = ['username' => $username, 'password' => $password];
         if($isAdmin)
         {
             $body['isAdmin'] = $isAdmin;
         }
+
+        //2. hit API
         $response = $this->postJson('/api/auth/login', $body);
 
+        //3. assert response
         $response
             ->assertStatus($statusExpected)
             ->assertJson($jsonExpected);
@@ -143,7 +102,7 @@ class AuthTest extends TestCase
             "error" => false,
             "authenticate" => true,
         ];
-        //[username, password, isAdmin, status code, message]
+        //[username, password, isAdmin, status code, response message]
         return [
             'when username is undefined, then return correct error' => [null,$passwordAny, null, 422, $usernameEmptyErrorMessage],
             'when username is empty, then return correct error' => ['', $passwordAny, null, 422, $usernameEmptyErrorMessage],
@@ -166,15 +125,17 @@ class AuthTest extends TestCase
 
     /**
      * feature test isLogin API with valid guard token.
-     * @depends testLoginAsGuardAndMakeFixture
      * @return void
      */
-    public function testValidGuardTokenIsValid($responseLoginGuard)
+    public function testValidGuardTokenIsValid()
     {
-        $token = $responseLoginGuard->json()['access_token'];
-        $body = ['token' => $token];
-        $response = $this->postJson('/api/auth/isLogin', $body);
+        //1. find user to use as an actor
+        $user = User::where('username', 'test_guard')->firstOrFail();
 
+        //2. hit API
+        $response = $this->actingAs($user)->postJson('/api/auth/isLogin');
+
+        //3. assert response
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
@@ -189,15 +150,17 @@ class AuthTest extends TestCase
 
     /**
      * feature test isLogin API with valid admin token.
-     * @depends testLoginAsAdminAndMakeFixture
      * @return void
      */
-    public function testValidAdminTokenIsValid($responseLoginAdmin)
+    public function testValidAdminTokenIsValid()
     {
-        $token = $responseLoginAdmin->json()['access_token'];
-        $body = ['token' => $token];
-        $response = $this->postJson('/api/auth/isLogin', $body);
+        //1. find user to use as an actor
+        $user = User::where('username', 'test_admin')->firstOrFail();
 
+        //2. hit API
+        $response = $this->actingAs($user)->postJson('/api/auth/isLogin');
+
+        //3. assert response
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
@@ -212,16 +175,17 @@ class AuthTest extends TestCase
 
     /**
      * feature test isLogin API with valid superadmin token.
-     * @depends testLoginAsSuperadminAndMakeFixture
      * @return void
      */
-    public function testValidSuperadminTokenIsValid($responseLoginSuperadmin)
+    public function testValidSuperadminTokenIsValid()
     {
-        $token = $responseLoginSuperadmin->json()['access_token'];
-        $body = ['token' => $token];
-        $response = $this->postJson('/api/auth/isLogin', $body);
+        //1. find user to use as an actor
+        $user = User::where('username', 'test_superadmin')->firstOrFail();
 
+        //2. hit API
+        $response = $this->actingAs($user)->postJson('/api/auth/isLogin');
 
+        //3. assert response
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
@@ -237,20 +201,23 @@ class AuthTest extends TestCase
 
     /**
      * feature test isLogin API with invalid token.
+     * so, this test is not use "actingAs" method, because it test the given token from user
      * @dataProvider isLoginProvider
      * @return void
      */
     public function testIsLogin($token, $statusExpected, $jsonExpected)
     {
+        //1. make body request
         $body = [];
         if($token != null)
         {
             $body['token'] = $token;
         }
+
+        //2. hit API
         $response = $this->postJson('/api/auth/isLogin', $body);
 
-        //$response->dump();
-
+        //3. assert response
         $response
             ->assertStatus($statusExpected)
             ->assertJson($jsonExpected);
@@ -281,16 +248,17 @@ class AuthTest extends TestCase
 
     /**
      * feature test login as guard and access admin data
-     * @depends testLoginAsGuardAndMakeFixture
      * @return void
      */
-    public function testLoginAsGuardAndAccessAdminData($responseLoginGuard)
+    public function testLoginAsGuardAndAccessAdminData()
     {
-        $token = $responseLoginGuard->json()['access_token'];
-        $parameter = ['token' => $token];
-        $response = $this->json('GET', '/api/admin/shifts', $parameter);
+        //1. find user to use as an actor
+        $user = User::where('username', 'test_guard')->firstOrFail();
 
+        //2. hit API
+        $response = $this->actingAs($user)->json('GET', '/api/admin/shifts');
 
+        //3. assert response
         $response
             ->assertStatus(401)
             ->assertJson([
@@ -302,16 +270,17 @@ class AuthTest extends TestCase
 
     /**
      * feature test login as admin and access admin data
-     * @depends testLoginAsAdminAndMakeFixture
      * @return void
      */
-    public function testLoginAsAdminAndAccessAdminData($responseLoginAdmin)
+    public function testLoginAsAdminAndAccessAdminData()
     {
-        $token = $responseLoginAdmin->json()['access_token'];
-        $parameter = ['token' => $token];
-        
-        $response = $this->json('GET', '/api/admin/shifts', $parameter);
+        //1. find user to use as an actor
+        $user = User::where('username', 'test_admin')->firstOrFail();
 
+        //2. hit API
+        $response = $this->actingAs($user)->json('GET', '/api/admin/shifts');
+
+        //3. assert response
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
@@ -325,17 +294,17 @@ class AuthTest extends TestCase
 
     /**
      * feature test login as superadmin and access admin data
-     * @depends testLoginAsSuperadminAndMakeFixture
      * @return void
      */
-    public function testLoginAsSuperadminAndAccessAdminData($responseLoginSuperadmin)
+    public function testLoginAsSuperadminAndAccessAdminData()
     {
-        $token = $responseLoginSuperadmin->json()['access_token'];
-        $parameter = ['token' => $token];
-        $response = $this->json('GET', '/api/admin/shifts', $parameter);
+        //1. find user to use as an actor
+        $user = User::where('username', 'test_superadmin')->firstOrFail();
 
-        
+        //2. hit API
+        $response = $this->actingAs($user)->json('GET', '/api/admin/shifts');
 
+        //3. assert response
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
@@ -347,17 +316,37 @@ class AuthTest extends TestCase
         
     }
 
+    //function to run http request login as guard and make fixture
+    //so this fixture can be use to test other API that requires login as guard
+    public function testLoginAsGuardAndMakeFixture()
+    {
+        $body = ['username' => 'test_guard', 'password' => 'secret', 'isAdmin' => false];
+        $response = $this->postJson('/api/auth/login', $body);
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                "error" => false,
+                "authenticate" => true,
+            ]);
+        return $response;
+    }
+
     /**
      * feature test logout API as guard.
+     * This test is not use method "actingAs", because we need token to test it again with login API
      * @depends testLoginAsGuardAndMakeFixture
      * @return void
      */
     public function testLogoutAsGuard($responseLoginGuard)
     {
+        //1. make body request
         $token = $responseLoginGuard->json()['access_token'];
         $body = ['token' => $token];
+
+        //2. hit API
         $response = $this->postJson('/api/auth/logout', $body);
 
+        //3. assert response
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -365,6 +354,7 @@ class AuthTest extends TestCase
                 'message' => 'Successfully logged out'
             ]);
         
+        //4. test again with login API 
         $this->testIsLogin($token, 400, 
         [
             "error" => true,
@@ -375,20 +365,23 @@ class AuthTest extends TestCase
 
     /**
      * feature test logout API with invalid token.
+     * this test is not use "actingAs" method, because we test given token from user.
      * @dataProvider logoutProvider
      * @return void
      */
     public function testLogout($token, $statusExpected, $jsonExpected)
     {
+        //1. make body request
         $body = [];
         if($token != null)
         {
             $body['token'] = $token;
         }
+
+        //2. hit API
         $response = $this->postJson('/api/auth/logout', $body);
 
-        //$response->dump();
-
+        //3. assert response
         $response
             ->assertStatus($statusExpected)
             ->assertJson($jsonExpected);
