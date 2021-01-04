@@ -27,7 +27,8 @@ class AppServiceProvider extends ServiceProvider
         date_default_timezone_set('Asia/Jakarta');
 
         $models = [
-            'Auth'
+            'Auth',
+            'Iot'
         ];
 
         //binding repository

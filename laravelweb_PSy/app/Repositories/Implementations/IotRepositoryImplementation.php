@@ -6,6 +6,7 @@ use App\Repositories\Contracts\IotRepositoryContract;
 use App\Models\Room;
 use Illuminate\Support\Arr;
 use App\Exceptions\MqttFailedException;
+use Salman\Mqtt\MqttClass\Mqtt;
 
 class IotRepositoryImplementation implements IotRepositoryContract  {
     public function getDataRooms()
@@ -23,7 +24,8 @@ class IotRepositoryImplementation implements IotRepositoryContract  {
 
     public function sendToConfigGatewayTopicMqtt($gatewayId, $stringListNodeId)
     {
-        $idUser = Auth::user()->id;
+        $idUser = auth()->user()->id;
+        $mqtt = new Mqtt();
 
         //idUser itu cuman client_id
         //sebenernya aku ga tau client_id ini buat apa, karena gak ada hubunganya sama data ynag dikirim
