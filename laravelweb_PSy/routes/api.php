@@ -42,6 +42,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin', 'as'=>'admin.'],
 
 	//dashboard
 	Route::name('graph')->get('/shifts/graph', 'ShiftsController@graph');
+
+	//get detail shift on specific user
 	Route::name('getAllShifts')->get('/users/{id}/getAllShifts', 'UserController@getAllShifts');
 
 	//shift today
