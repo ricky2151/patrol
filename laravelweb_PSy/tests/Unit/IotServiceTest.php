@@ -8,30 +8,22 @@ use App\Repositories\Implementations\IotRepositoryImplementations;
 use App\Services\Implementations\IotServiceImplementation;
 use App\Exceptions\MqttFailedException;
 
+use App\TestUtil;
+
 class IotServiceTest extends TestCase {
+
     /**
      * test config gateway function
      * @dataProvider configGatewayProvider
      * @return void
      */
-    public function testConfigGateway($iotRepoGetDataRooms, $iotRepoSendConfigGateway, $expectedResult, $verifySendConfigGateway)
+    public function testConfigGateway($iotRepoGetDataRooms, $iotRepoSendConfigGateway, $expectedResult, $verifyIotRepoGetDataRooms, $verifyIotRepoSendConfigGateway)
     {
         //1. create mock for IotRepository
-        $iotRepoMock = $this->mock(IotRepositoryContract::class, function ($iotRepoMock) use ($iotRepoGetDataRooms, $iotRepoSendConfigGateway, $verifySendConfigGateway){
-            if(is_bool($iotRepoSendConfigGateway))
-            {
-                $iotRepoMock->shouldReceive('sendToConfigGatewayTopicMqtt')->andReturn($iotRepoSendConfigGateway);
-            }
-            else
-            {
-                $iotRepoMock->shouldReceive('sendToConfigGatewayTopicMqtt')->andThrow($iotRepoSendConfigGateway);
-            }
-
-            
-            $iotRepoMock->shouldReceive('getDataRooms')->andReturn($iotRepoGetDataRooms);
-            
-            
-        });
+        $iotRepoMock = TestUtil::mockClass(IotRepositoryContract::class, [
+            ['method' => 'sendToConfigGatewayTopicMqtt', 'returnOrThrow' => $iotRepoSendConfigGateway],
+            ['method' => 'getDataRooms', 'returnOrThrow' => $iotRepoGetDataRooms]
+        ]);
         
         //2. make object IotService for testing
         $iotService = new IotServiceImplementation($iotRepoMock);
@@ -54,18 +46,14 @@ class IotServiceTest extends TestCase {
         }
         
         //5. verify that mocked method is called
-        if($verifySendConfigGateway)
-        {
-            $iotRepoMock->shouldReceive('sendToConfigGatewayTopicMqtt');
-        }
-        else
-        {
-            $iotRepoMock->shouldNotReceive('sendToConfigGatewayTopicMqtt');
-        }
+        $verifyIotRepoGetDataRooms ? $iotRepoMock->shouldReceive('GetDataRooms') : $iotRepoMock->shouldNotReceive('GetDataRooms');
+
+        $verifyIotRepoSendConfigGateway ? $iotRepoMock->shouldReceive('sendToConfigGatewayTopicMqtt') : $iotRepoMock->shouldNotReceive('sendToConfigGatewayTopicMqtt');
     }
 
     public function configGatewayProvider()
     {
+        //input variable
         $dataRooms = [
             [
                 "id" => 1,
@@ -99,6 +87,7 @@ class IotServiceTest extends TestCase {
             ]
         ];
 
+        //expected output variable
         $expectedResultWithRooms = 
         [
             'mqtt' => [
@@ -122,26 +111,26 @@ class IotServiceTest extends TestCase {
             'information' => []
         ];
 
-        $mqttFailedException = new MqttFailedException("cannot send data to topic 'config-gateway'");
+        $mqttFailedException = new MqttFailedException();
 
         //order : 
         //iotRepoGetDataRooms, iotRepoSendConfigGateway, 
-        //expectedResult, verifySendConfigGateway
+        //expectedResult, verifyIotRepoGetDataRooms, verifyIotRepoSendConfigGateway
         return [
             'when rooms data is not empty and success send to mqtt, then return correct data structure' =>
             [
                 $dataRooms, true,
-                $expectedResultWithRooms, true
+                $expectedResultWithRooms, true, true
             ],
             'when rooms data is empty, then return empty data' =>
             [
                 [], false,
-                $expectedResultEmptyRooms, false
+                $expectedResultEmptyRooms, true, false
             ],
             'when rooms data is not empty but failed send to mqtt, then return correct error' =>
             [
                 $dataRooms, $mqttFailedException,
-                $mqttFailedException, true
+                $mqttFailedException, true, true
             ]
             ];
     }
