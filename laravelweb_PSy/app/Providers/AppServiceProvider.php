@@ -28,7 +28,13 @@ class AppServiceProvider extends ServiceProvider
 
         $models = [
             'Auth',
-            'Iot'
+            'Iot',
+            'Building',
+            'User',
+            'Shift',
+            'Photo',
+            'History',
+            'StatusNode'
         ];
 
         //binding repository
