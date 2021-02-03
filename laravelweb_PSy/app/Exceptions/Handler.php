@@ -10,6 +10,9 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
+
 
 
 class Handler extends ExceptionHandler
@@ -76,7 +79,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof TokenInvalidException) {
+        if($exception instanceof LoginFailedException){
+            return LoginFailedException::render($exception->getMessage()); //E-0001
+        }
+        else if ($exception instanceof TokenInvalidException) {
             return response()->json(['error' => true,'code' => 'E-0002', 'message' => ["token"=>["Token is Invalid !"]]],400);
         }
         elseif ($exception instanceof TokenExpiredException) {
@@ -88,25 +94,33 @@ class Handler extends ExceptionHandler
         else if ($exception instanceof JWTException) {
             return response()->json(['error' => true,'code' => 'E-0002', 'message' => ["Error in Authentication !"]],400);
         }
+        else if ($exception instanceof ModelNotFoundException) {
+            return response()->json(['error' => true, 'message'=> "data not found"], 400);
+        }
         else if ($exception->getMessage() === 'Token not provided') {
             return response()->json(['error' => true,'code' => 'E-0002', 'message' => ["token"=>['Token not provided !']]], 400);
         }
         elseif ($exception->getMessage() === 'User not found'){
             return response()->json(['error' => true,'code' => 'E-0002', 'message' => ["user"=>['User not found !']]], 400);
         }
-        else if ($exception instanceof \Illuminate\Validation\ValidationException) 
-        { 
-            return response()->json([
-                "error" => true,
-                "code" => "E-1001",
-                "message" => $exception->errors()
-            ], 422);
-        }
-        else if($exception instanceof LoginFailedException){
-            return LoginFailedException::render($exception->getMessage());
-        }
         else if($exception instanceof MqttFailedException){
-            return MqttFailedException::render($exception->getMessage());
+            return MqttFailedException::render($exception->getMessage()); //E-0011
+        }
+        else if($exception instanceof GetDataFailedException){
+            return GetDataFailedException::render($exception->getMessage()); //E-0021
+        }
+        else if($exception instanceof StoreDataFailedException){
+            return StoreDataFailedException::render($exception->getMessage()); //E-0022
+        }
+        else if($exception instanceof SaveFileFailedException){
+            return SaveFileFailedException::render($exception->getMessage()); //E-0023
+        }
+        else if($exception instanceof SuspiciousInputException){
+            return SuspiciousInputException::render($exception->getMessage()); //E-0032
+        }
+        else if ($exception instanceof ValidationException) 
+        { 
+            return response()->json(["error" => true,"code" => "E-0031","message" => $exception->errors()], 422);
         }
         else
         {
