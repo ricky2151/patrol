@@ -30,7 +30,7 @@ class BaseRepositoryImplementation implements BaseRepositoryContract
         return $this->orderBy($orderBy, $orderType)->get();
     }
 
-    public function get($id)
+    public function find($id)
     {
         return $this->model->find($id);
     }
@@ -51,9 +51,10 @@ class BaseRepositoryImplementation implements BaseRepositoryContract
         return $this->model->where($column = '', $value)->count();
     }
 
-    public function create(array $data)
+    public function store(array $data)
     {
-        return $this->model->create($data);
+        $newData = $this->model->create($data);   
+        return $newData->toArray();
     }
 
     public function update(array $data, $id)

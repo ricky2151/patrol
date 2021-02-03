@@ -8,7 +8,7 @@ interface BaseRepositoryContract
 
     public function allOrder($orderBy, $orderType);
 
-    public function get($id);
+    public function find($id);
 
     public function getOneWhere($column, $value, $width);
 
@@ -16,7 +16,7 @@ interface BaseRepositoryContract
 
     public function countWhere($column, $value);
 
-    public function create(array $data);
+    public function store(array $data);
 
     public function update(array $data, $id);
 
