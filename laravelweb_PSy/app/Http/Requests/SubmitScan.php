@@ -24,8 +24,8 @@ class SubmitScan extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|integer',
-            'status_node_id' => 'required|integer',
+            'id' => 'required|integer|exists:shifts,id',
+            'status_node_id' => 'required|integer|exists:status_nodes,id',
             'message' => 'nullable|string',
             'photos.*.file' => 'required_with:photos.*.photo_time,true|file',
             'photos.*.photo_time' => 'required_with:photos.*.file, true|regex:"(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})"',
