@@ -63,7 +63,7 @@ class AuthTest extends TestCase
         //error messages
         $usernameEmptyErrorMessage = [
             "error" => true,
-            "code" => "E-1001",
+            "code" => "E-0031",
             "message" => [
                 "username" => [
                     "The username field is required."
@@ -72,7 +72,7 @@ class AuthTest extends TestCase
         ];
         $passwordEmptyErrorMessage = [
             "error" => true,
-            "code" => "E-1001",
+            "code" => "E-0031",
             "message" => [
                 "password" => [
                     "The password field is required."
@@ -81,7 +81,7 @@ class AuthTest extends TestCase
         ];
         $isAdminInvalidErrorMessage = [
             "error" => true,
-            "code" => "E-1001",
+            "code" => "E-0031",
             "message" => [
                 "isAdmin" => [
                     "The is admin field must be true or false."
@@ -247,10 +247,10 @@ class AuthTest extends TestCase
 
 
     /**
-     * feature test login as guard and access admin data
+     * feature test login as guard and hit admin page api
      * @return void
      */
-    public function testLoginAsGuardAndAccessAdminData()
+    public function testLoginAsGuardAndHitAdminPageApi()
     {
         //1. find user to use as an actor
         $user = User::where('username', 'test_guard')->firstOrFail();
@@ -269,10 +269,10 @@ class AuthTest extends TestCase
     }
 
     /**
-     * feature test login as admin and access admin data
+     * feature test login as admin and hit admin page api
      * @return void
      */
-    public function testLoginAsAdminAndAccessAdminData()
+    public function testLoginAsAdminAndHitAdminPageApi()
     {
         //1. find user to use as an actor
         $user = User::where('username', 'test_admin')->firstOrFail();
@@ -293,10 +293,10 @@ class AuthTest extends TestCase
     }
 
     /**
-     * feature test login as superadmin and access admin data
+     * feature test login as superadmin and hit admin page api
      * @return void
      */
-    public function testLoginAsSuperadminAndAccessAdminData()
+    public function testLoginAsSuperadminAndHitAdminPageApi()
     {
         //1. find user to use as an actor
         $user = User::where('username', 'test_superadmin')->firstOrFail();
@@ -315,6 +315,81 @@ class AuthTest extends TestCase
             ]);
         
     }
+
+
+    /**
+     * feature test login as guard and hit android api
+     * @return void
+     */
+    public function testLoginAsGuardAndHitAndroidApi()
+    {
+        //1. find user to use as an actor
+        $user = User::where('username', 'test_guard')->firstOrFail();
+
+        //2. hit API
+        $response = $this->actingAs($user)->json('GET', '/api/guard/users/shifts');
+
+        //3. assert response
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'data'
+            ])
+            ->assertJson([
+                "error" => false
+            ]);
+        
+    }
+
+    /**
+     * feature test login as admin and hit android api
+     * @return void
+     */
+    public function testLoginAsAdminAndHitAndroidApi()
+    {
+        //1. find user to use as an actor
+        $user = User::where('username', 'test_admin')->firstOrFail();
+
+        //2. hit API
+        $response = $this->actingAs($user)->json('GET', '/api/guard/users/shifts');
+
+        //3. assert response
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'data'
+            ])
+            ->assertJson([
+                "error" => false
+            ]);
+        
+    }
+
+    /**
+     * feature test login as superadmin and hit android api
+     * @return void
+     */
+    public function testLoginAsSuperadminAndHitAndroidApi()
+    {
+        //1. find user to use as an actor
+        $user = User::where('username', 'test_superadmin')->firstOrFail();
+
+        //2. hit API
+        $response = $this->actingAs($user)->json('GET', '/api/guard/users/shifts');
+
+        //3. assert response
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'data'
+            ])
+            ->assertJson([
+                "error" => false
+            ]);
+        
+    }
+
+    
 
     //function to run http request login as guard and make fixture
     //so this fixture can be use to test other API that requires login as guard

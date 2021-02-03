@@ -30,12 +30,12 @@ class IotTest extends TestCase
             '--class' => 'UsersTableSeeder'
         ]);
 
-        //4. run usertableseeder to make building data
+        //4. run buildingtableseeder to make building data
         Artisan::call('db:seed', [
             '--class' => 'BuildingsTableSeeder'
         ]);
 
-        //5. run usertableseeder to make floor data
+        //5. run floortableseeder to make floor data
         Artisan::call('db:seed', [
             '--class' => 'FloorsTableSeeder'
         ]);
