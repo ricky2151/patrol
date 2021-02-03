@@ -17,20 +17,24 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use App\Services\Contracts\UserServiceContract as UserService;
+use App\Exceptions\SuspiciousInputException;
 
 
 class UserController extends Controller
 {
     private $user;
+    private $userService;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(User $user)
+    public function __construct(User $user, UserService $userService)
     {
         $this->user = $user;
+        $this->userService = $userService;
     }
     public function index()
     {
@@ -52,24 +56,19 @@ class UserController extends Controller
     }
     public function getAllShifts($id)
     {
-        
-        
         $data = $this->user->getAllShifts($id);
         return response()->json(['error' => false, 'data'=>$data]);
     }
     public function shifts()
     {
-        
-        $iduser = Auth::user()->id;
-        $data = $this->user->find($iduser)->getShiftThatCanBeScanned();
-        return response()->json(['error' => false, 'data'=>$data]);
+        $data = $this->userService->getShiftsThatCanBeScanned();
+        return response()->json(['error' => false, 'data' => $data]);
     }
 
-    public function viewHistoryScan($id)
+    public function viewHistoryScan(Shift $shift)
     {
-        $iduser = Auth::user()->id;
-        $data = $this->user->find($iduser)->viewHistoryScan($id);
-        return response()->json(['error' => false, 'data'=>$data]);
+        $data = $this->userService->viewMyHistoryScan($shift->id);
+        return response()->json(['error' => false, 'data' => $data]);
     }
 
     /**
@@ -85,142 +84,35 @@ class UserController extends Controller
 
     public function getMasterData()
     {
-        $data = ['status_node' => StatusNode::all(['id','name'])];
-        return response()->json(['error' => false, 'data'=>$data]);
+        $data = $this->userService->getMasterDataSubmitScan();
+        return response()->json(['error' => false, 'data' => ['status_node' => $data]]);
+        // $data = ['status_node' => StatusNode::all(['id','name'])];
+        // return response()->json(['error' => false, 'data'=>$data]);
         
     }
 
     public function submitScan(SubmitScan $request)
     {
+        //1. log first to easily debug on sentry. 
         Log::channel('daily')->info('Request from /users/submitScan : ' . json_encode($request->all()));
+
+        //2. validate all input
         $data = $request->validated();
-        
-        $id = $data['id'];
-        unset($data['id']);
-        $shift = new Shift();
-        $shift = $shift->find($id);
-        $idUserThisShift = $shift->user()->get()[0]->id;
+        if(!isset($data['photos']))
+            throw new SuspiciousInputException("no photo uploaded");
 
-        $dataIsRight = false;
-        $reasonDataIsFalse = "your data is incorrect";
+        //3. get datetimenow
+        $dateTimeNow = Carbon::now()->timezone('Asia/Jakarta')->format('Y-m-d H:i:s');
 
-        //make variable that store time
-        $timeNow = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
-        $dateNow = Carbon::now()->timezone('Asia/Jakarta')->format('Y-m-d');    
-        $dateYesterday = date('Y-m-d', strtotime('-1 day', strtotime($dateNow)));
+        //4. submit scan
+        $result = $this->userService->submitScan($data['message'], $data['status_node_id'], $data['id'], $dateTimeNow, $data['photos']);
 
-        $timeShift = $shift->time()->get()[0];
-        $startTimeShift = $timeShift['start'];
-        $endTimeShift = $timeShift['end'];
-        $dateShift = $shift->date;
-
-
-        //check user is right or not
-        if($idUserThisShift == Auth::user()->id)
-        {   
-            //check scan time is right or not
-            $verifyScanTime = checkRangeTimeShift($timeNow, $dateNow, $dateYesterday, $dateShift, $startTimeShift, $endTimeShift, "between");
-            
-            if($verifyScanTime == true)
-            {
-                //check all photo time is right or not
-                $countRightPhotoTime = 0;
-                if(array_key_exists("photos", $data) && count($data['photos']) > 0)
-                {
-                    foreach($data['photos'] as $photo)
-                    {
-                        $photoDate = substr($photo['photo_time'],0, 10);
-                        $photoTime = substr($photo['photo_time'],11, 8);
-                        $photoDateYesterday = date('Y-m-d', strtotime('-1 day', strtotime($photoDate)));
-                        
-                        $verifyPhotoTime = checkRangeTimeShift($photoTime, $photoDate, $photoDateYesterday, $dateShift, $startTimeShift, $endTimeShift, "between");
-                        if($verifyPhotoTime == true)
-                        {
-                            $countRightPhotoTime += 1;
-                        }
-                        
-                    }
-                    
-                    if($countRightPhotoTime == count($data['photos']))
-                    {
-                        $dataIsRight = true;
-                    }
-                    else
-                    {
-                        $reasonDataIsFalse = "there is an incorrect photo_time data";
-                    }
-                }
-                else
-                {
-                    $reasonDataIsFalse = "no photo uploaded";
-                }
-            }  
-            else
-            {
-                $reasonDataIsFalse = "server time is not correct";
-            }          
-        }
-        else
-        {
-            $reasonDataIsFalse = "this user is not have this shift";
-        }
-
-        if($dataIsRight)
-        {
-            //get room name
-            
-            $room_name = Shift::find($id)->room()->get()[0]->name;
-            $temp_shift = [];
-            $temp_shift['shift_id'] = $id;
-            $temp_shift['status_node_id'] = $data['status_node_id'];
-            $temp_shift['scan_time'] = $timeNow;
-            isset($data['message']) ? $temp_shift['message'] = $data['message'] : $temp_shift['message'] = '';
-            //set image
-            $photosSaved = [];
-            if(count($data['photos']) > 0)
-            {
-                $indexPhoto = 0;
-                foreach($data['photos'] as $photo)
-                {
-                    
-                    $path = '';
-                    $folder = 'photos';
-                    $image = $photo['file'];
-                    $photo_time = $photo['photo_time'];
-
-                    if(!is_null($image)){
-
-                        //make file name
-                        //[photo time]-[user fullname]-[room name]-[index photo]
-                        //example : 
-                        //132324-ricky-RuanganPosSatpamAgape-0
-                        $name = preg_replace('/[^a-zA-Z0-9-_\.]/','',$photo_time . " - " . Auth::user()->name . " - " . $room_name . " - " . $indexPhoto);
-                        $path = $image->storeAs($folder, $name . ".jpg");
-                       
-                    }
-                    else{
-                        $path = $folder."/default.png";
-                    }
-
-                    $photosSaved[] = ['url' => $path, 'photo_time' => $photo_time];
-                    
-                    $indexPhoto += 1;
-                }
-
-            }
-            
-            //saving
-            $history = new History();
-            $history = $history->create($temp_shift);
-    //        $temp_shift->save();
-
-            if(count($photosSaved) > 0)
-                $history->photos()->createMany($photosSaved);
-            
+        //5. return result
+        if($result){
             return response()->json(['error' => false, 'message'=>'submit data success !']);
         }
         else{
-            return response()->json(['error' => true, 'message'=>$reasonDataIsFalse]);
+            throw new StoreDataFailedException("Store Failed");
         }
         
     }
