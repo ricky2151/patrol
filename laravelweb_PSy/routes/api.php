@@ -91,7 +91,7 @@ Route::group(['prefix' => 'guard', 'middleware' => 'RoleGuard', 'as'=>'guard.'],
 	//user
 	Route::name('shifts')->get('/users/shifts', 'UserController@shifts');
 	Route::name('getMasterData')->get('/users/getMasterData', 'UserController@getMasterData');
-	Route::name('viewHistoryScan')->get('/users/viewHistoryScan/{id}', 'UserController@viewHistoryScan');
+	Route::name('viewHistoryScan')->get('/users/viewHistoryScan/{shift}', 'UserController@viewHistoryScan');
 	Route::name('submitScan')->post('/users/submitScan', 'UserController@submitScan');
 	
 
