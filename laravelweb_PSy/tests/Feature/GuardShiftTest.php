@@ -3,9 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\Gateway;
 use App\Models\Room;
 use App\Models\User;
 use App\Models\Shift;
@@ -118,13 +116,13 @@ class GuardShiftTest extends TestCase
     }
 
     public function viewHistoryScanProvider() {
-        //[id, status code, jsonExpected]
         return [
-            'when id is valid, then return success with history scan' => [1, 200, [
+            '1. when id is valid, then return success with history scan' => [1, 200, [
                 "error" => false,
             ]],
-            'when id is invalid, then return correct error' => [99999, 400, [
+            '2. when id is invalid, then return correct error' => [99999, 400, [
                 "error" => true,
+                'code' => 'E-0033',
                 "message" => "data not found"
             ]],
         ];
@@ -176,7 +174,6 @@ class GuardShiftTest extends TestCase
 
         //4. hit API
         $response = $this->actingAs($user)->postJson('/api/guard/users/submitScan/', $body);
-        
         //5. assert response
         $response
             ->assertStatus($statusExpected)
@@ -185,7 +182,6 @@ class GuardShiftTest extends TestCase
     }
 
     public function submitScanProvider() {
-        //[id, message, statusnodeid, photos, statusExpected, jsonExpected]
         $validId = '(valid_id)';
         $invalidIdShift = '(invalid_id)';
         $validMessage = 'nih laporannya';
@@ -315,16 +311,16 @@ class GuardShiftTest extends TestCase
         ];
 
         return [
-            'when all body is valid with 1 photo valid, then return success' =>     [$validId, $validMessage, $validStatusNodeId, $onePhotosWithValidFileValidTime, $statusSuccess ,$successResponseMessage],
-            'when 1 photo time is invalid, then return correct error' =>            [$validId, $validMessage, $validStatusNodeId, $onePhotosWithValidFileInvalidTime, $statusBadRequest ,$invalidTimeResponseMessage],
-            'when 1 photo file is empty, then return correct error' =>              [$validId, $validMessage, $validStatusNodeId, $onePhotosWithEmptyFileValidTime, $statusSemanticError ,$emptyOneFileResponseMessage],
-            'when all body is valid with 2 photos valid, then return success' =>    [$validId, $validMessage, $validStatusNodeId, $twoPhotosWithValidFileValidTime, $statusSuccess ,$successResponseMessage],
-            'when 2 photo time is invalid, then return correct error' =>            [$validId, $validMessage, $validStatusNodeId, $twoPhotosWithValidFileInvalidTime, $statusBadRequest ,$invalidTimeResponseMessage],
-            'when 2 photo file is empty, then return correct error' =>              [$validId, $validMessage, $validStatusNodeId, $twoPhotosWithEmptyFileValidTime, $statusSemanticError ,$emptyTwoFileResponseMessage],
-            'when no photo is uploaded, then return correct error' =>               [$validId, $validMessage, $validStatusNodeId, $emptyPhoto, $statusBadRequest ,$noPhotoUploadedResponseMessage],
-            'when status node id is invalid, then return correct error' =>          [$validId, $validMessage, $invalidStatusNodeId, $onePhotosWithValidFileValidTime, $statusSemanticError ,$invalidStatusNodeResponseMessage],
-            'when message is empty, then return correct error' =>                   [$validId, $emptyMessage, $validStatusNodeId, $onePhotosWithValidFileValidTime, $statusSuccess ,$successResponseMessage],
-            'when shift id is invalid, then return correct error' =>                [$invalidIdShift, $emptyMessage, $validStatusNodeId, $onePhotosWithValidFileValidTime, $statusSemanticError ,$invalidShiftResponseMessage],
+            '1. when all body is valid with 1 photo valid, then return success' =>     [$validId, $validMessage, $validStatusNodeId, $onePhotosWithValidFileValidTime, $statusSuccess ,$successResponseMessage],
+            '2. when 1 photo time is invalid, then return correct error' =>            [$validId, $validMessage, $validStatusNodeId, $onePhotosWithValidFileInvalidTime, $statusBadRequest ,$invalidTimeResponseMessage],
+            '3. when 1 photo file is empty, then return correct error' =>              [$validId, $validMessage, $validStatusNodeId, $onePhotosWithEmptyFileValidTime, $statusSemanticError ,$emptyOneFileResponseMessage],
+            '4. when all body is valid with 2 photos valid, then return success' =>    [$validId, $validMessage, $validStatusNodeId, $twoPhotosWithValidFileValidTime, $statusSuccess ,$successResponseMessage],
+            '5. when 2 photo time is invalid, then return correct error' =>            [$validId, $validMessage, $validStatusNodeId, $twoPhotosWithValidFileInvalidTime, $statusBadRequest ,$invalidTimeResponseMessage],
+            '6. when 2 photo file is empty, then return correct error' =>              [$validId, $validMessage, $validStatusNodeId, $twoPhotosWithEmptyFileValidTime, $statusSemanticError ,$emptyTwoFileResponseMessage],
+            '7. when no photo is uploaded, then return correct error' =>               [$validId, $validMessage, $validStatusNodeId, $emptyPhoto, $statusBadRequest ,$noPhotoUploadedResponseMessage],
+            '8. when status node id is invalid, then return correct error' =>          [$validId, $validMessage, $invalidStatusNodeId, $onePhotosWithValidFileValidTime, $statusSemanticError ,$invalidStatusNodeResponseMessage],
+            '9. when message is empty, then return correct error' =>                   [$validId, $emptyMessage, $validStatusNodeId, $onePhotosWithValidFileValidTime, $statusSuccess ,$successResponseMessage],
+            '10. when shift id is invalid, then return correct error' =>                [$invalidIdShift, $emptyMessage, $validStatusNodeId, $onePhotosWithValidFileValidTime, $statusSemanticError ,$invalidShiftResponseMessage],
         ];
     }
 

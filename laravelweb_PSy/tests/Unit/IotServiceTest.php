@@ -4,9 +4,7 @@ namespace Test\Unit;
 
 use Tests\TestCase;
 use App\Repositories\Contracts\IotRepositoryContract;
-use App\Repositories\Implementations\IotRepositoryImplementations;
 use App\Services\Implementations\IotServiceImplementation;
-use App\Exceptions\MqttFailedException;
 
 use App\TestUtil;
 
@@ -17,11 +15,11 @@ class IotServiceTest extends TestCase {
      * @dataProvider configGatewayProvider
      * @return void
      */
-    public function testConfigGateway($iotRepoGetDataRooms, $iotRepoSendConfigGateway, $expectedResult, $verifyIotRepoGetDataRooms, $verifyIotRepoSendConfigGateway)
+    public function testConfigGateway($iotRepoGetDataRooms, $iotRepoSendConfigGateway, $expectedResult, $timesIotRepoSendConfigGateway)
     {
         //1. create mock for IotRepository
         $iotRepoMock = TestUtil::mockClass(IotRepositoryContract::class, [
-            ['method' => 'sendToConfigGatewayTopicMqtt', 'returnOrThrow' => $iotRepoSendConfigGateway],
+            ['method' => 'sendToConfigGatewayTopicMqtt', 'returnOrThrow' => $iotRepoSendConfigGateway, 'times' => $timesIotRepoSendConfigGateway],
             ['method' => 'getDataRooms', 'returnOrThrow' => $iotRepoGetDataRooms]
         ]);
         
@@ -45,10 +43,6 @@ class IotServiceTest extends TestCase {
             $this->assertSame($result, $expectedResult);
         }
         
-        //5. verify that mocked method is called
-        $verifyIotRepoGetDataRooms ? $iotRepoMock->shouldReceive('GetDataRooms') : $iotRepoMock->shouldNotReceive('GetDataRooms');
-
-        $verifyIotRepoSendConfigGateway ? $iotRepoMock->shouldReceive('sendToConfigGatewayTopicMqtt') : $iotRepoMock->shouldNotReceive('sendToConfigGatewayTopicMqtt');
     }
 
     public function configGatewayProvider()
@@ -111,27 +105,20 @@ class IotServiceTest extends TestCase {
             'information' => []
         ];
 
-        $mqttFailedException = new MqttFailedException();
-
         //order : 
         //iotRepoGetDataRooms, iotRepoSendConfigGateway, 
-        //expectedResult, verifyIotRepoGetDataRooms, verifyIotRepoSendConfigGateway
+        //expectedResult, timesIotRepoSendConfigGateway
         return [
-            'when rooms data is not empty and success send to mqtt, then return correct data structure' =>
+            '1. when rooms data is not empty and success send to mqtt, then return correct data structure' =>
             [
                 $dataRooms, true,
-                $expectedResultWithRooms, true, true
+                $expectedResultWithRooms, 2
             ],
-            'when rooms data is empty, then return empty data' =>
+            '2. when rooms data is empty, then return empty data' =>
             [
                 [], false,
-                $expectedResultEmptyRooms, true, false
-            ],
-            'when rooms data is not empty but failed send to mqtt, then return correct error' =>
-            [
-                $dataRooms, $mqttFailedException,
-                $mqttFailedException, true, true
-            ]
-            ];
+                $expectedResultEmptyRooms, 0
+            ],    
+        ];
     }
 }
