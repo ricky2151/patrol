@@ -16,7 +16,7 @@ class Gateway extends Model
 
     public function delete()
     {   
-        error_log("gateway.delete");
+        //error_log("gateway.delete");
         foreach($this->rooms as $room) { $room->delete(); }
         
         return parent::delete();

@@ -16,7 +16,7 @@ class Floor extends Model
 
     public function delete()
     {   
-        error_log("floor.delete");
+        //error_log("floor.delete");
         foreach($this->rooms as $room) { $room->delete(); }
         
         return parent::delete();

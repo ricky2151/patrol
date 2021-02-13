@@ -3,10 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Arr;
-use Carbon\Carbon;
-use DB;
 
 class History extends Model
 {
@@ -27,7 +23,7 @@ class History extends Model
 
     public function delete()
     {   
-        error_log("history.delete");
+        //error_log("history.delete");
         foreach($this->photos as $photo) { $photo->delete(); }
         
         return parent::delete();
