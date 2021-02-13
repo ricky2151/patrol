@@ -6,8 +6,8 @@ use App\Repositories\Contracts\StatusNodeRepositoryContract;
 use App\Models\StatusNode;
 
 class StatusNodeRepositoryImplementation extends BaseRepositoryImplementation implements StatusNodeRepositoryContract  {
-    public function __construct(StatusNode $model)
+    public function __construct(StatusNode $builder)
     {
-        $this->model = $model;
+        $this->builder = $builder;
     }
 }
