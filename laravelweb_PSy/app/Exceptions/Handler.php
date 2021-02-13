@@ -94,14 +94,14 @@ class Handler extends ExceptionHandler
         else if ($exception instanceof JWTException) {
             return response()->json(['error' => true,'code' => 'E-0002', 'message' => ["Error in Authentication !"]],400);
         }
-        else if ($exception instanceof ModelNotFoundException) {
-            return response()->json(['error' => true, 'message'=> "data not found"], 400);
-        }
         else if ($exception->getMessage() === 'Token not provided') {
             return response()->json(['error' => true,'code' => 'E-0002', 'message' => ["token"=>['Token not provided !']]], 400);
         }
         elseif ($exception->getMessage() === 'User not found'){
             return response()->json(['error' => true,'code' => 'E-0002', 'message' => ["user"=>['User not found !']]], 400);
+        }
+        else if($exception instanceof LogoutFailedException){
+            return LogoutFailedException::render($exception->getMessage()); //E-0003
         }
         else if($exception instanceof MqttFailedException){
             return MqttFailedException::render($exception->getMessage()); //E-0011
@@ -115,16 +115,31 @@ class Handler extends ExceptionHandler
         else if($exception instanceof SaveFileFailedException){
             return SaveFileFailedException::render($exception->getMessage()); //E-0023
         }
-        else if($exception instanceof SuspiciousInputException){
-            return SuspiciousInputException::render($exception->getMessage()); //E-0032
+        else if($exception instanceof UpdateDataFailedException){
+            return UpdateDataFailedException::render($exception->getMessage()); //E-0024
+        }
+        else if($exception instanceof DeleteDataFailedException){
+            return DeleteDataFailedException::render($exception->getMessage()); //E-0025
         }
         else if ($exception instanceof ValidationException) 
         { 
             return response()->json(["error" => true,"code" => "E-0031","message" => $exception->errors()], 422);
         }
+        else if($exception instanceof SuspiciousInputException){
+            return SuspiciousInputException::render($exception->getMessage()); //E-0032
+        }
+        else if ($exception instanceof ModelNotFoundException) {
+            return response()->json(['error' => true, 'code' => 'E-0033', 'message'=> "data not found"], 400);
+        }
         else
         {
-            return parent::render($request, $exception);
+            if($message = $exception->getMessage()) {
+                return UnexpectedException::render("Unexpected Exception : " . $message); //E-0041
+            } else {
+                return UnexpectedException::render("Unexpected Exception : undefined message"); //E-0041
+            }
+            
+            //return parent::render($request, $exception);
         }
         
     }
