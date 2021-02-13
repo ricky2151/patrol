@@ -44,13 +44,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin', 'as'=>'admin.'],
 	Route::name('graph')->get('/shifts/graph', 'ShiftsController@graph');
 
 	//get detail shift on specific user
-	Route::name('getAllShifts')->get('/users/{id}/getAllShifts', 'UserController@getAllShifts');
+	Route::name('getAllShifts')->get('/users/{user}/getAllShifts', 'UserController@getAllShifts');
 
 	//shift today
 	Route::name('getShiftToday')->get('/shifts/shifttoday', 'ShiftsController@getShiftToday');
 
 	//get histories
-	Route::name('getHistories')->get('/shifts/{id}/getHistories', 'ShiftsController@getHistories');
+	Route::name('getHistories')->get('/shifts/{shift}/getHistories', 'ShiftsController@getHistories');
 
 	//remove all shifts that have history
 	Route::name('removeAndBackup')->post('/shifts/removeAndBackup', 'ShiftsController@removeAndBackup');
