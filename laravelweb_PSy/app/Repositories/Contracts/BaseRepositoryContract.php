@@ -24,7 +24,7 @@ interface BaseRepositoryContract
 
     public function deleteWhere($column, $value);
 
-    public function datatable($select);
+    public function datatable();
 
-    public function datatableWith($select, array $data);
+    public function datatableWith(array $data);
 }
