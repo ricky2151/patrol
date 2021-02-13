@@ -15,7 +15,6 @@ class Time extends Model
 
     public function delete()
     {   
-        error_log("time.delete");
         foreach($this->shifts as $shift) { $shift->delete(); }
         
         return parent::delete();

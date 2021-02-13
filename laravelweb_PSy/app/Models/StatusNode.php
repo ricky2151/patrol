@@ -16,7 +16,6 @@ class StatusNode extends Model
 
     public function delete()
     {   
-        error_log("status_node.delete");
         foreach($this->histories as $history) { $history->delete(); }
         
         return parent::delete();
