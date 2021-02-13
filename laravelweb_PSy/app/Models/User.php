@@ -231,7 +231,7 @@ class User extends Authenticatable implements JWTSubject
 
     //update
     public function updateShifts($shifts){
-
+        
         foreach($shifts as $shift){
             if($shift['type'] == 1) {
                 $this->shifts()->create($shift);

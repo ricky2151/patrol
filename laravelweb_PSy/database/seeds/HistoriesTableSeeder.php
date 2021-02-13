@@ -13,6 +13,9 @@ class HistoriesTableSeeder extends Seeder
      */
     public function run()
     {
+        factory(History::class, 3)->create([
+            'shift_id' => 1
+        ]);
         factory(History::class, 30)->create();
     }
 }
