@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\DB;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,11 @@ class AppServiceProvider extends ServiceProvider
         
         date_default_timezone_set('Asia/Jakarta');
 
+        // DB::listen(function ($query) {
+        //     error_log($query->sql);
+            
+        // });
+
         $models = [
             'Auth',
             'Iot',
@@ -34,7 +40,12 @@ class AppServiceProvider extends ServiceProvider
             'Shift',
             'Photo',
             'History',
-            'StatusNode'
+            'StatusNode',
+            'Floor',
+            'Gateway',
+            'Time',
+            'Room',
+            'Role'
         ];
 
         //binding repository
