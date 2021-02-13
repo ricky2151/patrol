@@ -3,9 +3,16 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Services\Contracts\AuthServiceContract as AuthService;
+use App\Exceptions\LoginFailedException;
 
 class RoleSuperAdmin
 {
+    protected $authService;
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
     /**
      * Handle an incoming request.
      *
@@ -15,15 +22,13 @@ class RoleSuperAdmin
      */
     public function handle($request, Closure $next)
     {
-        $user = User::find(auth()->user()->id);
-        
-        
-        if($user->canPlayARole('Superadmin'))
+        if($this->authService->canMePlayARoleAsSuperAdmin())
+        {
             return $next($request);
+        }
         else
-            return response()->json([
-                'error' => true,
-                'message' => 'Your are not admin',
-            ]);
+        {
+            throw new LoginFailedException("You Are Not Super Admin !");
+        }
     }
 }

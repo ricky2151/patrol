@@ -3,9 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Services\Contracts\AuthServiceContract as AuthService;
 use App\Exceptions\LoginFailedException;
 
@@ -38,18 +35,7 @@ class RoleAdmin
             throw new LoginFailedException("You Are Not Admin !");
         }
         
-    	// if(Auth::check())
-    	// {
-    	// 	$user = User::find(auth()->user()->id);
-    	// 	if($user->canPlayARole('Admin'))
-    	// 	{
-    				
-    	// 	}
-        // }
-        // else
-        // {
-        //     dd($x);
-        // }
+    	
 
         
         	

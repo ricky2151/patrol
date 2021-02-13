@@ -3,11 +3,16 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use App\Services\Contracts\AuthServiceContract as AuthService;
+use App\Exceptions\LoginFailedException;
 
 class RoleGuard
 {
+    protected $authService;
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
     /**
      * Handle an incoming request.
      *
@@ -17,18 +22,13 @@ class RoleGuard
      */
     public function handle($request, Closure $next)
     {
-        if(Auth::check())
+        if($this->authService->canMePlayARoleAsGuard())
         {
-            $user = User::find(auth()->user()->id);
-            if($user->canPlayARole('Guard'))
-            {
-                return $next($request); 
-            }
+            return $next($request);
         }
-
-        return response()->json([
-            'error' => true,
-            'message' => 'Your are not Guard',
-        ]);
+        else
+        {
+            throw new LoginFailedException("You Are Not Guard !");
+        }
     }
 }
