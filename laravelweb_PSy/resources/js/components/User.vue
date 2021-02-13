@@ -625,6 +625,15 @@ export default {
             {
                 this.e6 = 2;
                 this.editing_shift = 1;
+                //khusus user
+                if(this.shift_not_assign)
+                {
+                    this.shift_not_assign.date_start = '';
+                    this.shift_not_assign.date_end = '';
+                    this.shift_not_assign.menu_date_end_sna = null;
+                    this.shift_not_assign.menu_date_start_sna = null;
+                    this.shift_not_assign.data = [];
+                }
                 this.get_data_before_edit(id_datatable);
 
                
