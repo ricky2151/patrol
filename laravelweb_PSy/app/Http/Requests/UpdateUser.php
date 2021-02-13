@@ -24,19 +24,19 @@ class UpdateUser extends FormRequest
     public function rules()
     {
         return [
-             'name' => 'nullable|string',
-            'age' => 'nullable|integer',
-            'role_id' => 'nullable|integer',
-            'username' => 'nullable|string',
-            'password' => 'nullable|string',
-            'phone' => 'nullable|string',
-            'master_key' => 'nullable|string',
-            'email' => 'nullable|email',
-            'shifts.*.id' => 'nullable|integer',
-            'shifts.*.room_id' => 'nullable|integer',
-            'shifts.*.time_id' => 'nullable|integer',
-            'shifts.*.date' => 'nullable|string',
-            'shifts.*.type' => 'nullable|string',
+            'name' => 'string',
+            'age' => 'integer',
+            'role_id' => 'integer|exists:roles,id',
+            'username' => 'string',
+            'password' => 'string',
+            'phone' => 'string',
+            'master_key' => 'string',
+            'email' => 'email',
+            'shifts.*.id' => 'integer|exists:shifts,id',
+            'shifts.*.room_id' => 'integer|exists:rooms,id',
+            'shifts.*.time_id' => 'integer|exists:times,id',
+            'shifts.*.date' => 'string',
+            'shifts.*.type' => 'integer',
 
         ];
     }

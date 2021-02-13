@@ -24,7 +24,7 @@ class UpdateFloor extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'nullable|string'
+            'name' => 'string'
         ];
     }
 }

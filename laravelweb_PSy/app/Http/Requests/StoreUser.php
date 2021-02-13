@@ -26,17 +26,15 @@ class StoreUser extends FormRequest
         return [
             'name' => 'required|string',
             'age' => 'required|integer',
-            'role_id' => 'required|integer',
+            'role_id' => 'required|integer|exists:roles,id',
             'username' => 'required|string',
             'password' => 'required|string',
             'phone' => 'required|string',
             'master_key' => 'nullable|string',
             'email' => 'required|email',
-            'shifts.*.room_id' => 'nullable|integer',
-            'shifts.*.time_id' => 'nullable|integer',
-            'shifts.*.date' => 'nullable|string',
-
-            
+            'shifts.*.room_id' => 'nullable|integer|exists:rooms,id',
+            'shifts.*.time_id' => 'nullable|integer|exists:times,id',
+            'shifts.*.date' => 'nullable|string',            
         ];
     }
 }

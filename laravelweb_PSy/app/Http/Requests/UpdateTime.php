@@ -24,8 +24,8 @@ class UpdateTime extends FormRequest
     public function rules()
     {
         return [
-            'start' => 'nullable|string',
-            'end' => 'nullable|string',
+            'start' => 'string|date_format:H:i',
+            'end' => 'string|date_format:H:i',
         ];
     }
 }

@@ -24,8 +24,8 @@ class StoreTime extends FormRequest
     public function rules()
     {
         return [
-            'start' => 'required|string',
-            'end' => 'required|string',
+            'start' => 'required|string|date_format:H:i',
+            'end' => 'required|string|date_format:H:i',
         ];
     }
 }

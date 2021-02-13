@@ -24,10 +24,10 @@ class UpdateRoom extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'nullable|string',
-            'floor_id' => 'nullable|integer',
-            'building_id' => 'nullable|integer',
-            'gateway_id' => 'nullable|integer'
+            'name' => 'string',
+            'floor_id' => 'integer|exists:floors,id',
+            'building_id' => 'integer|exists:buildings,id',
+            'gateway_id' => 'integer|exists:gateways,id'
         ];
     }
 }

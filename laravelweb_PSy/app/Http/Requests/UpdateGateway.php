@@ -24,8 +24,8 @@ class UpdateGateway extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'nullable|string',
-            'location' => 'nullable|string',
+            'name' => 'string',
+            'location' => 'string',
         ];
     }
 }
