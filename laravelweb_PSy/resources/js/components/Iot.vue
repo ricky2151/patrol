@@ -228,14 +228,17 @@ export default {
             .catch((error) =>
             {
                 this.showLoading(false);
-                console.log("error : ")
-                console.log(error)
+                console.log("error : ");
+                console.log(error.response.data);
                 if(error.response.status == 422)
                 {
                     swal('Request Gagal', 'Cek koneksi internet Anda !', 'error');
                 }
-                else
+                else if(error.response.status == 503)
                 {
+                    swal('Unkown Error', error.response.data.message[0] , 'error');
+                }
+                else {
                     swal('Unkown Error', error.response.data , 'error');
                 }
             });
