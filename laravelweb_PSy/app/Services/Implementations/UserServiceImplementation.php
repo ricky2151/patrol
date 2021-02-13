@@ -7,9 +7,9 @@ use App\Repositories\Contracts\ShiftRepositoryContract as ShiftRepo;
 use App\Repositories\Contracts\PhotoRepositoryContract as PhotoRepo;
 use App\Repositories\Contracts\HistoryRepositoryContract as HistoryRepo;
 use App\Repositories\Contracts\AuthRepositoryContract as AuthRepo;
-use App\Repositories\Contracts\StatusNodeRepositoryContract as StatusNodeRepo;
 use Carbon\Carbon;
 use App\Exceptions\SuspiciousInputException;
+use Illuminate\Support\Arr;
 
 class UserServiceImplementation implements UserServiceContract {
     protected $userRepo;
@@ -17,24 +17,18 @@ class UserServiceImplementation implements UserServiceContract {
     protected $photoRepo;
     protected $historyRepo;
     protected $authRepo;
-    protected $statusNodeRepo;
 
-    public function __construct(UserRepo $userRepo, ShiftRepo $shiftRepo, PhotoRepo $photoRepo, HistoryRepo $historyRepo, AuthRepo $authRepo, StatusNodeRepo $statusNodeRepo)
+    public function __construct(UserRepo $userRepo, ShiftRepo $shiftRepo, PhotoRepo $photoRepo, HistoryRepo $historyRepo, AuthRepo $authRepo)
     {
         $this->userRepo = $userRepo;
         $this->shiftRepo = $shiftRepo;
         $this->photoRepo = $photoRepo;
         $this->historyRepo = $historyRepo;
         $this->authRepo = $authRepo;
-        $this->statusNodeRepo = $statusNodeRepo;
     }
 
     public function getShiftsThatCanBeScanned() {
         return $this->userRepo->getShiftsThatCanBeScanned();
-    }
-
-    public function getMasterDataSubmitScan() {
-        return $this->statusNodeRepo->getAll();
     }
 
     public function viewMyHistoryScan($id) {
@@ -142,4 +136,165 @@ class UserServiceImplementation implements UserServiceContract {
         }
         
     }
+
+    public function get() {
+        $role_id = $this->authRepo->isLogin()['user']['role_id'];
+        if($role_id == 3) { //if user is superadmin, then return user data with role admin and guard
+            //$data = $this->userRepo->allOrder('id', 'desc');
+        } else { //if user is not superadmin (it should admin), then return user data with role guard
+            //$data = $this->userRepo->datatable->where('role_id', 1)->orderBy('id', 'desc')->
+        }
+        $data = $this->userRepo->allOrder('id', 'desc');
+        
+        
+        
+        
+        $data = collect($data)->map(function ($item) {
+            $item = Arr::add($item, 'role_name', $item['role']['name']);
+            return Arr::except($item, ['role']);
+        });
+        return $data->toArray();
+    }
+
+    public function getShifts($id) {
+        $data = $this->userRepo->getShifts($id);
+        
+        $data = collect($data)->map(function ($item) {
+            $item = Arr::add($item, 'room_name', $item['room']['name']);
+            $item = Arr::add($item, 'time_start_end', $item['time']['start'] . " - " . $item['time']['end']);
+            return Arr::except($item, ['room', 'time', 'room_id', 'time_id']);
+        });
+        return $data->toArray();
+    }
+
+    public function storeUserWithShifts($input) {
+        //1. encrypt password
+        $input["password"] = bcrypt($input["password"]);
+        //2. generate master key
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < 16; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        $input['master_key'] = $randomString;
+
+
+        //3. split to $inputUser and $inputShift
+        $inputUser = $input;
+        unset($inputUser['shifts']);
+        $inputShift = $input['shifts'];
+
+        //4. store user data
+        $newId = $this->userRepo->store($inputUser)['id'];
+
+        //5. store user's shifts
+        if(count($inputShift) > 0) {
+            $this->userRepo->insertShifts($newId, $inputShift);
+        }
+        return true;
+    }
+
+    public function updateUserWithShifts($input, $id) {
+        //1. separate input user data and input user's shifts
+        
+        $inputUser = $input;
+        unset($inputUser['shifts']);
+
+        $inputShift = $input['shifts'];
+
+        //2. convert shift's to collection
+        $inputShiftCollection = collect($inputShift);
+
+        //3. get list id on inputshift variable
+        //means it have 2 possibility : update shift or delete shift
+        //because insert shift is not using id shift.
+        $listIdShifts = $inputShiftCollection->filter(function ($value, $key) {
+            return array_key_exists('id', $value);
+        })->pluck('id')->toArray();
+        
+        //4. check wether there is suspicious input in shift data or not
+        if(count($listIdShifts) > 0) {
+            if(!($this->userRepo->checkHaveShifts($id, $listIdShifts))) { //just to ensure wether user have this shift or not
+                throw new SuspiciousInputException("this user is not have this shift");
+            }
+        }
+
+        //5. update user data
+        $this->userRepo->update($inputUser, $id);
+
+        //6. prepare new shift's user data (it can be insert shifts, update shifts, or delete shifts)
+        
+        $shiftsToBeInserted = $inputShiftCollection->where('type', 1)->toArray();
+        $shiftsToBeUpdated = $inputShiftCollection->where('type', 0)->toArray();
+        $shiftsToBeDeleted = $inputShiftCollection->where('type', -1)->toArray();
+
+        //7. remove type key
+        foreach ($shiftsToBeInserted as $key => $item) {
+            unset($item['type']);
+            $shiftsToBeInserted[$key] = $item;  
+        }
+        foreach ($shiftsToBeUpdated as $key => $item) {
+            unset($item['type']);
+            $shiftsToBeUpdated[$key] = $item;  
+        }
+        foreach ($shiftsToBeDeleted as $key => $item) {
+            unset($item['type']);
+            $shiftsToBeDeleted[$key] = $item;  
+        }
+
+        
+        //8. insert new shift
+        if($shiftsToBeInserted != null)
+            
+            $this->userRepo->insertShifts($id, $shiftsToBeInserted);
+
+        //9. update new shift
+        if($shiftsToBeUpdated != null)
+            $this->userRepo->updateShifts($id, $shiftsToBeUpdated);
+
+        //10. delete new shift
+        if($shiftsToBeDeleted != null)
+            $this->userRepo->deleteShifts($id, $shiftsToBeDeleted);
+
+        return true;
+        
+    }
+
+
+    public function findWithShifts($id) {
+        //1. get user data with user's shifts
+        $data = $this->userRepo->findWithShifts($id);
+
+        
+
+        //2. delete role_id key
+        $data = Arr::except($data, ['role_id']);
+
+        //3. filter shifts
+        $shifts = $data['shifts'];
+        $shifts = collect($shifts)->map(function($item) {
+            $item['time']['name'] = $item['time']['start'] . '-' . $item['time']['end'];
+            Arr::forget($item, 'time.start');
+            Arr::forget($item, 'time.end');
+            return Arr::except($item, ['user_id', 'room_id', 'time_id']);
+        })->toArray();
+
+        //filter user
+        Arr::forget($data, 'shifts');
+        $user = $data;
+
+        return([
+            'user' => $user,
+            'shifts' => $shifts
+        ]);
+
+        
+    }
+
+    public function delete($id) {
+        return $this->userRepo->delete($id);
+    }
+
+    
 }

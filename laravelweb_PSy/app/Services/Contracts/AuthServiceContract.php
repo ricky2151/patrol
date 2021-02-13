@@ -10,6 +10,10 @@ interface AuthServiceContract {
 
     public function canMePlayARoleAsAdmin();
 
+    public function canMePlayARoleAsGuard();
+
+    public function canMePlayARoleAsSuperAdmin();
+
     public function logout();
 
     // public function refresh();
