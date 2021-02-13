@@ -4,28 +4,38 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Floor;
-use Illuminate\Support\Arr;
 use App\Http\Requests\StoreFloor;
 use App\Http\Requests\UpdateFloor;
-use Illuminate\Support\Facades\DB;
+use App\Services\Contracts\FloorServiceContract as FloorService;
+use App\Exceptions\GetDataFailedException;
+use App\Exceptions\StoreDataFailedException;
+use App\Exceptions\UpdateDataFailedException;
+use App\Exceptions\DeleteDataFailedException;
 
 class FloorController extends Controller
 {
     private $floor;
+    private $floorService;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(Floor $floor)
+    public function __construct(Floor $floor, FloorService $floorService)
     {
         $this->floor = $floor;
+        $this->floorService = $floorService;
     }
     public function index()
     {
-        $data = $this->floor->orderBy('id', 'desc')->get();
-        return response()->json(['error' => false, 'data'=>$data]);
+        try {
+            $data = $this->floorService->get();
+            $response = ['error' => false, 'data'=>$data];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new GetDataFailedException('Get Data Failed : Undefined Error');
+        }
     }
 
     /**
@@ -36,17 +46,14 @@ class FloorController extends Controller
      */
     public function store(StoreFloor $request)
     {
-        DB::beginTransaction();
         try {
             $data = $request->validated();
-            $floor = $this->floor->create($data);            
-            DB::commit();
-        } catch (\Throwable $e) {
-            dd($e);
-            DB::rollback();
-            return response()->json(['error' => true, 'message'=>$e->message()]);
+            $this->floorService->store($data);    
+            $response = ['error' => false, 'message'=>'create data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new StoreDataFailedException('Store Data Failed : Undefined Error');
         }
-        return response()->json(['error' => false, 'message'=>'create data success !']);
     }
 
     /**
@@ -58,8 +65,8 @@ class FloorController extends Controller
     public function edit($id)
     {
         $floor = $this->floor->find($id);
-        
-        return response()->json(['error' => false, 'data'=>['floor'=>$floor]]);
+        ['error' => false, 'data'=>['floor'=>$floor]];
+        return response()->json($response);
     }
 
     /**
@@ -69,10 +76,17 @@ class FloorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateFloor $request, $id)
+    public function update(UpdateFloor $request, Floor $floor)
     {
-        $this->floor->find($id)->update($request->validated());
-        return response()->json(['error' => false, 'message'=>'update data success !']);
+        try {
+            $data = $request->validated();
+            $this->floorService->update($data, $floor->id);
+            $response = ['error' => false, 'message'=>'update data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            dd($th);
+            throw new UpdateDataFailedException('Update Data Failed : Undefined Error');
+        }
     }
 
     /**
@@ -81,10 +95,14 @@ class FloorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Floor $floor)
     {   
-        $this->floor->find($id)->delete();
-
-        return response()->json(['error' => false, 'message'=>'delete data success !']);
+        try {
+            $this->floorService->delete($floor->id);
+            $response = ['error' => false, 'message'=>'delete data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new DeleteDataFailedException('Delete Data Failed : Undefined Error');
+        }
     }
 }

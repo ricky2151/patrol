@@ -13,6 +13,7 @@ use App\Models\Room;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Services\Contracts\IotServiceContract as IotService;
+use App\Exceptions\MqttFailedException;
 
 class IotController extends Controller
 {
@@ -25,8 +26,13 @@ class IotController extends Controller
 
     public function configGateway()
     {
-        $data = $this->iotService->configGateway();
-        $response = ['error' => false, 'mqtt' => $data['mqtt'], 'information' => $data['information']];
-        return response()->json($response);
+        try {
+            $data = $this->iotService->configGateway();
+            $response = ['error' => false, 'mqtt' => $data['mqtt'], 'information' => $data['information']];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new MqttFailedException('MQTT Failed : Undefined Error');
+        }
+        
     }
 }

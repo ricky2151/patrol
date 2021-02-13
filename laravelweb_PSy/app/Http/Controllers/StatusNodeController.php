@@ -4,30 +4,39 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\StatusNode;
-use Illuminate\Support\Arr;
 use App\Http\Requests\StoreStatusNode;
 use App\Http\Requests\UpdateStatusNode;
-use Illuminate\Support\Facades\DB;
+use App\Services\Contracts\StatusNodeServiceContract as StatusNodeService;
+use App\Exceptions\GetDataFailedException;
+use App\Exceptions\StoreDataFailedException;
+use App\Exceptions\UpdateDataFailedException;
+use App\Exceptions\DeleteDataFailedException;
 
 class StatusNodeController extends Controller
 {
     private $status_node;
+    private $statusNodeService;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(StatusNode $status_node)
+    public function __construct(StatusNode $status_node, StatusNodeService $statusNodeService)
     {
         $this->status_node = $status_node;
+        $this->statusNodeService = $statusNodeService;
+
     }
     public function index()
     {
-        $data = $this->status_node->orderBy('id', 'desc')->get();
-
-        
-        return response()->json(['error' => false, 'data'=>$data]);
+        try {
+            $data = $this->statusNodeService->get();
+            $response = ['error' => false, 'data'=>$data];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new GetDataFailedException('Get Data Failed : Undefined Error');
+        }
     }
 
     /**
@@ -38,17 +47,14 @@ class StatusNodeController extends Controller
      */
     public function store(StoreStatusNode $request)
     {
-        DB::beginTransaction();
         try {
             $data = $request->validated();
-            $status_node = $this->status_node->create($data);            
-            DB::commit();
-        } catch (\Throwable $e) {
-            dd($e);
-            DB::rollback();
-            return response()->json(['error' => true, 'message'=>$e->message()]);
+            $this->statusNodeService->store($data);    
+            $response = ['error' => false, 'message'=>'create data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new StoreDataFailedException('Store Data Failed : Undefined Error');
         }
-        return response()->json(['error' => false, 'message'=>'create data success !']);
     }
 
     /**
@@ -71,10 +77,17 @@ class StatusNodeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateStatusNode $request, $id)
+    public function update(UpdateStatusNode $request, StatusNode $statusNode)
     {
-        $this->status_node->find($id)->update($request->validated());
-        return response()->json(['error' => false, 'message'=>'update data success !']);
+        try {
+            $data = $request->validated();
+            $this->statusNodeService->update($data, $statusNode->id);
+            $response = ['error' => false, 'message'=>'update data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            dd($th);
+            throw new UpdateDataFailedException('Update Data Failed : Undefined Error');
+        }
     }
 
     /**
@@ -83,11 +96,14 @@ class StatusNodeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(StatusNode $statusNode)
     {
-        $this->status_node->find($id)->delete();
-        
-
-        return response()->json(['error' => false, 'message'=>'delete data success !']);
+        try {
+            $this->statusNodeService->delete($statusNode->id);
+            $response = ['error' => false, 'message'=>'delete data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new DeleteDataFailedException('Delete Data Failed : Undefined Error');
+        }
     }
 }

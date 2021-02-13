@@ -11,58 +11,80 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File; 
 use Carbon\Carbon;
 use Artisan;
+use App\Services\Contracts\ShiftServiceContract as ShiftService;
+use App\Exceptions\GetDataFailedException;
 
 
 class ShiftsController extends Controller
 {
     private $shift;
+    private $shiftService;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(Shift $shift)
+    public function __construct(Shift $shift, ShiftService $shiftService)
     {
         $this->shift = $shift;
+        $this->shiftService = $shiftService;
     }
     public function index()
     {
-        
-        $data = $this->shift->index();
-
-        
-        return response()->json(['error' => false, 'data'=>$data]);
+        try {
+            $data = $this->shiftService->get();
+            $response = ['error' => false, 'data'=>$data];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            dd($th);
+            throw new GetDataFailedException('Get Data Failed : Undefined Error');
+        }
     }
     public function getShiftToday()
     {
-        $data = $this->shift->indexToday();
-
-        
-        return response()->json(['error' => false, 'data'=>$data]);   
+        try {
+            $data = $this->shiftService->getToday();
+            $response = ['error' => false, 'data'=>$data];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            dd($th);
+            throw new GetDataFailedException('Get Data Failed : Undefined Error');
+        }
     }
 
     public function graph()
     {
-        $smallReportData = $this->shift->showSmallReport();
-
-        $graphData = $this->shift->showGraph();
-
-        $statusNodeData = StatusNode::get();
-
-        
-
-        $result = [];
-        $result['smallReportData'] = $smallReportData;
-        $result['graphData'] = $graphData;
-        $result['statusNodeData'] = $statusNodeData;
-        return response()->json(['error' => false, 'data'=>$result]);
+        try {
+            $data = $this->shiftService->getDashboardData();
+            $result = [
+                'smallReportData' => [
+                    'currentEvent' => $data['currentEvent']
+                ],
+                'graphData' => $data['graphData'],
+                'statusNodeData' => $data['statusNodeData']
+            ];
+            $response = ['error' => false, 'data'=>$result];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            dd($th);
+            throw new GetDataFailedException('Get Data Failed : Undefined Error');
+        }
     }
 
-    public function getHistories($id)
+    public function getHistories(Shift $shift)
     {
-        $data = $this->shift->find($id)->getHistories();
-        return response()->json(['error' => false, 'data'=>$data]);
+        try {
+            $data = $this->shiftService->getHistoryScan($shift->id);
+            $response = ['error' => false, 'data'=>$data];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            dd($th);
+            throw new GetDataFailedException('Get Data Failed : Undefined Error');
+        }
+
+        // $data = $this->shift->find($shift->id)->getHistories();
+        // return response()->json(['error' => false, 'data'=>$data]);
     }
 
     
@@ -81,43 +103,16 @@ class ShiftsController extends Controller
     }
     public function removeAndBackup()
     {  
-        Artisan::call("backup:run");
-        $resultArtisanCall = Artisan::output();
-        if(strpos($resultArtisanCall, "Backup failed"))
-        {
-            return response()->json(['error' => true, 'message'=>$resultArtisanCall]);
-        }
-        else
-        {
-            $shifts = Shift::get();
-
-
-            $shifts->map(function($itemShift) {
-                $deleteThisData = false;
-                //check time is right
-                $timeNow = Carbon::now()->timezone('Asia/Jakarta')->format('H:i:s');
-                $dateNow = Carbon::now()->timezone('Asia/Jakarta')->format('Y-m-d');    
-                $dateYesterday = date('Y-m-d', strtotime('-1 day', strtotime($dateNow)));
-
-                $timeShift = $itemShift->time()->get()[0];
-                $startTimeShift = $timeShift['start'];
-                $endTimeShift = $timeShift['end'];
-                $dateShift = $itemShift->date;
-
-                $verifyTimeNowIsGreater = checkRangeTimeShift($timeNow, $dateNow, $dateYesterday, $dateShift, $startTimeShift, $endTimeShift, "greater");
-
-                if($verifyTimeNowIsGreater == true) //if time now is greater than this shift, then delete
-                {
-                    $deleteThisData = true;
-                }
-                
-                if($deleteThisData)
-                {
-                    $itemShift->delete();
-                }
-                
-            });
-            return response()->json(['error' => false, 'message'=>'success']);
+        try {
+            $data = $this->shiftService->removeAndBackup();
+            $response = ['error' => false, 'data'=>$data];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            if($th instanceof DeleteDataFailedException) {
+                throw $th;
+            } else {
+                throw new DeleteDataFailedException('Delete Data Failed : Undefined Error');
+            }
         }
 
     }

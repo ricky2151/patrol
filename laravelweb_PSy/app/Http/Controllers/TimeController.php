@@ -4,30 +4,38 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Time;
-use Illuminate\Support\Arr;
 use App\Http\Requests\StoreTime;
 use App\Http\Requests\UpdateTime;
-use Illuminate\Support\Facades\DB;
+use App\Services\Contracts\TimeServiceContract as TimeService;
+use App\Exceptions\GetDataFailedException;
+use App\Exceptions\StoreDataFailedException;
+use App\Exceptions\UpdateDataFailedException;
+use App\Exceptions\DeleteDataFailedException;
 
 class TimeController extends Controller
 {
     private $time;
+    private $timeService;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(Time $time)
+    public function __construct(Time $time, TimeService $timeService)
     {
         $this->time = $time;
+        $this->timeService = $timeService;
     }
     public function index()
     {
-        $data = $this->time->orderBy('id', 'desc')->get();
-
-        
-        return response()->json(['error' => false, 'data'=>$data]);
+        try {
+            $data = $this->timeService->get();
+            $response = ['error' => false, 'data'=>$data];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new GetDataFailedException('Get Data Failed : Undefined Error');
+        }
     }
 
     /**
@@ -38,17 +46,14 @@ class TimeController extends Controller
      */
     public function store(StoreTime $request)
     {
-        DB::beginTransaction();
         try {
             $data = $request->validated();
-            $time = $this->time->create($data);            
-            DB::commit();
-        } catch (\Throwable $e) {
-            dd($e);
-            DB::rollback();
-            return response()->json(['error' => true, 'message'=>$e->message()]);
+            $this->timeService->store($data);    
+            $response = ['error' => false, 'message'=>'create data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new StoreDataFailedException('Store Data Failed : Undefined Error');
         }
-        return response()->json(['error' => false, 'message'=>'create data success !']);
     }
 
     /**
@@ -71,10 +76,17 @@ class TimeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTime $request, $id)
+    public function update(UpdateTime $request, Time $time)
     {
-        $this->time->find($id)->update($request->validated());
-        return response()->json(['error' => false, 'message'=>'update data success !']);
+        try {
+            $data = $request->validated();
+            $this->timeService->update($data, $time->id);
+            $response = ['error' => false, 'message'=>'update data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            dd($th);
+            throw new UpdateDataFailedException('Update Data Failed : Undefined Error');
+        }
     }
 
     /**
@@ -83,11 +95,14 @@ class TimeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Time $time)
     {
-        $this->time->find($id)->delete();
-        
-
-        return response()->json(['error' => false, 'message'=>'delete data success !']);
+        try {
+            $this->timeService->delete($time->id);
+            $response = ['error' => false, 'message'=>'delete data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new DeleteDataFailedException('Delete Data Failed : Undefined Error');
+        }
     }
 }

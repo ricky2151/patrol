@@ -4,38 +4,49 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Room;
-use Illuminate\Support\Arr;
 use App\Http\Requests\StoreRoom;
 use App\Http\Requests\UpdateRoom;
-use Illuminate\Support\Facades\DB;
+use App\Services\Contracts\RoomServiceContract as RoomService;
+use App\Services\Contracts\FloorServiceContract as FloorService;
+use App\Services\Contracts\BuildingServiceContract as BuildingService;
+use App\Services\Contracts\GatewayServiceContract as GatewayService;
+use App\Exceptions\GetDataFailedException;
+use App\Exceptions\StoreDataFailedException;
+use App\Exceptions\UpdateDataFailedException;
+use App\Exceptions\DeleteDataFailedException;
 
 
 class RoomController extends Controller
 {
      private $room;
+     private $roomService;
+     private $floorService;
+     private $buildingService;
+     private $gatewayService;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(Room $room)
+    public function __construct(Room $room, RoomService $roomService, FloorService $floorService, BuildingService $buildingService, GatewayService $gatewayService)
     {
         $this->room = $room;
+        $this->roomService = $roomService;
+        $this->floorService = $floorService;
+        $this->buildingService = $buildingService;
+        $this->gatewayService = $gatewayService;
     }
     public function index()
     {
-        
-        $data = $this->room->orderBy('id', 'desc')->get();
-
-        $data = $data->map(function ($data) { 
-            $data = Arr::add($data, 'floor_name', $data['floor']['name']);
-            $data = Arr::add($data, 'building_name', $data['building']['name']);
-            $data = Arr::add($data, 'gateway_name', $data['gateway']['name']);
-            return Arr::except($data, ['floor', 'building', 'gateway']);
-        });
-        
-        return response()->json(['error' => false, 'data'=>$data]);
+        try {
+            $data = $this->roomService->get();
+            $response = ['error' => false, 'data'=>$data];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            dd($th);
+            throw new GetDataFailedException('Get Data Failed : Undefined Error');
+        }
     }
 
     /**
@@ -45,7 +56,23 @@ class RoomController extends Controller
      */
     public function create()
     {
-        return response()->json(['error' => false, 'data'=>$this->room->allDataCreate()]);
+        try {
+            $dataFloor = $this->floorService->get();
+            $dataBuilding = $this->buildingService->get();
+            $dataGateway = $this->gatewayService->get();
+            $result = [
+                'floors' => $dataFloor,
+                'buildings' => $dataBuilding,
+                'gateways' => $dataGateway
+            ];
+            $response = ['error' => false, 'data'=>$result];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            dd($th);
+            throw new GetDataFailedException('Get Data Failed : Undefined Error');
+        }
+
+        
     }
 
     /**
@@ -57,17 +84,14 @@ class RoomController extends Controller
     public function store(StoreRoom $request)
     {
         
-        DB::beginTransaction();
         try {
             $data = $request->validated();
-            $room = $this->room->create($data);            
-            DB::commit();
-        } catch (\Throwable $e) {
-            dd($e);
-            DB::rollback();
-            return response()->json(['error' => true, 'message'=>$e->message()]);
+            $this->roomService->store($data);    
+            $response = ['error' => false, 'message'=>'create data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new StoreDataFailedException('Store Data Failed : Undefined Error');
         }
-        return response()->json(['error' => false, 'message'=>'create data success !']);
     }
 
     /**
@@ -76,11 +100,18 @@ class RoomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Room $room)
     {
-        $room = $this->room->find($id);
-        
-        return response()->json(['error' => false, 'data'=>['room'=>$room]]);
+        try {
+            $data = $this->roomService->find($room->id);
+            $response = ['error' => false, 'data'=> [
+                'room' => $data
+            ]];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            dd($th);
+            throw new GetDataFailedException('Get Data Failed : Undefined Error');
+        }
     }
 
     /**
@@ -90,10 +121,17 @@ class RoomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateRoom $request, $id)
+    public function update(UpdateRoom $request, Room $room)
     {
-        $this->room->find($id)->update($request->validated());
-        return response()->json(['error' => false, 'message'=>'update data success !']);
+        try {
+            $data = $request->validated();
+            $this->roomService->update($data, $room->id);
+            $response = ['error' => false, 'message'=>'update data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            dd($th);
+            throw new UpdateDataFailedException('Update Data Failed : Undefined Error');
+        }
     }
 
     /**
@@ -102,11 +140,14 @@ class RoomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Room $room)
     {
-        $this->room->find($id)->delete();
-        
-
-        return response()->json(['error' => false, 'message'=>'delete data success !']);
+        try {
+            $this->roomService->delete($room->id);
+            $response = ['error' => false, 'message'=>'delete data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new DeleteDataFailedException('Delete Data Failed : Undefined Error');
+        }
     }
 }

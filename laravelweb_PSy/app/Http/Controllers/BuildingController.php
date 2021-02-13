@@ -4,30 +4,39 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Building;
-use Illuminate\Support\Arr;
 use App\Http\Requests\StoreBuilding;
 use App\Http\Requests\UpdateBuilding;
-use Illuminate\Support\Facades\DB;
+use App\Services\Contracts\BuildingServiceContract as BuildingService;
+use App\Exceptions\GetDataFailedException;
+use App\Exceptions\StoreDataFailedException;
+use App\Exceptions\UpdateDataFailedException;
+use App\Exceptions\DeleteDataFailedException;
 
 class BuildingController extends Controller
 {
     private $building;
+    private $buildingService;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(Building $building)
+    public function __construct(Building $building, BuildingService $buildingService)
     {
         $this->building = $building;
+        $this->buildingService = $buildingService;
     }
     public function index()
     {
-        $data = $this->building->orderBy('id', 'desc')->get();
-
+        try {
+            $data = $this->buildingService->get();
+            $response = ['error' => false, 'data'=>$data];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new GetDataFailedException('Get Data Failed : Undefined Error');
+        }
         
-        return response()->json(['error' => false, 'data'=>$data]);
     }
 
     /**
@@ -38,17 +47,16 @@ class BuildingController extends Controller
      */
     public function store(StoreBuilding $request)
     {
-        DB::beginTransaction();
         try {
             $data = $request->validated();
-            $building = $this->building->create($data);            
-            DB::commit();
-        } catch (\Throwable $e) {
-            dd($e);
-            DB::rollback();
-            return response()->json(['error' => true, 'message'=>$e->message()]);
+            $this->buildingService->store($data);    
+            $response = ['error' => false, 'message'=>'create data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new StoreDataFailedException('Store Data Failed : Undefined Error');
         }
-        return response()->json(['error' => false, 'message'=>'create data success !']);
+        
+        
     }
 
     /**
@@ -71,10 +79,17 @@ class BuildingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateBuilding $request, $id)
+    public function update(UpdateBuilding $request, Building $building)
     {
-        $this->building->find($id)->update($request->validated());
-        return response()->json(['error' => false, 'message'=>'update data success !']);
+        try {
+            $data = $request->validated();
+            $this->buildingService->update($data, $building->id);
+            $response = ['error' => false, 'message'=>'update data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new UpdateDataFailedException('Update Data Failed : Undefined Error');
+        }
+        
     }
 
     /**
@@ -83,11 +98,15 @@ class BuildingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Building $building)
     {
-        $this->building->find($id)->delete();
+        try {
+            $this->buildingService->delete($building->id);
+            $response = ['error' => false, 'message'=>'delete data success !'];
+            return response()->json($response);
+        } catch (\Throwable $th) {
+            throw new DeleteDataFailedException('Delete Data Failed : Undefined Error');
+        }
         
-
-        return response()->json(['error' => false, 'message'=>'delete data success !']);
     }
 }
