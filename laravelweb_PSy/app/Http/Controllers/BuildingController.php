@@ -14,7 +14,6 @@ use App\Exceptions\DeleteDataFailedException;
 
 class BuildingController extends Controller
 {
-    private $building;
     private $buildingService;
     /**
      * Display a listing of the resource.
@@ -22,9 +21,8 @@ class BuildingController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(Building $building, BuildingService $buildingService)
+    public function __construct(BuildingService $buildingService)
     {
-        $this->building = $building;
         $this->buildingService = $buildingService;
     }
     public function index()
@@ -57,19 +55,6 @@ class BuildingController extends Controller
         }
         
         
-    }
-
-    /**
-     * Show data by specified id
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $building = $this->building->find($id);
-        
-        return response()->json(['error' => false, 'data'=>['building'=>$building]]);
     }
 
     /**

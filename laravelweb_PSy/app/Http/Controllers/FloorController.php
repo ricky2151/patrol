@@ -14,7 +14,6 @@ use App\Exceptions\DeleteDataFailedException;
 
 class FloorController extends Controller
 {
-    private $floor;
     private $floorService;
     /**
      * Display a listing of the resource.
@@ -22,9 +21,8 @@ class FloorController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(Floor $floor, FloorService $floorService)
+    public function __construct(FloorService $floorService)
     {
-        $this->floor = $floor;
         $this->floorService = $floorService;
     }
     public function index()
@@ -54,19 +52,6 @@ class FloorController extends Controller
         } catch (\Throwable $th) {
             throw new StoreDataFailedException('Store Data Failed : Undefined Error');
         }
-    }
-
-    /**
-     * Show data by specified id
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $floor = $this->floor->find($id);
-        ['error' => false, 'data'=>['floor'=>$floor]];
-        return response()->json($response);
     }
 
     /**

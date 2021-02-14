@@ -14,7 +14,6 @@ use App\Exceptions\DeleteDataFailedException;
 
 class StatusNodeController extends Controller
 {
-    private $status_node;
     private $statusNodeService;
     /**
      * Display a listing of the resource.
@@ -22,9 +21,8 @@ class StatusNodeController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(StatusNode $status_node, StatusNodeService $statusNodeService)
+    public function __construct(StatusNodeService $statusNodeService)
     {
-        $this->status_node = $status_node;
         $this->statusNodeService = $statusNodeService;
 
     }
@@ -55,19 +53,6 @@ class StatusNodeController extends Controller
         } catch (\Throwable $th) {
             throw new StoreDataFailedException('Store Data Failed : Undefined Error');
         }
-    }
-
-    /**
-     * Show data by specified id
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $status_node = $this->status_node->find($id);
-        
-        return response()->json(['error' => false, 'data'=>['status_node'=>$status_node]]);
     }
 
     /**

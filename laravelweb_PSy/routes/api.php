@@ -57,28 +57,25 @@ Route::group(['prefix' => 'admin', 'middleware' => 'RoleAdmin', 'as'=>'admin.'],
 
 	//route resource
 	Route::resource('shifts', 'ShiftsController')->only([
-		'index', 'destroy'
+		'index'
 	]);
 	Route::resource('floors', 'FloorController')->except([
-		'create', 'show'
+		'create', 'show', 'edit'
 	]);
 	Route::resource('buildings', 'BuildingController')->except([
-		'create', 'show'
+		'create', 'show', 'edit'
 	]);
 	Route::resource('gateways', 'GatewayController')->except([
-		'create', 'show'
+		'create', 'show', 'edit'
 	]);
 	Route::resource('rooms', 'RoomController')->except([
 		'show'
 	]);
-	Route::resource('photos', 'PhotoController')->only([
-		'index', 'destroy'
-	]);
 	Route::resource('status_nodes', 'StatusNodeController')->except([
-		'create', 'show'
+		'create', 'show', 'edit'
 	]);
 	Route::resource('times', 'TimeController')->except([
-		'create', 'show'
+		'create', 'show', 'edit'
 	]);
 	Route::resource('users', 'UserController')->except([
 		'show'

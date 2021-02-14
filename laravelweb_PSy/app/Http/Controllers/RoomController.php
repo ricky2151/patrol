@@ -18,7 +18,6 @@ use App\Exceptions\DeleteDataFailedException;
 
 class RoomController extends Controller
 {
-     private $room;
      private $roomService;
      private $floorService;
      private $buildingService;
@@ -29,9 +28,8 @@ class RoomController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(Room $room, RoomService $roomService, FloorService $floorService, BuildingService $buildingService, GatewayService $gatewayService)
+    public function __construct(RoomService $roomService, FloorService $floorService, BuildingService $buildingService, GatewayService $gatewayService)
     {
-        $this->room = $room;
         $this->roomService = $roomService;
         $this->floorService = $floorService;
         $this->buildingService = $buildingService;

@@ -14,16 +14,14 @@ use App\Exceptions\DeleteDataFailedException;
 
 class GatewayController extends Controller
 {
-    private $gateway;
     private $gatewayService;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct(Gateway $gateway, GatewayService $gatewayService)
+    public function __construct(GatewayService $gatewayService)
     {
-        $this->gateway = $gateway;
         $this->gatewayService = $gatewayService;
     }
 
@@ -55,19 +53,6 @@ class GatewayController extends Controller
         } catch (\Throwable $th) {
             throw new StoreDataFailedException('Store Data Failed : Undefined Error');
         }
-    }
-
-    /**
-     * Show data by specified id
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $gateway = $this->gateway->find($id);
-        
-        return response()->json(['error' => false, 'data'=>['gateway'=>$gateway]]);
     }
 
     /**

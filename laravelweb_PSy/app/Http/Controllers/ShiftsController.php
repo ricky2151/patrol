@@ -2,22 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Shift;
-use App\Models\History;
-use App\Models\Photo;
-use App\Models\StatusNode;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\File; 
-use Carbon\Carbon;
-use Artisan;
 use App\Services\Contracts\ShiftServiceContract as ShiftService;
 use App\Exceptions\GetDataFailedException;
 
 
 class ShiftsController extends Controller
 {
-    private $shift;
     private $shiftService;
     /**
      * Display a listing of the resource.
@@ -25,9 +16,8 @@ class ShiftsController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(Shift $shift, ShiftService $shiftService)
+    public function __construct(ShiftService $shiftService)
     {
-        $this->shift = $shift;
         $this->shiftService = $shiftService;
     }
     public function index()
@@ -89,18 +79,7 @@ class ShiftsController extends Controller
 
     
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $this->shift->find($id)->delete();
-
-        return response()->json(['error' => false, 'message'=>'delete data success !']);
-    }
+    
     public function removeAndBackup()
     {  
         try {

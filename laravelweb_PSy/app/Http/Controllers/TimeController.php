@@ -14,7 +14,6 @@ use App\Exceptions\DeleteDataFailedException;
 
 class TimeController extends Controller
 {
-    private $time;
     private $timeService;
     /**
      * Display a listing of the resource.
@@ -22,9 +21,8 @@ class TimeController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(Time $time, TimeService $timeService)
+    public function __construct(TimeService $timeService)
     {
-        $this->time = $time;
         $this->timeService = $timeService;
     }
     public function index()
@@ -54,19 +52,6 @@ class TimeController extends Controller
         } catch (\Throwable $th) {
             throw new StoreDataFailedException('Store Data Failed : Undefined Error');
         }
-    }
-
-    /**
-     * Show data by specified id
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $time = $this->time->find($id);
-        
-        return response()->json(['error' => false, 'data'=>['time'=>$time]]);
     }
 
     /**

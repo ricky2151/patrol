@@ -8,13 +8,7 @@ use App\Http\Requests\UpdateUser;
 use App\Http\Requests\SubmitScan;
 use App\Models\User;
 use App\Models\Shift;
-use App\Models\History;
-use App\Models\StatusNode;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Services\Contracts\UserServiceContract as UserService;
@@ -30,7 +24,6 @@ use App\Exceptions\StoreDataFailedException;
 
 class UserController extends Controller
 {
-    private $user;
     private $userService;
     private $statusNodeService;
     private $roleService;
@@ -44,9 +37,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(User $user, UserService $userService, StatusNodeService $statusNodeService, RoleService $roleService, RoomService $roomService, TimeService $timeService, ShiftService $shiftService)
+    public function __construct(UserService $userService, StatusNodeService $statusNodeService, RoleService $roleService, RoomService $roomService, TimeService $timeService, ShiftService $shiftService)
     {
-        $this->user = $user;
         $this->userService = $userService;
         $this->statusNodeService = $statusNodeService;
         $this->roleService = $roleService;
@@ -210,17 +202,6 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show data by specified id
      *
      * @param  int  $id
@@ -236,11 +217,7 @@ class UserController extends Controller
             dd($th);
             throw new GetDataFailedException('Get Data Failed : Undefined Error');
         }
-        // $userEdit = $this->user->find($user->id);
-        // $shiftsWithId = $userEdit->getShiftWithId();
-        // $userWithId = $userEdit->getUserWithId();
-        // $userWithId['password'] = '';
-        // return response()->json(['error' => false, 'data'=>['user'=>$userWithId,'shifts'=>$shiftsWithId]]);
+        
         
     }
 
@@ -266,31 +243,6 @@ class UserController extends Controller
             throw new StoreDataFailedException('Store Data Failed : Undefined Error');
             
         }
-
-        // $data = $request->validated();
-        // $user = $this->user->find($user->id);
-        // //dd($data);
-        // DB::beginTransaction();
-        // try {
-        //     if(array_key_exists('password', $data))
-        //     {
-        //      $data["password"] = bcrypt($data["password"]);
-
-        //     }
-        //     $user->update($data);
-        //     if(array_key_exists('shifts', $data))
-        //     {
-        //         $user->updateShifts($data['shifts']);
-        //     }
-            
-
-        //     DB::commit();
-        //     return response()->json(['error' => false, 'message'=>'update data success !']);
-        // } catch (\Throwable $e) {
-
-        //     DB::rollback();
-        //     dd($e);
-        // }
 
     }
 
