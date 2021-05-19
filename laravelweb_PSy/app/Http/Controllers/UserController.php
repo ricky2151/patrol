@@ -11,6 +11,7 @@ use App\Models\Shift;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use App\Services\Contracts\AuthServiceContract as AuthService;
 use App\Services\Contracts\UserServiceContract as UserService;
 use App\Services\Contracts\RoleServiceContract as RoleService;
 use App\Services\Contracts\RoomServiceContract as RoomService;
@@ -24,6 +25,7 @@ use App\Exceptions\StoreDataFailedException;
 
 class UserController extends Controller
 {
+    private $authService;
     private $userService;
     private $statusNodeService;
     private $roleService;
@@ -37,8 +39,9 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct(UserService $userService, StatusNodeService $statusNodeService, RoleService $roleService, RoomService $roomService, TimeService $timeService, ShiftService $shiftService)
+    public function __construct(AuthService $authService, UserService $userService, StatusNodeService $statusNodeService, RoleService $roleService, RoomService $roomService, TimeService $timeService, ShiftService $shiftService)
     {
+        $this->authService = $authService;
         $this->userService = $userService;
         $this->statusNodeService = $statusNodeService;
         $this->roleService = $roleService;
@@ -102,11 +105,40 @@ class UserController extends Controller
     public function create()
     {
         try {
+            //1. get role data
             $dataRole = $this->roleService->get();
+
+            //2. get current role of this user.
+            //if role is admin then, give guard role as master data
+            //if role is super admin then, give admin and guard role as master data
+            $thisRole = $this->authService->isLogin()['user']['role_id'];
+           
+            
+            if($thisRole == 2) {//means admin 
+                $dataRole = $dataRole->reject(function ($value, $key) {
+                    return $value['name'] == 'Admin' || $value['name'] == 'Superadmin';
+                });
+            } else if ($thisRole == 3) {//means super admin 
+                $dataRole = $dataRole->reject(function ($value, $key) {
+                    return $value['name'] == 'Superadmin';
+                });
+            }
+            //reset index to start from 0
+            $dataRole = $dataRole->values();
+            
+            //3. get data room
             $dataRoom = $this->roomService->getWithoutFormat();
+
+            //4. get data status node
             $dataStatusNode = $this->statusNodeService->get();
+            
+            //5. get data time
             $dataTime = $this->timeService->get();
+
+            //6. get data shiftfuture
             $shiftFuture = $this->shiftService->getShiftsNotAssign();
+
+            //7. return 
             $result = [
                 'roles' => $dataRole,
                 'rooms' => $dataRoom,
@@ -239,7 +271,7 @@ class UserController extends Controller
             return response()->json($response);
         } catch (\Throwable $e) {
             DB::rollback();
-            //dd($e);
+            dd($e);
             throw new StoreDataFailedException('Store Data Failed : Undefined Error');
             
         }
