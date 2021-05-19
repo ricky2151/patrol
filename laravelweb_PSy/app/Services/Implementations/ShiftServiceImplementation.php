@@ -78,7 +78,7 @@ class ShiftServiceImplementation implements ShiftServiceContract {
             $item = Arr::add($item, 'user_name', $item['user']['name']);
             $item = Arr::add($item, 'time_start_end', $item['time']['start'] . ' - ' . $item['time']['end']);
             $item['total_histories'] = intval($item['histories_count']);
-            return Arr::except($item, ['user_id', 'room_id', 'time_id', 'room', 'user', 'time', 'histories_count']);
+            return Arr::except($item, ['user_id', 'time_id', 'room', 'user', 'time', 'histories_count']);
         });
         return $data->toArray();
     }
