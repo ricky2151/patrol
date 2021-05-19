@@ -15,7 +15,7 @@ class TimeServiceImplementation implements TimeServiceContract {
     public function get() {
         $data = $this->timeRepo->allOrder('id', 'desc');
         for($i = 0;$i<count($data);$i++) {
-            $data[$i]['name'] = $data[$i]['start'] . ' - ' . $data[$i]['end'];
+            $data[$i]['name'] = $data[$i]['start'] . '-' . $data[$i]['end'];
         }
         return $data;
         
