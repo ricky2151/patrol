@@ -201,7 +201,7 @@ class UserServiceImplementation implements UserServiceContract {
         $inputUser = $input;
         unset($inputUser['shifts']);
 
-        $inputShift = $input['shifts'];
+        $inputShift = isset($input['shifts']) ? $input['shifts'] : [];
 
         //2. convert shift's to collection
         $inputShiftCollection = collect($inputShift);
