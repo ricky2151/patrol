@@ -12,7 +12,7 @@
 					<br>
 					<h3 style='font-size:20px'>Kondisi terkini :</h3>
 					<div style='font-size:15px' id='list-current-events'>
-						<p v-for='(item,index) in current_event'>{{index}} : {{item}}</p>
+						<p v-for='(item) in current_event'>{{item}}</p>
 					</div>
 				</v-flex>
 				<v-spacer>
@@ -107,13 +107,7 @@
 		data () {
 			return {
 				
-				current_event : {
-					'Gedung Agape' : 'Ada acara IAA',
-					'Gedung Didaktos' : 'Tidak ada apa-apa',
-					'Gedung Logos' : 'Tidak ada apa-apa',
-					'Gedung Makarios' : 'Tidak ada apa-apa',
-					'Depan ATM' : 'Tidak ada apa-apa',
-				},
+				current_event : [],
 				chartData: [
 		        	['Month', 'Aman', 'Mencurigakan', 'Tidak Aman'],
 		       
@@ -229,10 +223,9 @@
 
 
 	                	//- isi current event
-	                	this.current_event = {};
 	                	for(var  i = 0;i<r_report.currentEvent.length;i++)
 	                	{
-	                		this.current_event[r_report.currentEvent[i].shift.room.name] = r_report.currentEvent[i].message;
+	                		this.current_event.push(r_report.currentEvent[i].shift.room.name + " : " + r_report.currentEvent[i].message);
 	                	}
 	                	console.log('cek current event');
 	                	console.log(this.current_event);
@@ -293,10 +286,6 @@
 							//then index_in_temp_status_node is 3
 
 							var index_in_temp_status_node = -1;
-							console.log('cek dulu nih keknya adayg salah');
-							console.log(r_graph);
-							console.log('===');
-							console.log(temp_status_node);
 							for(var j = 0;j<temp_status_node.length;j++)
 							{
 								if(parseInt(r_graph[i].status_nodes_id) == temp_status_node[j].id)

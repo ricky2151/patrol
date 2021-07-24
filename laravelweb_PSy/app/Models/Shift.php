@@ -141,10 +141,7 @@ class Shift extends Model
 
 
         //get current event
-        $totalRooms = Room::count();
-        $currentEvent = History::with(["shift" => function($q) use ($thisDay){
-            $q->where('shifts.date', '=', $thisDay);
-        }])->where('scan_time', '!=', '')->limit($totalRooms)->with('shift.room:id,name')->get();
+        $currentEvent = History::orderBy('id', 'desc')->with(["shift.room:id,name"])->limit(5)->get();
         
         //dd($currentEvent);
         
